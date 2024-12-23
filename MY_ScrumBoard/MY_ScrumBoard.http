@@ -1,0 +1,6 @@
+@MY_ScrumBoard_HostAddress = http://localhost:5151
+
+GET {{MY_ScrumBoard_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
