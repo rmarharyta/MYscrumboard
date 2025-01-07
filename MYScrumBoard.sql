@@ -76,3 +76,12 @@ CREATE INDEX idx_notes_scrumid ON Notes(scrumId);
 CREATE INDEX idx_deleted_scrumid ON Deleted(scrumId);
 
 CREATE INDEX idx_scrum_projectid ON Scrum(projectId);
+
+INSERT INTO Statuses
+VALUES  (1,"Story/PBI"),
+		(2,"To do"),
+        (3,"In process"),
+        (4,"To verify/testing"),
+        (5,"Done");
+
+select * from statuses;
