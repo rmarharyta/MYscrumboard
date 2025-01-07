@@ -1,0 +1,93 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using MY_ScrumBoard.Models;
+using MY_ScrumBoard.Services;
+using System.Security.Claims;
+
+namespace MY_ScrumBoard.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class CollaborationController(CollaborationServices _collaborationServices, IConfiguration _configuration) : ControllerBase
+    {
+        //add new collaboration
+        [HttpPost]
+        [Authorize]
+        public IActionResult AddNewCollaboration([FromBody] Collaboration collaboration)
+        {
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(currentUserId))
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Collaboration data is required.");
+            }
+
+            try
+            {
+                _collaborationServices.CreateCollaboration(collaboration, currentUserId);
+            }
+            catch (Exception ex)
+            {
+                BadRequest(ex.Message + "Something went wrong.");
+            }
+            return Ok();
+        }
+
+        //delete
+        [HttpDelete]
+        [Authorize]
+        public IActionResult DeleteCollaboration(Collaboration collaboration)
+        {
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(currentUserId))
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Collaboration data is required.");
+            }
+
+            try
+            {
+                _collaborationServices.DeleteCollaborationServ(collaboration);
+            }
+            catch (Exception ex) { 
+                BadRequest(ex.Message+"There is no such collaboration");
+            }
+            return Ok();
+        }
+
+        //Get all collaboration
+        [HttpGet]
+        public IActionResult GetCollaboration()
+        {
+            return Ok(_collaborationServices.GetAllCollaborations());
+        }
+
+        //get by project
+        [HttpGet("get_by_project")]
+        [Authorize]
+        public IActionResult GetCollaborationByProject([FromBody] string projectId)
+        {
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUserId == null)
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+
+            try
+            {
+                _collaborationServices.GetProjectsCollaboration(projectId);
+            }
+            catch
+            {
+                return NotFound("This project does not have collaborations");
+            }
+            return Ok();
+        }
+    }
+}

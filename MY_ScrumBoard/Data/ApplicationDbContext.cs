@@ -8,8 +8,7 @@ namespace MY_ScrumBoard.Data
         {
 
         }
-
-        public DbSet<Users> Users { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Projects> Projects { get; set; }
         public DbSet<Collaboration> Collaboration { get; set; }
         public DbSet<Scrum> Scrum { get; set; }

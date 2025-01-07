@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\MY_ScrumBoard.props" />
+</Project>

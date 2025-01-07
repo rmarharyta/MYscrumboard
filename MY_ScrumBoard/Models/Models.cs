@@ -2,48 +2,52 @@
 
 namespace MY_ScrumBoard.Models
 {
-    public class Users
+    public class User
     {
         [Key]
-        private string userId { get; set; }
+        public string userId { get; set; }
         [Required]
+        [EmailAddress]
         public string email { get; set; }
         [Required]
         public string userPassword { get; set; }
+
+
     }
 
     public class Projects
     {
         [Key]
-        private string projectId { get; set; }
+        public string projectId { get; set; }
         [Required]
         public string ownerId { get; set; }
         [Required]
         public string projectName { get; set; }
     }
 
+    [PrimaryKey(nameof(projectId), nameof(userId))]
     public class Collaboration
     {
         [Required]
-        private string projectId { get; set; }
+        public string projectId { get; set; }
         [Required]
-        private string userId { get; set; }
+        public string userId { get; set; }
     }
 
     public class Scrum
     {
         [Key]
-        private string scrumId { get; set; }
+        public string scrumId { get; set; }
         [Required]
-        private string projectId { get; set; }
+        public string projectId { get; set; }
         [Required]
-        private string scrumName { get; set; }
+        public string scrumName { get; set; }
     }
 
     public class Statuses
     {
         [Key]
-        private int statusId { get; set; }
+        public int statusId { get; set; }
         [Required]
         public string statusDescription { get; set; }
     }
@@ -51,22 +55,67 @@ namespace MY_ScrumBoard.Models
     public class Notes
     {
         [Key]
-        private string noteId { get; set; }
+        public string noteId { get; set; }
         [Required]
-        private string scrumId { get; set; }
+        public string scrumId { get; set; }
         [Required]
-        private int statusId { get; set; }
+        public int statusId { get; set; }
         public string noteValues { get; set; }
     }
 
     public class Deleted
     {
         [Key]
-        private string noteId { get; set; }
+        public string noteId { get; set; }
         [Required]
-        private string scrumId { get; set; }
+        public string scrumId { get; set; }
         [Required]
-        private int statusId { get; set; }
+        public int statusId { get; set; }
         public string noteValues { get; set; }
+    }
+
+    public class ChangePasswordData
+    {
+        [Required]
+        [EmailAddress]
+        public string email { get; set; }
+        [Required]
+        public string oldPassword { get; set; }
+        [Required]
+        public string newPassword { get; set; }
+    }
+
+    public class PasswordResetModel
+    {
+        [Required]
+        public string ResetToken { get; set; }
+        [Required]
+        public string newPassword { get; set; }
+    }
+
+    public class PasswordResetSys
+    {
+        [Required]
+        public string Id { get; set; }
+        [Required]
+        public string Email { get; set; }
+        [Required]
+        public string PasswordResetToken { get; set; }
+    }
+
+    public class RequestRenameProject
+    {
+        [Required]
+        public string projectId { get; set; }
+        [Required]
+        public string newName { get; set; }
+    }
+
+    public class RequestRenameScrum
+    {
+        [Required]
+        public string scrumId { get; set; }
+        [Required]
+        public string newName { get; set; }
     }
 }

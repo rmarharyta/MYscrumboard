@@ -1,0 +1,198 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using MY_ScrumBoard.Models;
+using MY_ScrumBoard.Services;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Net.Mail;
+using System.Security.Claims;
+using System.Text;
+
+namespace MY_ScrumBoard.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class PasswordController(PasswordServices _passwordServices, IConfiguration _configuration) : ControllerBase
+    {
+        //changePassword
+        [HttpPut]
+        [Authorize]
+        public IActionResult ChangePassword([FromBody] ChangePasswordData model)
+        {
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(currentUserId))
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("User data is required.");
+            }
+            try
+            {
+                _passwordServices.ChangeOldPassword(model);
+                return Ok("Password updated successfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        //request for changing password
+        [HttpPost("reset-request")]
+        public IActionResult RequestPasswordPeset([FromBody] string email)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var returnedUser = _passwordServices.ResetPasswordEmail(email);
+            if (returnedUser == null)
+            {
+                return BadRequest("There is no such user");
+            }
+            string resetToken = GenerateJWTToken(returnedUser);
+            PasswordResetSys passResetSys = new PasswordResetSys
+            {
+                Id = returnedUser.userId,
+                Email = returnedUser.email,
+                PasswordResetToken = resetToken
+            };
+            try
+            {
+                SendPasswordResetEmail(returnedUser.email, resetToken);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error sending password reset email.");
+            }
+            return Ok(new { message = "Password reset email sent." });
+
+        }
+
+        public IActionResult ResetPassword([FromBody] PasswordResetModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (ValidateToken(model.ResetToken))
+            {
+                return BadRequest("Invalid Token");
+            }
+            try
+            {
+                _passwordServices.ChangeForgottenPassword(model);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error retting password" + ex.Message);
+            }
+            return Ok("Password reset successfully");
+        }
+        //generate temporary token for changing password
+        private string GenerateJWTToken(User user)
+        {
+            var claims = new List<Claim>
+            {
+                new(ClaimTypes.NameIdentifier, user.userId),
+                new(ClaimTypes.Email, user.email)
+            };
+
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtConfig:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var jwtToken = new JwtSecurityToken(
+                issuer: _configuration["JwtConfig:Issuer"],
+                audience: _configuration["JwtConfig:Audience"],
+                claims: claims,
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddMinutes(10),
+                signingCredentials: credentials
+             );
+            return new JwtSecurityTokenHandler().WriteToken(jwtToken);
+        }
+        //send email to the user
+        private void SendPasswordResetEmail(string email, string resetToken)
+        {
+            IConfiguration emailSettings = _configuration.GetSection("EmailSettings");
+
+            string smtpServer = emailSettings["SmtpServer"];
+            int smtpPort = int.Parse(emailSettings["SmtpPort"]);
+            string smtpEmail = emailSettings["SmtpEmail"];
+            string smtpPassword = emailSettings["SmtpPassword"];
+
+
+            // Construct the email message
+            MailAddress to = new MailAddress(email);
+            MailAddress from = new MailAddress(smtpEmail);
+            MailMessage emailMsg = new MailMessage(from, to);
+
+            emailMsg.Subject = "Password Reset Request";
+            emailMsg.Body = $"You have requested to reset your password. Click on this link to reset it: {resetToken}";
+
+            SmtpClient smtp = new SmtpClient(smtpServer, smtpPort);
+            smtp.Credentials = new NetworkCredential(smtpEmail, smtpPassword);
+
+            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtp.EnableSsl = true;
+
+            try
+            {
+                smtp.Send(emailMsg);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        //check validation of jwt
+        public bool ValidateToken(string token)
+        {
+            try
+            {
+                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtConfig:Key"]));
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var validationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true, // Перевірка відповідності "Issuer"
+                    ValidateAudience = true, // Перевірка відповідності "Audience"
+                    ValidateLifetime = true, // Перевірка терміну дії
+                    ValidateIssuerSigningKey = true, // Перевірка підпису
+                    ValidIssuer = _configuration["JwtConfig:Issuer"],
+                    ValidAudience = _configuration["JwtConfig:Audience"],
+                    IssuerSigningKey = securityKey
+                };
+
+                // Перевіряємо токен
+                var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
+
+                if (validatedToken is JwtSecurityToken jwtToken &&
+                    jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return true; // Токен дійсний
+                }
+
+                return false; // Токен недійсний
+            }
+            catch (SecurityTokenExpiredException)
+            {
+                Console.WriteLine("Token has expired.");
+                return false;
+            }
+            catch (SecurityTokenException)
+            {
+                Console.WriteLine("Invalid token.");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return false;
+            }
+        }
+    }
+}

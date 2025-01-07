@@ -1,52 +1,47 @@
-﻿using MY_ScrumBoard.Models;
-using MySql.Data.MySqlClient;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+﻿
+using MY_ScrumBoard.Models;
 
 namespace MY_ScrumBoard.Services
 {
-    public class UserServices
+    public class UserServices(ApplicationDbContext _context)
     {
-        static MySqlConnection connection = ConnectionSingleton.GetInstance().Connection;
-        public static void PostUser(Users user)
+        public string Registration(User user)
         {
-            string query = "INSERT INTO Users(userId, email, userPassword) VALUES(UUID(),@email, @userPassword);";
-
-            connection.Open();
-
-            var command = new MySqlCommand(query, connection);
-            command.Parameters.AddWithValue("@email", user.email);
-            command.Parameters.AddWithValue("@userPassword", user.userPassword);
-
-            command.ExecuteNonQuery();
-            connection.Close();
+            Guid id = Guid.NewGuid();
+            user.userId = id.ToString();
+            var password = BCrypt.Net.BCrypt.EnhancedHashPassword(user.userPassword);
+            user.userPassword= password;
+            var signIn = _context.Users.Add(user);
+            _context.SaveChangesAsync();
+            return user.userId;
         }
-
-        public static void DeleteUser(string userId)
+        public void DeleteUser(string userId)
         {
-            string query = "DELETE  FROM Users WHERE userId=@userId;";
+            var user = _context.Set<User>().FirstOrDefault(u => u.userId == userId);
 
-            connection.Open();
+            if (user != null)
+            {
+                _context.Set<User>().Remove(user);
 
-            var command = new MySqlCommand(query, connection);
-
-            command.Parameters.AddWithValue("@userId", userId);
-            command.ExecuteNonQuery();
-            connection.Close();
+                _context.SaveChangesAsync();
+            }
         }
-
-        public static void PutUser(Users user)
+        public string? LogIn(User user)
         {
-            string query = "SELECT * FROM Users(userId, email, userPassword) VALUES(UUID(),@email, @userPassword);";
-
-            connection.Open();
-
-            var command = new MySqlCommand(query, connection);
-            command.Parameters.AddWithValue("@email", user.email);
-            command.Parameters.AddWithValue("@userPassword", user.userPassword);
-
-            command.ExecuteNonQuery();
-            connection.Close();
+            var login = _context.Set<User>().FirstOrDefault(u => u.email == user.email);
+            if (login == null)
+            {
+                return null;
+            }
+            if (BCrypt.Net.BCrypt.EnhancedVerify( user.userPassword,login.userPassword))
+            {
+                return login.userId; 
+            }
+            return null;
         }
-    }
+        internal IEnumerable<Object> GetAllUsers()
+        {
+            return _context.Users;
+        }
     }
 }
