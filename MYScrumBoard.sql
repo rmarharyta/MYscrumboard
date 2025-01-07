@@ -5,7 +5,7 @@ USE MyScrumDb;
 CREATE TABLE Users(
 userId VARCHAR(265) PRIMARY KEY,
 email VARCHAR(265) UNIQUE NOT NULL,
-userPassword VARCHAR(50) not null
+userPassword VARCHAR(265) not null
 );
 
 -- Create the Projects table
