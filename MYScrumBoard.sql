@@ -3,15 +3,15 @@ USE MyScrumDb;
 
 -- Create the Users table
 CREATE TABLE Users(
-userId VARCHAR(36) PRIMARY KEY,
-email VARCHAR(100) UNIQUE NOT NULL,
+userId VARCHAR(265) PRIMARY KEY,
+email VARCHAR(265) UNIQUE NOT NULL,
 userPassword VARCHAR(50) not null
 );
 
 -- Create the Projects table
 CREATE TABLE Projects(
-projectId VARCHAR(36) PRIMARY KEY,
-ownerId VARCHAR(36) NOT NULL,
+projectId VARCHAR(265) PRIMARY KEY,
+ownerId VARCHAR(265) NOT NULL,
 projectName VARCHAR(100) NOT NULL,
 FOREIGN KEY(ownerId) REFERENCES Users(userId)
 ON DELETE CASCADE
@@ -19,8 +19,8 @@ ON DELETE CASCADE
 
 -- Create the Collaboration table
 CREATE TABLE Collaboration(
-projectId VARCHAR(36) NOT NULL,
-userId VARCHAR(36) NOT NULL,
+projectId VARCHAR(265) NOT NULL,
+userId VARCHAR(265) NOT NULL,
 FOREIGN KEY(projectId) REFERENCES Projects(projectId)
 ON DELETE CASCADE,
 FOREIGN KEY(userId) REFERENCES Users(userId) 
@@ -30,8 +30,8 @@ PRIMARY KEY(projectId, userId)
 
 -- Create the Scrum table
 CREATE TABLE Scrum(
-scrumId VARCHAR(36) PRIMARY KEY,
-projectId VARCHAR (36) NOT NULL,
+scrumId VARCHAR(265) PRIMARY KEY,
+projectId VARCHAR (265) NOT NULL,
 scrumName VARCHAR(100) NOT NULL,
 FOREIGN KEY (projectId) REFERENCES Projects(projectId)
 ON DELETE CASCADE
@@ -45,8 +45,8 @@ statusDescription VARCHAR (100) NOT NULL
 
 -- Create the Note table
 CREATE TABLE Notes(
-noteId VARCHAR(36) PRIMARY KEY,
-scrumId VARCHAR(36) NOT NULL,
+noteId VARCHAR(265) PRIMARY KEY,
+scrumId VARCHAR(265) NOT NULL,
 statusId INT NOT NULL,
 noteValue VARCHAR (255),
 FOREIGN KEY (scrumId) REFERENCES Scrum(scrumId)
@@ -57,8 +57,8 @@ ON DELETE CASCADE
 
 -- Create the Deleted table
 CREATE TABLE DELETED (
-noteId VARCHAR(36) PRIMARY KEY,
-scrumId VARCHAR(36) NOT NULL,
+noteId VARCHAR(265) PRIMARY KEY,
+scrumId VARCHAR(265) NOT NULL,
 statusId INT NOT NULL,
 noteValue VARCHAR (255),
 FOREIGN KEY (scrumId) REFERENCES Scrum(scrumId)
