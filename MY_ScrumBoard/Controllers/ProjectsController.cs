@@ -30,7 +30,7 @@ namespace MY_ScrumBoard.Controllers
             }
             catch (Exception ex)
             {
-                BadRequest(ex.Message);
+                BadRequest(ex.Message + "Something went wrong.");
             }
             return Ok();
         }
@@ -40,11 +40,6 @@ namespace MY_ScrumBoard.Controllers
         [Authorize]
         public IActionResult RenameProject([FromBody] RequestRenameProject renameProject)
         {
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (currentUserId == null)
-            {
-                return Unauthorized("User ID not found in token.");
-            }
             if (renameProject.projectId == null || renameProject.newName == null)
             {
                 return BadRequest("Project ID or new name is missing.");
@@ -78,7 +73,7 @@ namespace MY_ScrumBoard.Controllers
 
             try
             {
-                _projectServices.DeleteProject(projectId);
+                _projectServices.DeleteProject(projectId, currentUserId);
             }
             catch (Exception ex)
             {
@@ -112,6 +107,48 @@ namespace MY_ScrumBoard.Controllers
             catch
             {
                 return NotFound("This user has no own projects.");
+            }
+            return Ok();
+        }
+
+        //get by membership/collaboration
+        [HttpGet("get_by_membership")]
+        [Authorize]
+        public IActionResult GetOwners()
+        {
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUserId == null)
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+            try
+            {
+                _projectServices.GetProjectsByMembership(currentUserId);
+            }
+            catch
+            {
+                return NotFound("This user is not in other people's collaborations.");
+            }
+            return Ok();
+        }
+
+        //get all projects for user
+        [HttpGet("get_by_user")]
+        [Authorize]
+        public IActionResult GetByUser()
+        {
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUserId == null)
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+            try
+            {
+                _projectServices.GetAllProjectsByUser(currentUserId);
+            }
+            catch
+            {
+                return NotFound("This user haven`t any projects.");
             }
             return Ok();
         }

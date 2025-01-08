@@ -28,9 +28,10 @@ namespace MY_ScrumBoard.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex.Message + "Something went wrong.");
             }
         }
+
         //log in
         [HttpPut]
         public IActionResult LogInUsers([FromBody] User user)
@@ -54,6 +55,7 @@ namespace MY_ScrumBoard.Controllers
                 return BadRequest("Problem: "+ ex.Message);
             }
         }
+
         //delete
         [HttpDelete("{Id}")]
         public IActionResult DeleteUsers([FromRoute] string Id)
@@ -68,11 +70,31 @@ namespace MY_ScrumBoard.Controllers
                 return BadRequest($"Could not delete {ex.Message}");
             }
         }
+
         [HttpGet]
         public IActionResult GetAllUsers()
         {
             return Ok(_userServices.GetAllUsers());
         }
+
+        //get by project
+        [HttpGet("get_by_project")]
+        public IActionResult GetByProject(string projectId)
+        {
+            if (projectId == null)
+            {
+                return BadRequest(projectId);
+            }
+            try
+            {
+                _userServices.GetByProject(projectId);
+            }
+            catch (Exception ex) {
+                return BadRequest(ex.Message + "Something went wrong.");
+            }
+            return Ok();
+        }
+
         private string GenerateJWTToken(string userId)
         {
             var claims = new List<Claim>

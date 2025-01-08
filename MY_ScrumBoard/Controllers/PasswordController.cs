@@ -6,6 +6,7 @@ using MY_ScrumBoard.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Mail;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Text;
 
@@ -36,12 +37,12 @@ namespace MY_ScrumBoard.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex.Message+ "Something went wrong.");
             }
         }
         //request for changing password
-        [HttpPost("reset-request")]
-        public IActionResult RequestPasswordPeset([FromBody] string email)
+        [HttpPost("request_reset_password")]
+        public IActionResult RequestPasswordReset([FromBody] string email)
         {
             if (!ModelState.IsValid)
             {
@@ -70,16 +71,13 @@ namespace MY_ScrumBoard.Controllers
             return Ok(new { message = "Password reset email sent." });
 
         }
-
+        [HttpPost("reset_password")]
+        [Authorize]
         public IActionResult ResetPassword([FromBody] PasswordResetModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
-            }
-            if (ValidateToken(model.ResetToken))
-            {
-                return BadRequest("Invalid Token");
             }
             try
             {
@@ -87,7 +85,7 @@ namespace MY_ScrumBoard.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Error retting password" + ex.Message);
+                return StatusCode(500, "Error resetting password" + ex.Message);
             }
             return Ok("Password reset successfully");
         }
@@ -123,7 +121,6 @@ namespace MY_ScrumBoard.Controllers
             string smtpEmail = emailSettings["SmtpEmail"];
             string smtpPassword = emailSettings["SmtpPassword"];
 
-
             // Construct the email message
             MailAddress to = new MailAddress(email);
             MailAddress from = new MailAddress(smtpEmail);
@@ -137,62 +134,54 @@ namespace MY_ScrumBoard.Controllers
 
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtp.EnableSsl = true;
-
-            try
-            {
-                smtp.Send(emailMsg);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            smtp.Send(emailMsg);
         }
 
         //check validation of jwt
-        public bool ValidateToken(string token)
-        {
-            try
-            {
-                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtConfig:Key"]));
+        //private bool ValidateToken(string token)
+        //{
+        //    try
+        //    {
+        //        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtConfig:Key"]));
 
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var validationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true, // Перевірка відповідності "Issuer"
-                    ValidateAudience = true, // Перевірка відповідності "Audience"
-                    ValidateLifetime = true, // Перевірка терміну дії
-                    ValidateIssuerSigningKey = true, // Перевірка підпису
-                    ValidIssuer = _configuration["JwtConfig:Issuer"],
-                    ValidAudience = _configuration["JwtConfig:Audience"],
-                    IssuerSigningKey = securityKey
-                };
+        //        var tokenHandler = new JwtSecurityTokenHandler();
+        //        var validationParameters = new TokenValidationParameters
+        //        {
+        //            ValidateIssuer = true, // Перевірка відповідності "Issuer"
+        //            ValidateAudience = true, // Перевірка відповідності "Audience"
+        //            ValidateLifetime = true, // Перевірка терміну дії
+        //            ValidateIssuerSigningKey = true, // Перевірка підпису
+        //            ValidIssuer = _configuration["JwtConfig:Issuer"],
+        //            ValidAudience = _configuration["JwtConfig:Audience"],
+        //            IssuerSigningKey = securityKey
+        //        };
 
-                // Перевіряємо токен
-                var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
+        //        // Перевіряємо токен
+        //        var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
 
-                if (validatedToken is JwtSecurityToken jwtToken &&
-                    jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    return true; // Токен дійсний
-                }
+        //        if (validatedToken is JwtSecurityToken jwtToken &&
+        //            jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+        //        {
+        //            return true; // Токен дійсний
+        //        }
 
-                return false; // Токен недійсний
-            }
-            catch (SecurityTokenExpiredException)
-            {
-                Console.WriteLine("Token has expired.");
-                return false;
-            }
-            catch (SecurityTokenException)
-            {
-                Console.WriteLine("Invalid token.");
-                return false;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                return false;
-            }
-        }
+        //        return false; // Токен недійсний
+        //    }
+        //    catch (SecurityTokenExpiredException)
+        //    {
+        //        Console.WriteLine("Token has expired.");
+        //        return false;
+        //    }
+        //    catch (SecurityTokenException)
+        //    {
+        //        Console.WriteLine("Invalid token.");
+        //        return false;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"An error occurred: {ex.Message}");
+        //        return false;
+        //    }
+        //}
     }
 }

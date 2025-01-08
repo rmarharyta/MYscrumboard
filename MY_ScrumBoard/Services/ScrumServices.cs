@@ -5,37 +5,56 @@ namespace MY_ScrumBoard.Services
     public class ScrumServices(ApplicationDbContext _context)
     {
         //create
-        public void CreateScrumBoard(Scrum scrum)
+        public void CreateScrumBoard(Scrum scrum, string userId)
         {
+            var project = _context.Set<Projects>()
+                .FirstOrDefault(u => u.projectId == scrum.projectId && u.ownerId == userId);
+            if (project == null)
+            {
+                throw new Exception("You cannot create it.");
+            }
             Guid id = Guid.NewGuid();
             scrum.scrumId = id.ToString();
             _context.Set<Scrum>().Add(scrum);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         //rename
-        public void RenameScrum(RequestRenameScrum renameScrum)
+        public void RenameScrum(RequestRenameScrum renameScrum, string userId)
         {
             var scrum = _context.Set<Scrum>().FirstOrDefault(u => u.scrumId == renameScrum.scrumId);
             if (scrum == null)
             {
                 throw new Exception("There is no such scrum board");
             }
+            var project = _context.Set<Projects>()
+                .FirstOrDefault(u => u.projectId == scrum.projectId && u.ownerId == userId);
+            if (project == null)
+            {
+                throw new Exception("You cannot rename this scrum");
+            }
             scrum.scrumName = renameScrum.newName;
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         //delete
-        public void DeleteScrumBoard(string id)
+        public void DeleteScrumBoard(string id, string ownerId)
         {
             var scrum = _context.Set<Scrum>().FirstOrDefault(u => u.scrumId == id);
-
             if (scrum == null)
             {
                 throw new Exception("There is no such scrum");
             }
+
+            var project = _context.Set<Projects>().FirstOrDefault(u => u.ownerId == ownerId && u.projectId == scrum.projectId);
+            if (project == null)
+            {
+                throw new Exception("You cannot delete this scrum");
+            }
+
+
             _context.Set<Scrum>().Remove(scrum);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         //get all scrum

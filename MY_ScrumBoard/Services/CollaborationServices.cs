@@ -11,7 +11,7 @@ namespace MY_ScrumBoard.Services
                 .FirstOrDefault(u => u.projectId == collaboration.projectId && u.ownerId == ownerId);
             if (project == null)
             {
-                throw new Exception("There is no such project");
+                throw new Exception("There is no such project or you cannot add new member.");
             }
             var user = _context.Set<User>().FirstOrDefault(u => u.userId == collaboration.userId);
             if (user == null)
@@ -19,18 +19,23 @@ namespace MY_ScrumBoard.Services
                 throw new Exception("There is no such user");
             }
             _context.Collaboration.Add(collaboration);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         //delete
-        public void DeleteCollaborationServ(Collaboration collaboration)
+        public void DeleteCollaborationServ(Collaboration collaboration,string ownerId)
         {
             if (collaboration == null)
             {
                 throw new Exception("There is no such collaboration");
             }
+            var project = _context.Set<Projects>()
+                .FirstOrDefault(u => u.projectId == collaboration.projectId && u.ownerId == ownerId);
+            if (project == null) {
+                throw new Exception("You cannot delete this project.");
+            }
             _context.Collaboration.Remove(collaboration);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         //get all collaboration

@@ -13,15 +13,11 @@ namespace MY_ScrumBoard.Services
                 throw new Exception("Incorrect Data");
             }
             user.userPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(model.newPassword);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
         public User? ResetPasswordEmail(string email)
         {
             var user = _context.Set<User>().FirstOrDefault(u => u.email == email);
-            if (user == null)
-            {
-                return null;
-            }
             return user;
         }
 
@@ -34,7 +30,7 @@ namespace MY_ScrumBoard.Services
             }
             user.userPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(model.newPassword);
             _context.Set<PasswordResetSys>().Remove(passResetSys);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
     }

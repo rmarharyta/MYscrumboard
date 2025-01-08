@@ -1,5 +1,63 @@
 [
   {
+    "ContainingType": "MY_ScrumBoard.Controllers.CollaborationController",
+    "Method": "AddNewCollaboration",
+    "RelativePath": "api/Collaboration",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "collaboration",
+        "Type": "MY_ScrumBoard.Models.Collaboration",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.CollaborationController",
+    "Method": "DeleteCollaboration",
+    "RelativePath": "api/Collaboration",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "collaboration",
+        "Type": "MY_ScrumBoard.Models.Collaboration",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.CollaborationController",
+    "Method": "GetCollaboration",
+    "RelativePath": "api/Collaboration",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.CollaborationController",
+    "Method": "GetCollaborationByProject",
+    "RelativePath": "api/Collaboration/get_by_project",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "projectId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MY_ScrumBoard.Controllers.PasswordController",
     "Method": "ChangePassword",
     "RelativePath": "api/Password",
@@ -10,6 +68,180 @@
       {
         "Name": "model",
         "Type": "MY_ScrumBoard.Models.ChangePasswordData",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.PasswordController",
+    "Method": "RequestPasswordReset",
+    "RelativePath": "api/Password/request_reset_password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "email",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.PasswordController",
+    "Method": "ResetPassword",
+    "RelativePath": "api/Password/reset_password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "MY_ScrumBoard.Models.PasswordResetModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.ProjectsController",
+    "Method": "CreateNewProject",
+    "RelativePath": "api/Projects",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "projectName",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.ProjectsController",
+    "Method": "RenameProject",
+    "RelativePath": "api/Projects",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "renameProject",
+        "Type": "MY_ScrumBoard.Models.RequestRenameProject",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.ProjectsController",
+    "Method": "DeleteProject",
+    "RelativePath": "api/Projects",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "projectId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.ProjectsController",
+    "Method": "GetProjects",
+    "RelativePath": "api/Projects",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.ProjectsController",
+    "Method": "GetProjectsByOwner",
+    "RelativePath": "api/Projects/get_by_owner",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.ScrumController",
+    "Method": "CreateNewScrumBoard",
+    "RelativePath": "api/Scrum",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "scrum",
+        "Type": "MY_ScrumBoard.Models.Scrum",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.ScrumController",
+    "Method": "RenameScrumBoard",
+    "RelativePath": "api/Scrum",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "renameScrum",
+        "Type": "MY_ScrumBoard.Models.RequestRenameScrum",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.ScrumController",
+    "Method": "DeleteScrum",
+    "RelativePath": "api/Scrum",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "scrumId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.ScrumController",
+    "Method": "GetScrums",
+    "RelativePath": "api/Scrum",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.ScrumController",
+    "Method": "GetScrumByProject",
+    "RelativePath": "api/Scrum/get_by_project",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "projectId",
+        "Type": "System.String",
         "IsRequired": true
       }
     ],

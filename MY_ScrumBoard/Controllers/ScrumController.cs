@@ -15,23 +15,24 @@ namespace MY_ScrumBoard.Controllers
         [Authorize]
         public IActionResult CreateNewScrumBoard([FromBody] Scrum scrum)
         {
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (currentUserId == null)
-            {
-                return Unauthorized("User ID not found in token.");
-            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUserId == null)
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+
             try
             {
-                _scrumServices.CreateScrumBoard(scrum);
+                _scrumServices.CreateScrumBoard(scrum,currentUserId);
             }
             catch (Exception ex)
             {
-                BadRequest(ex.Message);
+                BadRequest(ex.Message+ "Something went wrong.");
             }
             return Ok();
         }
@@ -41,19 +42,18 @@ namespace MY_ScrumBoard.Controllers
         [Authorize]
         public IActionResult RenameScrumBoard([FromBody] RequestRenameScrum renameScrum)
         {
+            if (renameScrum.scrumId == null || renameScrum.newName == null)
+            {
+                return BadRequest("Scrum ID or new name is missing.");
+            }
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (currentUserId == null)
             {
                 return Unauthorized("User ID not found in token.");
             }
-            if (renameScrum.scrumId == null || renameScrum.newName == null)
-            {
-                return BadRequest("Scrum ID or new name is missing.");
-            }
-
             try
             {
-                _scrumServices.RenameScrum(renameScrum);
+                _scrumServices.RenameScrum(renameScrum,currentUserId);
             }
             catch (Exception ex)
             {
@@ -79,7 +79,7 @@ namespace MY_ScrumBoard.Controllers
 
             try
             {
-                _scrumServices.DeleteScrumBoard(scrumId);
+                _scrumServices.DeleteScrumBoard(scrumId,currentUserId);
             }
             catch (Exception ex)
             {
@@ -100,12 +100,6 @@ namespace MY_ScrumBoard.Controllers
         [Authorize]
         public IActionResult GetScrumByProject([FromBody] string projectId)
         {
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (currentUserId == null)
-            {
-                return Unauthorized("User ID not found in token.");
-            }
-
             try
             {
                 _scrumServices.GetScrumBoardsByProject(projectId);

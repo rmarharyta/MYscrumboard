@@ -53,7 +53,7 @@ namespace MY_ScrumBoard.Controllers
 
             try
             {
-                _collaborationServices.DeleteCollaborationServ(collaboration);
+                _collaborationServices.DeleteCollaborationServ(collaboration,currentUserId);
             }
             catch (Exception ex) { 
                 BadRequest(ex.Message+"There is no such collaboration");
@@ -78,7 +78,6 @@ namespace MY_ScrumBoard.Controllers
             {
                 return Unauthorized("User ID not found in token.");
             }
-
             try
             {
                 _collaborationServices.GetProjectsCollaboration(projectId);
