@@ -80,22 +80,22 @@ namespace MY_ScrumBoard.Services
         //get all projects by user
         public List<Projects>? GetAllProjectsByUser(string userId)
         {
-            var ownProject = _context.Set<Projects>()
-                .FirstOrDefault(u => u.ownerId == userId);
+            var ownProjects = _context.Set<Projects>()
+                .Where(u => u.ownerId == userId)
+                .ToList();
             var collaborationProjects = _context.Set<Collaboration>()
                 .Where(u => u.userId == userId)
                 .Select(u => u.projectId)
                 .ToList();
-            if (ownProject==null&&collaborationProjects == null)
+            if (!ownProjects.Any() && !collaborationProjects.Any())
             {
                 return null;
             }
-            var allUserIds = new List<string> { ownProject.projectId }
-            .Union(collaborationProjects)
-            .ToList();
+
             var projects = _context.Set<Projects>()
-                .Where(u => allUserIds.Contains(userId))
+                .Where(p => collaborationProjects.Contains(p.projectId) || p.ownerId == userId)
                 .ToList();
+
             return projects;
         }
     }

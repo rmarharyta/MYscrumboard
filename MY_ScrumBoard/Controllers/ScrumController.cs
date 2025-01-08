@@ -32,7 +32,7 @@ namespace MY_ScrumBoard.Controllers
             }
             catch (Exception ex)
             {
-                BadRequest(ex.Message+ "Something went wrong.");
+                return BadRequest(ex.Message+ "Something went wrong.");
             }
             return Ok();
         }
@@ -57,7 +57,7 @@ namespace MY_ScrumBoard.Controllers
             }
             catch (Exception ex)
             {
-                BadRequest(ex.Message + "Something went wrong.");
+                return BadRequest(ex.Message + "Something went wrong.");
             }
             return Ok();
         }
@@ -83,7 +83,7 @@ namespace MY_ScrumBoard.Controllers
             }
             catch (Exception ex)
             {
-                BadRequest(ex.Message + "Something went wrong.");
+                return BadRequest(ex.Message + "Something went wrong.");
             }
             return Ok();
         }
@@ -102,13 +102,12 @@ namespace MY_ScrumBoard.Controllers
         {
             try
             {
-                _scrumServices.GetScrumBoardsByProject(projectId);
+                return Ok(_scrumServices.GetScrumBoardsByProject(projectId));
             }
             catch
             {
                 return NotFound("This project does not have scrum boards.");
             }
-            return Ok();
         }
     }
 }

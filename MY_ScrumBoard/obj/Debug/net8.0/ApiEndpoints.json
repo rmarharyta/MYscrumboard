@@ -58,6 +58,96 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "MY_ScrumBoard.Controllers.NotesController",
+    "Method": "CreateNote",
+    "RelativePath": "api/Notes",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "note",
+        "Type": "MY_ScrumBoard.Models.Notes",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.NotesController",
+    "Method": "DeleteNote",
+    "RelativePath": "api/Notes",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "note",
+        "Type": "MY_ScrumBoard.Models.Notes",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.NotesController",
+    "Method": "GetAllNotes",
+    "RelativePath": "api/Notes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.NotesController",
+    "Method": "ChangeNoteStatus",
+    "RelativePath": "api/Notes/change_status",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "newStatus",
+        "Type": "MY_ScrumBoard.Models.ChangeStatusNote",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.NotesController",
+    "Method": "ChangeNoteValue",
+    "RelativePath": "api/Notes/change_value",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "newValue",
+        "Type": "MY_ScrumBoard.Models.RenameNote",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.NotesController",
+    "Method": "GetByScrum",
+    "RelativePath": "api/Notes/get_by_scrum",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "scrumId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MY_ScrumBoard.Controllers.PasswordController",
     "Method": "ChangePassword",
     "RelativePath": "api/Password",
@@ -107,22 +197,6 @@
   },
   {
     "ContainingType": "MY_ScrumBoard.Controllers.ProjectsController",
-    "Method": "CreateNewProject",
-    "RelativePath": "api/Projects",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "projectName",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MY_ScrumBoard.Controllers.ProjectsController",
     "Method": "RenameProject",
     "RelativePath": "api/Projects",
     "HttpMethod": "PUT",
@@ -165,8 +239,44 @@
   },
   {
     "ContainingType": "MY_ScrumBoard.Controllers.ProjectsController",
+    "Method": "CreateNewProject",
+    "RelativePath": "api/Projects/create_new_project",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "projectName",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.ProjectsController",
+    "Method": "GetOwners",
+    "RelativePath": "api/Projects/get_by_membership",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.ProjectsController",
     "Method": "GetProjectsByOwner",
     "RelativePath": "api/Projects/get_by_owner",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.ProjectsController",
+    "Method": "GetByUser",
+    "RelativePath": "api/Projects/get_by_user",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -301,6 +411,22 @@
         "Name": "Id",
         "Type": "System.String",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.UsersController",
+    "Method": "GetByProject",
+    "RelativePath": "api/Users/get_by_project",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "projectId",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

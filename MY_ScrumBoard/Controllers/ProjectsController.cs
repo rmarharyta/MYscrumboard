@@ -8,10 +8,10 @@ namespace MY_ScrumBoard.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProjectsController(ProjectServices _projectServices, IConfiguration _configuration) : ControllerBase
+    public class ProjectsController(ProjectServices _projectServices) : ControllerBase
     {
         //create new project
-        [HttpPost]
+        [HttpPost("create_new_project")]
         [Authorize]
         public IActionResult CreateNewProject([FromBody] string projectName)
         {
@@ -30,7 +30,7 @@ namespace MY_ScrumBoard.Controllers
             }
             catch (Exception ex)
             {
-                BadRequest(ex.Message + "Something went wrong.");
+                return BadRequest(ex.Message + "Something went wrong.");
             }
             return Ok();
         }
@@ -51,7 +51,7 @@ namespace MY_ScrumBoard.Controllers
             }
             catch (Exception ex)
             {
-                BadRequest(ex.Message + "Something went wrong.");
+                return BadRequest(ex.Message + "Something went wrong.");
             }
             return Ok();
         }
@@ -77,7 +77,7 @@ namespace MY_ScrumBoard.Controllers
             }
             catch (Exception ex)
             {
-                BadRequest(ex.Message + "Something went wrong.");
+                return BadRequest(ex.Message + "Something went wrong.");
             }
             return Ok();
         }
@@ -102,13 +102,13 @@ namespace MY_ScrumBoard.Controllers
 
             try
             {
-                _projectServices.GetOwnersProjects(currentUserId);
+
+                return Ok(_projectServices.GetOwnersProjects(currentUserId));
             }
             catch
             {
                 return NotFound("This user has no own projects.");
             }
-            return Ok();
         }
 
         //get by membership/collaboration
@@ -123,13 +123,13 @@ namespace MY_ScrumBoard.Controllers
             }
             try
             {
-                _projectServices.GetProjectsByMembership(currentUserId);
+
+                return Ok(_projectServices.GetProjectsByMembership(currentUserId));
             }
             catch
             {
                 return NotFound("This user is not in other people's collaborations.");
             }
-            return Ok();
         }
 
         //get all projects for user
@@ -144,13 +144,13 @@ namespace MY_ScrumBoard.Controllers
             }
             try
             {
-                _projectServices.GetAllProjectsByUser(currentUserId);
+
+                return Ok(_projectServices.GetAllProjectsByUser(currentUserId));
             }
             catch
             {
                 return NotFound("This user haven`t any projects.");
             }
-            return Ok();
         }
     }
 }

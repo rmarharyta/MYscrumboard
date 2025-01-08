@@ -7,6 +7,11 @@ namespace MY_ScrumBoard.Services
         //create
         public void CreateNewNote(Notes notes)
         {
+            var scrum = _context.Scrum.FirstOrDefault(u => u.scrumId == notes.scrumId);
+            if (scrum == null)
+            {
+                throw new Exception("There is no such scrum.");
+            }
             Guid id = Guid.NewGuid();
             notes.noteId = id.ToString();
             _context.Set<Notes>().Add(notes);
@@ -14,19 +19,19 @@ namespace MY_ScrumBoard.Services
         }
 
         //change value
-        public void ChangeNote(Notes newValue)
+        public void ChangeNote(RenameNote newValue)
         {
             var note = _context.Set<Notes>().FirstOrDefault(u => u.noteId == newValue.noteId);
             if (note == null)
             {
                 throw new Exception("There is no such note.");
             }
-            note.noteValues = newValue.noteValues;
+            note.noteValue = newValue.newValue;
             _context.SaveChanges();
         }
 
         //change status
-        public void ChangeStatus(Notes newStatus)
+        public void ChangeStatus(ChangeStatusNote newStatus)
         {
             var note = _context.Set<Notes>().FirstOrDefault(u => u.noteId == newStatus.noteId);
             if (note == null)

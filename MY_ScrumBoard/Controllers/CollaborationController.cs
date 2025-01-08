@@ -31,7 +31,7 @@ namespace MY_ScrumBoard.Controllers
             }
             catch (Exception ex)
             {
-                BadRequest(ex.Message + "Something went wrong.");
+                return BadRequest(ex.Message + "Something went wrong.");
             }
             return Ok();
         }
@@ -56,7 +56,7 @@ namespace MY_ScrumBoard.Controllers
                 _collaborationServices.DeleteCollaborationServ(collaboration,currentUserId);
             }
             catch (Exception ex) { 
-                BadRequest(ex.Message+"There is no such collaboration");
+                return BadRequest(ex.Message+"There is no such collaboration");
             }
             return Ok();
         }
@@ -69,6 +69,7 @@ namespace MY_ScrumBoard.Controllers
         }
 
         //get by project
+        //need to delete it? because we have get users by projects (even if they r not owners)
         [HttpGet("get_by_project")]
         [Authorize]
         public IActionResult GetCollaborationByProject([FromBody] string projectId)
@@ -80,13 +81,12 @@ namespace MY_ScrumBoard.Controllers
             }
             try
             {
-                _collaborationServices.GetProjectsCollaboration(projectId);
+                return Ok(_collaborationServices.GetProjectsCollaboration(projectId,currentUserId));
             }
             catch
             {
                 return NotFound("This project does not have collaborations");
             }
-            return Ok();
         }
     }
 }

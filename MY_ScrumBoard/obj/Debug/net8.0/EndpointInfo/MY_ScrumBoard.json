@@ -106,6 +106,169 @@
         }
       }
     },
+    "/api/Notes": {
+      "post": {
+        "tags": [
+          "Notes"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Notes"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Notes"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Notes"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Notes"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Notes"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Notes"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Notes"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Notes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Notes/change_value": {
+      "put": {
+        "tags": [
+          "Notes"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RenameNote"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RenameNote"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RenameNote"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Notes/change_status": {
+      "put": {
+        "tags": [
+          "Notes"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeStatusNote"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeStatusNote"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeStatusNote"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Notes/get_by_scrum": {
+      "get": {
+        "tags": [
+          "Notes"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Password": {
       "put": {
         "tags": [
@@ -199,7 +362,7 @@
         }
       }
     },
-    "/api/Projects": {
+    "/api/Projects/create_new_project": {
       "post": {
         "tags": [
           "Projects"
@@ -228,7 +391,9 @@
             "description": "OK"
           }
         }
-      },
+      }
+    },
+    "/api/Projects": {
       "put": {
         "tags": [
           "Projects"
@@ -299,6 +464,30 @@
       }
     },
     "/api/Projects/get_by_owner": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Projects/get_by_membership": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Projects/get_by_user": {
       "get": {
         "tags": [
           "Projects"
@@ -531,6 +720,27 @@
           }
         }
       }
+    },
+    "/api/Users/get_by_project": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -559,6 +769,24 @@
         },
         "additionalProperties": false
       },
+      "ChangeStatusNote": {
+        "required": [
+          "noteId",
+          "statusId"
+        ],
+        "type": "object",
+        "properties": {
+          "noteId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "statusId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "Collaboration": {
         "required": [
           "projectId",
@@ -577,6 +805,32 @@
         },
         "additionalProperties": false
       },
+      "Notes": {
+        "required": [
+          "scrumId",
+          "statusId"
+        ],
+        "type": "object",
+        "properties": {
+          "noteId": {
+            "type": "string",
+            "nullable": true
+          },
+          "scrumId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "statusId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "noteValue": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "PasswordResetModel": {
         "required": [
           "newPassword",
@@ -589,6 +843,24 @@
             "type": "string"
           },
           "newPassword": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RenameNote": {
+        "required": [
+          "newValue",
+          "noteId"
+        ],
+        "type": "object",
+        "properties": {
+          "noteId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "newValue": {
             "minLength": 1,
             "type": "string"
           }

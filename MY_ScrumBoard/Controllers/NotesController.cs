@@ -33,7 +33,7 @@ namespace MY_ScrumBoard.Controllers
         //change value
         [HttpPut("change_value")]
         [Authorize]
-        public IActionResult ChangeNoteValue([FromBody] Notes newValue)
+        public IActionResult ChangeNoteValue([FromBody] RenameNote newValue)
         {
             if (!ModelState.IsValid)
             {
@@ -53,7 +53,7 @@ namespace MY_ScrumBoard.Controllers
         //change status
         [HttpPut("change_status")]
         [Authorize]
-        public IActionResult ChangeNoteStatus([FromBody] Notes newStatus)
+        public IActionResult ChangeNoteStatus([FromBody] ChangeStatusNote newStatus)
         {
             if (!ModelState.IsValid)
             {
@@ -104,21 +104,20 @@ namespace MY_ScrumBoard.Controllers
         //get by scrum
         [HttpGet("get_by_scrum")]
         [Authorize]
-        public IActionResult GetByScrum(string scrumId)
+        public IActionResult GetByScrum([FromBody] string scrumId)
         {
-            if (scrumId == null)
+            if (scrumId==null)
             {
-                return BadRequest();
+                return BadRequest("The scrum id is required.");
             }
             try
             {
-                _notesServices.GetNotesByScrum(scrumId);
+                return Ok(_notesServices.GetNotesByScrum(scrumId));
             }
-            catch (Exception ex)
+            catch
             {
                 return NotFound();
             }
-            return Ok();
         }
     }
 }

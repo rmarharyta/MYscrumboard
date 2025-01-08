@@ -60,7 +60,7 @@ namespace MY_ScrumBoard.Models
         public string scrumId { get; set; }
         [Required]
         public int statusId { get; set; }
-        public string noteValues { get; set; }
+        public string noteValue { get; set; }
     }
 
     public class Deleted
@@ -98,6 +98,7 @@ namespace MY_ScrumBoard.Models
         [Required]
         public string Id { get; set; }
         [Required]
+        [EmailAddress]
         public string Email { get; set; }
         [Required]
         public string PasswordResetToken { get; set; }
@@ -117,5 +118,21 @@ namespace MY_ScrumBoard.Models
         public string scrumId { get; set; }
         [Required]
         public string newName { get; set; }
+    }
+
+    public class RenameNote
+    {
+        [Required]
+        public string noteId { get; set; }
+        [Required]
+        public string newValue { get; set; }
+    }
+
+    public class ChangeStatusNote
+    {
+        [Required]
+        public string noteId { get; set; }
+        [Required]
+        public int statusId { get; set; }
     }
 }

@@ -5,13 +5,17 @@ namespace MY_ScrumBoard.Services
     public class CollaborationServices(ApplicationDbContext _context)
     {
         //create collaboration
-        public void CreateCollaboration(Collaboration collaboration, string ownerId)
+        public void CreateCollaboration(Collaboration collaboration, string userId)
         {
             var project = _context.Set<Projects>()
-                .FirstOrDefault(u => u.projectId == collaboration.projectId && u.ownerId == ownerId);
+                .FirstOrDefault(u => u.projectId == collaboration.projectId && u.ownerId == userId);
             if (project == null)
             {
                 throw new Exception("There is no such project or you cannot add new member.");
+            }
+            if (project.ownerId == collaboration.userId)
+            {
+                throw new Exception("You are the owner");
             }
             var user = _context.Set<User>().FirstOrDefault(u => u.userId == collaboration.userId);
             if (user == null)
@@ -45,8 +49,14 @@ namespace MY_ScrumBoard.Services
         }
 
         //get by project
-        public List<Collaboration>? GetProjectsCollaboration(string projectId)
+        public List<Collaboration>? GetProjectsCollaboration(string projectId,string userId)
         {
+            var collaboration_check = _context.Collaboration.FirstOrDefault(u => u.userId == userId && u.projectId == projectId);
+            var owner_check = _context.Projects.FirstOrDefault(u => u.ownerId == userId && u.projectId == projectId);
+            if (collaboration_check == null && owner_check == null)
+            {
+                return null;
+            }
             var collaborations = _context.Set<Collaboration>()
                 .Where(u => u.projectId == projectId)
                 .ToList();

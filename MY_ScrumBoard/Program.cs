@@ -27,6 +27,10 @@ namespace MY_ScrumBoard
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<UserServices>();
             builder.Services.AddScoped<PasswordServices>();
+            builder.Services.AddScoped<ProjectServices>();
+            builder.Services.AddScoped<CollaborationServices>();
+            builder.Services.AddScoped<ScrumServices>();
+            builder.Services.AddScoped<NotesServices>();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

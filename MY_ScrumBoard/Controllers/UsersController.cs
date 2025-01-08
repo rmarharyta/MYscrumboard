@@ -87,12 +87,11 @@ namespace MY_ScrumBoard.Controllers
             }
             try
             {
-                _userServices.GetByProject(projectId);
+                return Ok(_userServices.GetByProject(projectId));
             }
             catch (Exception ex) {
                 return BadRequest(ex.Message + "Something went wrong.");
             }
-            return Ok();
         }
 
         private string GenerateJWTToken(string userId)
