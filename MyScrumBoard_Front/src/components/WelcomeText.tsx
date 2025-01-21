@@ -5,15 +5,15 @@ function WelcomeText() {
   return (
     <Box
       sx={{
-        width: 478,
+        width: 624,
         height: "auto",
+        alignItems: "flex-end", // Вирівнювання по правому краю
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       <Typography
-        //variant="h2"
         sx={{
-          //width: 478,
-          //height: 122,
           color: "#08031B",
           fontFamily: "Poppins, sans-serif",
           fontWeight: 600,
@@ -24,14 +24,15 @@ function WelcomeText() {
         Start work with
       </Typography>
       <Typography
-        //variant="h3"
         sx={{
-                  width: 257,
+          width: 257,
           color: "#565454",
           fontFamily: "Ledger, sans-serif",
           fontWeight: 400,
           fontSize: "36px",
           textAlign: "right",
+          marginTop: "-20px",
+          lineHeight: 1.1,
         }}
       >
         MY.scrum board

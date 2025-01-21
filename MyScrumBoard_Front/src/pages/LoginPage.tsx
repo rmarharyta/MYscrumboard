@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { useState } from "react";
+import { Box, Link } from "@mui/material";
 import UserName from "../components/UserName";
 import Password from "../components/Password";
 import WelcomeText from "../components/WelcomeText";
+import LogInButton from "../components/LogInButton";
+import SignUpLinkButton from "../components/SignUpLinkButton";
 
 function LoginPage() {
   const [username, setUsername] = useState<string>("");
@@ -15,6 +17,7 @@ function LoginPage() {
     //background
     <Box
       sx={{
+        overflowY: "auto",
         display: "flex",
         flexDirection: "column",
         gap: "15px",
@@ -32,7 +35,7 @@ function LoginPage() {
           flexDirection: "column",
           gap: "15px",
           width: 880,
-          height: 880,
+          height: "auto",
           alignItems: "center",
           backgroundColor: "#FFFFFFCC",
           borderRadius: "60px",
@@ -51,10 +54,65 @@ function LoginPage() {
           }}
         >
           <WelcomeText />
-
-          <UserName value={username} onChange={handleUsername} />
-          <Password value={password} onChange={handlePassword} />
+          {/* box login components */}
+          <Box
+            sx={{
+              margin: "85px 16px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "25px",
+              width: 592,
+              height: 364,
+              alignItems: "center",
+            }}
+          >
+            <UserName value={username} onChange={handleUsername} />
+            <Password value={password} onChange={handlePassword} />
+            <Link
+              href="#"
+              underline="hover"
+              color="#440464"
+              textAlign={"right"}
+              marginTop={"-11px"}
+              paddingLeft={"449px"}
+            >
+              {"Forgot password?"}
+            </Link>
+            <LogInButton />
+            <SignUpLinkButton />
+          </Box>
         </Box>
+        <Link
+          href="#"
+          underline="none" // Прибрати підкреслення
+          sx={{
+            display: "flex", // Для вирівнювання тексту та іконки
+            alignItems: "center", // Вирівнювання по вертикалі
+            color: "#000000", // Чорний колір тексту
+            textAlign: "center",
+            fontFamily: "Poppins, sans-serif",
+            fontSize: "20px",
+            fontWeight: 400,
+              marginTop: "-80px",
+            marginBottom:"70px",
+            textDecoration: "none", // Забезпечення відсутності підкреслення
+            "&:hover": {
+              textDecoration: "underline", // Підкреслення при наведенні
+            },
+          }}
+        >
+          <Box
+            component="img"
+            src="src/assets/png-transparent-google-logo-google-search-meng-meng-company-text-logo-thumbnail.png" // Шлях до логотипу
+            alt="Google logo"
+            sx={{
+              width: "50px", // Розмір логотипу
+              height: "50px",
+              marginRight: "8px", // Відступ між логотипом і текстом
+            }}
+          />
+          Continue with Google
+        </Link>
       </Box>
     </Box>
   );
