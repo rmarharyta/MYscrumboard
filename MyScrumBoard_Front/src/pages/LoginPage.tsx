@@ -69,7 +69,7 @@ function LoginPage() {
             <UserName value={username} onChange={handleUsername} />
             <Password value={password} onChange={handlePassword} />
             <Link
-              href="#"
+              href="/requestchangepassword"
               underline="hover"
               color="#440464"
               textAlign={"right"}
@@ -93,8 +93,8 @@ function LoginPage() {
             fontFamily: "Poppins, sans-serif",
             fontSize: "20px",
             fontWeight: 400,
-              marginTop: "-80px",
-            marginBottom:"70px",
+            marginTop: "-80px",
+            marginBottom: "70px",
             textDecoration: "none", // Забезпечення відсутності підкреслення
             "&:hover": {
               textDecoration: "underline", // Підкреслення при наведенні

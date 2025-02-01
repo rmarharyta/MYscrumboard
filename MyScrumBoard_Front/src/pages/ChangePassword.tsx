@@ -1,14 +1,10 @@
 import { useState } from "react";
-import { Box, Link } from "@mui/material";
-import UserName from "../components/UserName";
+import { Box} from "@mui/material";
 import WelcomeText from "../components/WelcomeText";
-import SignUpButton from "../components/SignUpButton";
 import PasswordRegister from "../components/PasswordRegister";
+import ChangePasswordButton from "../components/ChangePasswordButton"
 
-function SignUpPage() {
-  const [username, setUsername] = useState<string>("");
-  const handleUsername = (newValue: string) => setUsername(newValue);
-
+function ChangePassword() {
   const [password, setPassword] = useState<string>("");
   const handlePassword = (newValue: string) => setPassword(newValue);
 
@@ -69,23 +65,14 @@ function SignUpPage() {
               alignItems: "center",
             }}
           >
-            <UserName value={username} onChange={handleUsername} />
+            {" "}
             <PasswordRegister
               valueFirst={password}
               valueSecond={repeatPassword}
               onChangeFirst={handlePassword}
               onChangeSecond={handleRepeatedPassword}
             />
-            <SignUpButton />
-            <Link
-              href="/"
-              underline="hover"
-              color="#440464"
-              textAlign={"center"}
-              marginTop={"-11px"}
-            >
-              {"Go back"}
-            </Link>
+            <ChangePasswordButton />
           </Box>
         </Box>
       </Box>
@@ -93,4 +80,4 @@ function SignUpPage() {
   );
 }
 
-export default SignUpPage;
+export default ChangePassword;

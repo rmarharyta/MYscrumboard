@@ -2,19 +2,11 @@ import { useState } from "react";
 import { Box, Link } from "@mui/material";
 import UserName from "../components/UserName";
 import WelcomeText from "../components/WelcomeText";
-import SignUpButton from "../components/SignUpButton";
-import PasswordRegister from "../components/PasswordRegister";
+import SendRequestButton from "../components/SendRequestButton";
 
-function SignUpPage() {
+function RequestChangePassword() {
   const [username, setUsername] = useState<string>("");
   const handleUsername = (newValue: string) => setUsername(newValue);
-
-  const [password, setPassword] = useState<string>("");
-  const handlePassword = (newValue: string) => setPassword(newValue);
-
-  const [repeatPassword, setRepeadPassword] = useState<string>("");
-  const handleRepeatedPassword = (newValue: string) =>
-    setRepeadPassword(newValue);
 
   return (
     //background
@@ -52,12 +44,12 @@ function SignUpPage() {
             flexDirection: "column",
             gap: "15px",
             width: 624,
-            height: 587,
+            height: 450,
             alignItems: "center",
           }}
         >
           <WelcomeText />
-          {/* box sign up components */}
+          {/* box send request components */}
           <Box
             sx={{
               margin: "85px 16px",
@@ -70,13 +62,7 @@ function SignUpPage() {
             }}
           >
             <UserName value={username} onChange={handleUsername} />
-            <PasswordRegister
-              valueFirst={password}
-              valueSecond={repeatPassword}
-              onChangeFirst={handlePassword}
-              onChangeSecond={handleRepeatedPassword}
-            />
-            <SignUpButton />
+            <SendRequestButton />
             <Link
               href="/"
               underline="hover"
@@ -93,4 +79,4 @@ function SignUpPage() {
   );
 }
 
-export default SignUpPage;
+export default RequestChangePassword;
