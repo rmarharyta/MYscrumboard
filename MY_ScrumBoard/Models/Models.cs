@@ -2,17 +2,24 @@
 
 namespace MY_ScrumBoard.Models
 {
-    public class User
+    public class UserLoginRegister
     {
-        [Key]
-        public string userId { get; set; }
         [Required]
         [EmailAddress]
         public string email { get; set; }
         [Required]
         public string userPassword { get; set; }
+    }
 
-
+    public class User
+    {
+        [Key]
+        public string? userId { get; set; }
+        [Required]
+        [EmailAddress]
+        public string email { get; set; }
+        [Required]
+        public string userPassword { get; set; }
     }
 
     public class Projects

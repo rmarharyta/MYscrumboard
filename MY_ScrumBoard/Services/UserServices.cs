@@ -6,13 +6,15 @@ namespace MY_ScrumBoard.Services
 {
     public class UserServices(ApplicationDbContext _context)
     {
-        public string Registration(User user)
+        public string Registration(UserLoginRegister userRegister)
         {
             Guid id = Guid.NewGuid();
+            User user= new User();
             user.userId = id.ToString();
-            var password = BCrypt.Net.BCrypt.EnhancedHashPassword(user.userPassword);
-            user.userPassword= password;
-            var signIn = _context.Users.Add(user);
+            var password = BCrypt.Net.BCrypt.EnhancedHashPassword(userRegister.userPassword);
+            user.userPassword = password;
+            user.email=userRegister.email;
+            _context.Users.Add(user);
             _context.SaveChanges();
             return user.userId;
         }
@@ -27,14 +29,14 @@ namespace MY_ScrumBoard.Services
                 _context.SaveChanges();
             }
         }
-        public string? LogIn(User user)
+        public string? LogIn(UserLoginRegister userLogin)
         {
-            var login = _context.Set<User>().FirstOrDefault(u => u.email == user.email);
+            var login = _context.Set<User>().FirstOrDefault(u => u.email == userLogin.email);
             if (login == null)
             {
                 return null;
             }
-            if (BCrypt.Net.BCrypt.EnhancedVerify( user.userPassword,login.userPassword))
+            if (BCrypt.Net.BCrypt.EnhancedVerify(userLogin.userPassword,login.userPassword))
             {
                 return login.userId; 
             }

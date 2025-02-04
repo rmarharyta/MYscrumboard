@@ -15,15 +15,15 @@ namespace MY_ScrumBoard.Controllers
     {
         //Register
         [HttpPost]
-        public IActionResult RegistrationUser([FromBody] User user)
+        public IActionResult RegistrationUser([FromBody] UserLoginRegister userRegister)
         {
-            if (user == null)
+            if (userRegister == null)
             {
                 return BadRequest("User data is required.");
             }
             try
             {
-                var returnedUserId = _userServices.Registration(user);
+                var returnedUserId = _userServices.Registration(userRegister);
                 return CreatedAtAction(nameof(RegistrationUser), new { returnedUserId, Token = GenerateJWTToken(returnedUserId) });
             }
             catch (Exception ex)
@@ -34,20 +34,18 @@ namespace MY_ScrumBoard.Controllers
 
         //log in
         [HttpPut]
-        public IActionResult LogInUsers([FromBody] User user)
+        public IActionResult LogInUsers([FromBody] UserLoginRegister userLogin)
         {
             Console.WriteLine("Login");
-            if (user == null)
+            if (userLogin == null)
             {
                 return BadRequest("User data is required.");
             }
             try
             {
-                var returnedUserId = _userServices.LogIn(user);
-                if (returnedUserId is null)
-                {
-                    throw new Exception("Login is failed");
-                }
+                var returnedUserId = _userServices.LogIn(userLogin)
+                    ?? throw new Exception("Login is failed");// Edited: New Null check
+                
                 return Ok( new { returnedUserId, Token = GenerateJWTToken(returnedUserId) });
             }
             catch (Exception ex)
