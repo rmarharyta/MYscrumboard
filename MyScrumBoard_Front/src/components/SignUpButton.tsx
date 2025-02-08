@@ -1,6 +1,12 @@
 import Button from "@mui/material/Button";
 
-function SignUpButton() {
+interface Props {
+  email: string;
+  password: string;
+  setIsSubmitted: (value: boolean) => void;
+}
+
+function SignUpButton({ email, password, setIsSubmitted }: Props) {
   return (
     <Button
       variant="contained"
@@ -15,6 +21,9 @@ function SignUpButton() {
         borderRadius: "10px",
         marginTop: "11px",
         textTransform: "none",
+      }}
+      onClick={() => {
+        setIsSubmitted(true);
       }}
     >
       Sign up

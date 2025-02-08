@@ -1,6 +1,11 @@
 import Button from "@mui/material/Button";
 
-function ChangePasswordButton() {
+interface Props {
+  password: string;
+  setIsSubmitted: (value: boolean) => void;
+}
+
+function ChangePasswordButton({password, setIsSubmitted }: Props) {
   return (
     <Button
       variant="contained"
@@ -16,8 +21,11 @@ function ChangePasswordButton() {
         marginTop: "11px",
         textTransform: "none",
       }}
+      onClick={() => {
+        setIsSubmitted(true);
+      }}
     >
-    Change password
+      Change password
     </Button>
   );
 }

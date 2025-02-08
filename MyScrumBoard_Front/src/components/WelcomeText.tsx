@@ -17,7 +17,7 @@ function WelcomeText() {
           color: "#08031B",
           fontFamily: "Poppins, sans-serif",
           fontWeight: 600,
-          fontSize: "64px",
+            fontSize: "64px",
           textAlign: "right",
         }}
       >
@@ -29,7 +29,7 @@ function WelcomeText() {
           color: "#565454",
           fontFamily: "Ledger, sans-serif",
           fontWeight: 400,
-          fontSize: "36px",
+            fontSize: "36px",
           textAlign: "right",
           marginTop: "-20px",
           lineHeight: 1.1,

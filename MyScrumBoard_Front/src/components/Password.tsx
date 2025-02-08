@@ -13,9 +13,10 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 interface Props {
   value: string;
   onChange: (value: string) => void;
+  isSubmitted: boolean;
 }
 
-const Password = ({ value, onChange }: Props) => {
+const Password = ({ value, onChange, isSubmitted }: Props) => {
   const [isTouched, setIsTouched] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
@@ -42,7 +43,7 @@ const Password = ({ value, onChange }: Props) => {
   return (
     <FormControl
       variant="outlined"
-      error={isTouched && !isValidPassword(value)}
+      error={isTouched && !isValidPassword(value)||( isSubmitted &&!isValidPassword(value))}
       sx={{
         backgroundColor: "#D9D9D9",
         color: "#565454",

@@ -366,8 +366,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "user",
-        "Type": "MY_ScrumBoard.Models.User",
+        "Name": "userRegister",
+        "Type": "MY_ScrumBoard.Models.UserLoginRegister",
         "IsRequired": true
       }
     ],
@@ -382,8 +382,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "user",
-        "Type": "MY_ScrumBoard.Models.User",
+        "Name": "userLogin",
+        "Type": "MY_ScrumBoard.Models.UserLoginRegister",
         "IsRequired": true
       }
     ],

@@ -16,6 +16,8 @@ function SignUpPage() {
   const handleRepeatedPassword = (newValue: string) =>
     setRepeadPassword(newValue);
 
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   return (
     //background
     <Box
@@ -69,14 +71,23 @@ function SignUpPage() {
               alignItems: "center",
             }}
           >
-            <UserName value={username} onChange={handleUsername} />
+            <UserName
+              value={username}
+              onChange={handleUsername}
+              isSubmitted={isSubmitted}
+            />
             <PasswordRegister
               valueFirst={password}
               valueSecond={repeatPassword}
               onChangeFirst={handlePassword}
               onChangeSecond={handleRepeatedPassword}
+              isSubmitted={isSubmitted}
             />
-            <SignUpButton />
+            <SignUpButton
+              email={username}
+              password={password}
+              setIsSubmitted={setIsSubmitted}
+            />
             <Link
               href="/"
               underline="hover"

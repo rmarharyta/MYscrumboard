@@ -16,13 +16,15 @@ interface Props {
   valueSecond: string;
   onChangeFirst: (value: string) => void;
   onChangeSecond: (value: string) => void;
+  isSubmitted: boolean;
 }
 
 const PasswordRegister = ({
   valueFirst,
   valueSecond,
   onChangeFirst,
-  onChangeSecond,
+    onChangeSecond,
+    isSubmitted
 }: Props) => {
   const [isTouchedFirst, setIsTouchedFirst] = useState(false);
   const [isTouchedSecond, setIsTouchedSecond] = useState(false);
@@ -64,7 +66,10 @@ const PasswordRegister = ({
     <Box>
       <FormControl
         variant="outlined"
-        error={isTouchedFirst && !isValidPassword(valueFirst)}
+        error={
+          (isTouchedFirst && !isValidPassword(valueFirst)) ||
+          (isSubmitted && !isValidPassword(valueFirst))
+        }
         sx={{
           backgroundColor: "#D9D9D9",
           color: "#565454",
@@ -126,7 +131,8 @@ const PasswordRegister = ({
         variant="outlined"
         error={
           (isTouchedSecond && !isValidPassword(valueSecond)) ||
-          (isTouchedFirst && isTouchedSecond && valueFirst !== valueSecond)
+          (isTouchedFirst && isTouchedSecond && valueFirst !== valueSecond) ||
+          (isSubmitted && !isValidPassword(valueSecond))
         }
         sx={{
           backgroundColor: "#D9D9D9",

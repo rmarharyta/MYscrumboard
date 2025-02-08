@@ -5,9 +5,10 @@ import { TextField } from "@mui/material";
 interface Props {
   value: string;
   onChange: (value: string) => void;
+  isSubmitted: boolean;
 }
 
-const UserName = ({ value, onChange }: Props) => {
+const UserName = ({ value, onChange, isSubmitted }: Props) => {
   const [isTouched, setIsTouched] = useState(false);
 
   const isValidEmail = (email: string) => {
@@ -49,7 +50,7 @@ const UserName = ({ value, onChange }: Props) => {
       }}
       onChange={handleUsername}
       onBlur={handleBlur} // Перевірка після того, як користувач покидає поле
-      error={isTouched && !isValidEmail(value)} // Помилка, якщо формат некоректний
+      error={(isTouched && !isValidEmail(value)) || (isSubmitted && !isValidEmail(value))} // Помилка, якщо формат некоректний
       label="Email"
       value={value}
       helperText={

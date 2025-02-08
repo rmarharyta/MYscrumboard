@@ -13,6 +13,8 @@ function LoginPage() {
   const [password, setPassword] = useState<string>("");
   const handlePassword = (newValue: string) => setPassword(newValue);
 
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   return (
     //background
     <Box
@@ -34,7 +36,7 @@ function LoginPage() {
           display: "flex",
           flexDirection: "column",
           gap: "15px",
-          width: 880,
+          width: "880px",
           height: "auto",
           alignItems: "center",
           backgroundColor: "#FFFFFFCC",
@@ -66,8 +68,16 @@ function LoginPage() {
               alignItems: "center",
             }}
           >
-            <UserName value={username} onChange={handleUsername} />
-            <Password value={password} onChange={handlePassword} />
+            <UserName
+              value={username}
+              onChange={handleUsername}
+              isSubmitted={isSubmitted}
+            />
+            <Password
+              value={password}
+              onChange={handlePassword}
+              isSubmitted={isSubmitted}
+            />
             <Link
               href="/requestchangepassword"
               underline="hover"
@@ -78,7 +88,11 @@ function LoginPage() {
             >
               {"Forgot password?"}
             </Link>
-            <LogInButton />
+            <LogInButton
+              email={username}
+              password={password}
+              setIsSubmitted={setIsSubmitted}
+            />
             <SignUpLinkButton />
           </Box>
         </Box>

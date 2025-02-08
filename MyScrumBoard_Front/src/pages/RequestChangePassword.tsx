@@ -8,6 +8,8 @@ function RequestChangePassword() {
   const [username, setUsername] = useState<string>("");
   const handleUsername = (newValue: string) => setUsername(newValue);
 
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   return (
     //background
     <Box
@@ -61,8 +63,15 @@ function RequestChangePassword() {
               alignItems: "center",
             }}
           >
-            <UserName value={username} onChange={handleUsername} />
-            <SendRequestButton />
+            <UserName
+              value={username}
+              onChange={handleUsername}
+              isSubmitted={isSubmitted}
+            />
+            <SendRequestButton
+              email={username}
+              setIsSubmitted={setIsSubmitted}
+            />
             <Link
               href="/"
               underline="hover"

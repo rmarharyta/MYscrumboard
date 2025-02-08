@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Box} from "@mui/material";
+import { Box } from "@mui/material";
 import WelcomeText from "../components/WelcomeText";
 import PasswordRegister from "../components/PasswordRegister";
-import ChangePasswordButton from "../components/ChangePasswordButton"
+import ChangePasswordButton from "../components/ChangePasswordButton";
 
 function ChangePassword() {
   const [password, setPassword] = useState<string>("");
@@ -11,6 +11,8 @@ function ChangePassword() {
   const [repeatPassword, setRepeadPassword] = useState<string>("");
   const handleRepeatedPassword = (newValue: string) =>
     setRepeadPassword(newValue);
+
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   return (
     //background
@@ -71,8 +73,12 @@ function ChangePassword() {
               valueSecond={repeatPassword}
               onChangeFirst={handlePassword}
               onChangeSecond={handleRepeatedPassword}
+              isSubmitted={isSubmitted}
             />
-            <ChangePasswordButton />
+            <ChangePasswordButton
+              password={password}
+              setIsSubmitted={setIsSubmitted}
+            />
           </Box>
         </Box>
       </Box>
