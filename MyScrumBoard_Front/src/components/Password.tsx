@@ -6,6 +6,8 @@ import {
   InputLabel,
   OutlinedInput,
   FormHelperText,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -39,18 +41,24 @@ const Password = ({ value, onChange, isSubmitted }: Props) => {
   const handleClickShowPassword = () => {
     setShowPassword((show) => !show);
   };
-
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <FormControl
       variant="outlined"
-      error={isTouched && !isValidPassword(value)||( isSubmitted &&!isValidPassword(value))}
+      error={
+        (isTouched && !isValidPassword(value)) ||
+        (isSubmitted && !isValidPassword(value))
+      }
+      fullWidth
       sx={{
         backgroundColor: "#D9D9D9",
         color: "#565454",
-        width: 592,
-        height: 56,
+        width: "80vw",
+        maxWidth: "592px",
+        height: isMobile ? "36px" : "56px",
         fontFamily: "Poppins, sans-serif", // Шрифт
-        fontSize: "15px", // Розмір
+        fontSize: isMobile ? "9px" : "15px", // Розмір
         fontWeight: 400,
         borderRadius: "20px", // Закруглення країв
         "& .MuiOutlinedInput-root": {

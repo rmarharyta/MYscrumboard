@@ -7,6 +7,8 @@ import {
   InputLabel,
   OutlinedInput,
   FormHelperText,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -23,15 +25,18 @@ const PasswordRegister = ({
   valueFirst,
   valueSecond,
   onChangeFirst,
-    onChangeSecond,
-    isSubmitted
+  onChangeSecond,
+  isSubmitted,
 }: Props) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   const [isTouchedFirst, setIsTouchedFirst] = useState(false);
   const [isTouchedSecond, setIsTouchedSecond] = useState(false);
 
   const [showPasswordFirst, setShowPasswordFirst] = useState(false);
-    const [showPasswordSecond, setShowPasswordSecond] = useState(false);
-    
+  const [showPasswordSecond, setShowPasswordSecond] = useState(false);
+
   const isValidPassword = (password: string) => {
     const lengthCondition = password.length >= 6;
     const digitCondition = /\d/.test(password); // At least one digit
@@ -56,24 +61,32 @@ const PasswordRegister = ({
 
   const handleClickShowPasswordFirst = () => {
     setShowPasswordFirst((show) => !show);
-    };
-      const handleClickShowPasswordSecond = () => {
-        setShowPasswordSecond((show) => !show);
-      };
-
+  };
+  const handleClickShowPasswordSecond = () => {
+    setShowPasswordSecond((show) => !show);
+  };
 
   return (
-    <Box>
+    <Box
+      width={1}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        rowGap: isMobile ? 1.5 : 2,
+      }}
+    >
       <FormControl
         variant="outlined"
         error={
           (isTouchedFirst && !isValidPassword(valueFirst)) ||
           (isSubmitted && !isValidPassword(valueFirst))
         }
+        fullWidth
         sx={{
           backgroundColor: "#D9D9D9",
           color: "#565454",
-          width: 592,
+          maxWidth: "90vw",
           height: 56,
           fontFamily: "Poppins, sans-serif",
           fontSize: "15px",
@@ -134,15 +147,15 @@ const PasswordRegister = ({
           (isTouchedFirst && isTouchedSecond && valueFirst !== valueSecond) ||
           (isSubmitted && !isValidPassword(valueSecond))
         }
+        fullWidth
         sx={{
           backgroundColor: "#D9D9D9",
           color: "#565454",
-          width: 592,
+          maxWidth: "90vw",
           height: 56,
           fontFamily: "Poppins, sans-serif",
           fontSize: "15px",
           fontWeight: 400,
-          marginTop: "22px",
           borderRadius: "20px",
           "& .MuiOutlinedInput-root": {
             borderRadius: "20px",

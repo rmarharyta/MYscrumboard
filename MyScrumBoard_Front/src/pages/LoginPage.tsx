@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Link } from "@mui/material";
+import { Box, Link, useMediaQuery, useTheme } from "@mui/material";
 import UserName from "../components/UserName";
 import Password from "../components/Password";
 import WelcomeText from "../components/WelcomeText";
@@ -15,57 +15,51 @@ function LoginPage() {
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
-    //background
     <Box
+      width={1}
+      height={1}
       sx={{
-        overflowY: "auto",
         display: "flex",
-        flexDirection: "column",
-        gap: "15px",
-        width: "100vw",
-        height: "100vh",
+        justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#E6DFFF",
       }}
     >
-      {/* білий боксік */}
+      {/* Білий контейнер */}
       <Box
         sx={{
-          margin: "72px 280px",
           display: "flex",
-          flexDirection: "column",
-          gap: "15px",
-          width: "880px",
-          height: "auto",
-          alignItems: "center",
+          width: "90vw",
+          maxWidth: "700px",
+          justifyContent: "center",
           backgroundColor: "#FFFFFFCC",
-          borderRadius: "60px",
+          borderRadius: isMobile ? "30px" : "60px",
+          padding: isMobile ? "20px" : "40px",
         }}
       >
-        {/* бокс з компонентами */}
+        {/* Блок з компонентами */}
         <Box
           sx={{
-            margin: "115px 128px",
             display: "flex",
             flexDirection: "column",
-            gap: "15px",
-            width: 624,
-            height: 587,
+            maxWidth: "100%",
             alignItems: "center",
+            rowGap: isMobile ? 1.5 : 2,
           }}
         >
           <WelcomeText />
-          {/* box login components */}
+          {/* Поля введення */}
           <Box
             sx={{
-              margin: "85px 16px",
+              width: "100%",
               display: "flex",
-              flexDirection: "column",
-              gap: "25px",
-              width: 592,
-              height: 364,
               alignItems: "center",
+              rowGap: isMobile ? 1.5 : 2,
+              flexDirection: "column",
             }}
           >
             <UserName
@@ -78,55 +72,50 @@ function LoginPage() {
               onChange={handlePassword}
               isSubmitted={isSubmitted}
             />
-            <Link
-              href="/requestchangepassword"
-              underline="hover"
-              color="#440464"
-              textAlign={"right"}
-              marginTop={"-11px"}
-              paddingLeft={"449px"}
-            >
-              {"Forgot password?"}
-            </Link>
-            <LogInButton
-              email={username}
-              password={password}
-              setIsSubmitted={setIsSubmitted}
-            />
-            <SignUpLinkButton />
           </Box>
-        </Box>
-        <Link
-          href="#"
-          underline="none" // Прибрати підкреслення
-          sx={{
-            display: "flex", // Для вирівнювання тексту та іконки
-            alignItems: "center", // Вирівнювання по вертикалі
-            color: "#000000", // Чорний колір тексту
-            textAlign: "center",
-            fontFamily: "Poppins, sans-serif",
-            fontSize: "20px",
-            fontWeight: 400,
-            marginTop: "-80px",
-            marginBottom: "70px",
-            textDecoration: "none", // Забезпечення відсутності підкреслення
-            "&:hover": {
-              textDecoration: "underline", // Підкреслення при наведенні
-            },
-          }}
-        >
-          <Box
-            component="img"
-            src="src/assets/png-transparent-google-logo-google-search-meng-meng-company-text-logo-thumbnail.png" // Шлях до логотипу
-            alt="Google logo"
-            sx={{
-              width: "50px", // Розмір логотипу
-              height: "50px",
-              marginRight: "8px", // Відступ між логотипом і текстом
-            }}
+
+          <Link
+            textAlign={"right"}
+            width={1}
+            href="/requestchangepassword"
+            underline="hover"
+            color="#440464"
+            fontSize={isMobile ? "12px" : "16px"}
+          >
+            {"Forgot password?"}
+          </Link>
+
+          <LogInButton
+            email={username}
+            password={password}
+            setIsSubmitted={setIsSubmitted}
           />
-          Continue with Google
-        </Link>
+          <SignUpLinkButton />
+
+          {/* Кнопка входу через Google */}
+          <Link
+            href="#"
+            underline="hover"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "#000000",
+              fontFamily: "Poppins, sans-serif",
+              fontSize: isMobile ? "12px" : "16px",
+              width: isMobile ? "40vw" : "30vw",
+              maxWidth: "270px",
+            }}
+          >
+            <Box
+              component="img"
+              src="src/assets/png-transparent-google-logo-google-search-meng-meng-company-text-logo-thumbnail.png"
+              alt="Google logo"
+              width={isMobile ? "24px" : "36px"}
+            />
+            Continue with Google
+          </Link>
+        </Box>
       </Box>
     </Box>
   );

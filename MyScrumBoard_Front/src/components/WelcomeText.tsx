@@ -1,15 +1,24 @@
-import { Typography } from "@mui/material";
+import { SxProps, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Box } from "@mui/material";
 
 function WelcomeText() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const SecTitleStyle: SxProps = {
+    color: "#565454",
+    fontFamily: "Ledger, sans-serif",
+    fontWeight: 400,
+    fontSize: isMobile ? "20px" : "36px",
+    textAlign: "right",
+    lineHeight: 1.1,
+  };
+
   return (
     <Box
       sx={{
-        width: 624,
-        height: "auto",
-        alignItems: "flex-end", // Вирівнювання по правому краю
-        display: "flex",
-        flexDirection: "column",
+        width:"80vw",
+        maxWidth: "590px",
       }}
     >
       <Typography
@@ -17,26 +26,22 @@ function WelcomeText() {
           color: "#08031B",
           fontFamily: "Poppins, sans-serif",
           fontWeight: 600,
-            fontSize: "64px",
+          fontSize: isMobile ? "36px" : "64px",
           textAlign: "right",
         }}
       >
         Start work with
       </Typography>
-      <Typography
+      <Box
         sx={{
-          width: 257,
-          color: "#565454",
-          fontFamily: "Ledger, sans-serif",
-          fontWeight: 400,
-            fontSize: "36px",
-          textAlign: "right",
-          marginTop: "-20px",
-          lineHeight: 1.1,
+          display: "flex",
+          alignItems: "flex-end", // Вирівнювання по правому краю
+          flexDirection: "column",
         }}
       >
-        MY.scrum board
-      </Typography>
+        <Typography sx={SecTitleStyle}>MY.scrum</Typography>
+        <Typography sx={SecTitleStyle}>board</Typography>
+      </Box>
     </Box>
   );
 }

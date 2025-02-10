@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 import WelcomeText from "../components/WelcomeText";
 import PasswordRegister from "../components/PasswordRegister";
 import ChangePasswordButton from "../components/ChangePasswordButton";
@@ -14,57 +14,52 @@ function ChangePassword() {
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     //background
     <Box
+      width={1}
+      height={1}
       sx={{
-        overflowY: "auto",
         display: "flex",
-        flexDirection: "column",
-        gap: "15px",
-        width: "100vw",
-        height: "100vh",
+        justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#E6DFFF",
       }}
     >
-      {/* білий боксік */}
+      {/* Білий контейнер */}
       <Box
         sx={{
-          margin: "72px 280px",
           display: "flex",
-          flexDirection: "column",
-          gap: "15px",
-          width: 880,
-          height: "auto",
-          alignItems: "center",
+          width: "90vw",
+          maxWidth: "700px",
+          justifyContent: "center",
           backgroundColor: "#FFFFFFCC",
-          borderRadius: "60px",
+          borderRadius: isMobile ? "30px" : "60px",
+          padding: isMobile ? "20px" : "40px",
         }}
       >
-        {/* бокс з компонентами */}
+        {/* Блок з компонентами */}
         <Box
           sx={{
-            margin: "115px 128px",
             display: "flex",
             flexDirection: "column",
-            gap: "15px",
-            width: 624,
-            height: 587,
+            maxWidth: "100%",
             alignItems: "center",
+            rowGap: isMobile ? 1.5 : 2,
           }}
         >
           <WelcomeText />
-          {/* box sign up components */}
+          {/* Поля введення */}
           <Box
             sx={{
-              margin: "85px 16px",
+              width: "100%",
               display: "flex",
-              flexDirection: "column",
-              gap: "25px",
-              width: 592,
-              height: 364,
               alignItems: "center",
+              rowGap: isMobile ? 1.5 : 2,
+              flexDirection: "column",
             }}
           >
             {" "}
@@ -75,11 +70,11 @@ function ChangePassword() {
               onChangeSecond={handleRepeatedPassword}
               isSubmitted={isSubmitted}
             />
-            <ChangePasswordButton
-              password={password}
-              setIsSubmitted={setIsSubmitted}
-            />
           </Box>
+          <ChangePasswordButton
+            password={password}
+            setIsSubmitted={setIsSubmitted}
+          />
         </Box>
       </Box>
     </Box>

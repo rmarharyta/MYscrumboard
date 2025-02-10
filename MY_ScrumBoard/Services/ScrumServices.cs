@@ -40,19 +40,12 @@ namespace MY_ScrumBoard.Services
         //delete
         public void DeleteScrumBoard(string id, string ownerId)
         {
-            var scrum = _context.Set<Scrum>().FirstOrDefault(u => u.scrumId == id);
-            if (scrum == null)
-            {
-                throw new Exception("There is no such scrum");
-            }
+            var scrum = _context.Set<Scrum>().FirstOrDefault(u => u.scrumId == id)
+                ?? throw new Exception("There is no such scrum");
 
-            var project = _context.Set<Projects>().FirstOrDefault(u => u.ownerId == ownerId && u.projectId == scrum.projectId);
-            if (project == null)
-            {
-                throw new Exception("You cannot delete this scrum");
-            }
-
-
+            var project = _context.Set<Projects>().FirstOrDefault(u => u.ownerId == ownerId && u.projectId == scrum.projectId)
+                ?? throw new Exception("You cannot delete this scrum");
+            
             _context.Set<Scrum>().Remove(scrum);
             _context.SaveChanges();
         }
@@ -66,13 +59,14 @@ namespace MY_ScrumBoard.Services
         //get by project
         public List<Scrum>? GetScrumBoardsByProject(string projectId)
         {
-            var scrum_boards = _context.Set<Scrum>()
-                .Where(u => u.projectId == projectId)
-                .ToList();
-            if (scrum_boards == null)
+            if (string.IsNullOrWhiteSpace(projectId))
             {
-                return null;
+                throw new ArgumentException("projectId IsNullOrEmpty");
             }
+            var scrum_boards = _context.Set<Scrum>()
+                .Where(u => u.projectId == projectId)?
+                .ToList();
+            
             return scrum_boards;
         }
     }

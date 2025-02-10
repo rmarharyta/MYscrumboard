@@ -7,11 +7,9 @@ namespace MY_ScrumBoard.Services
         //create
         public void CreateNewNote(Notes notes)
         {
-            var scrum = _context.Scrum.FirstOrDefault(u => u.scrumId == notes.scrumId);
-            if (scrum == null)
-            {
-                throw new Exception("There is no such scrum.");
-            }
+            var scrum = _context.Scrum.FirstOrDefault(u => u.scrumId == notes.scrumId)
+                ?? throw new Exception("There is no such scrum."); ;
+            
             Guid id = Guid.NewGuid();
             notes.noteId = id.ToString();
             _context.Set<Notes>().Add(notes);
@@ -21,11 +19,8 @@ namespace MY_ScrumBoard.Services
         //change value
         public void ChangeNote(RenameNote newValue)
         {
-            var note = _context.Set<Notes>().FirstOrDefault(u => u.noteId == newValue.noteId);
-            if (note == null)
-            {
-                throw new Exception("There is no such note.");
-            }
+            var note = _context.Set<Notes>().FirstOrDefault(u => u.noteId == newValue.noteId)
+                ?? throw new Exception("There is no such note.");
             note.noteValue = newValue.newValue;
             _context.SaveChanges();
         }
@@ -33,11 +28,8 @@ namespace MY_ScrumBoard.Services
         //change status
         public void ChangeStatus(ChangeStatusNote newStatus)
         {
-            var note = _context.Set<Notes>().FirstOrDefault(u => u.noteId == newStatus.noteId);
-            if (note == null)
-            {
-                throw new Exception("There is no such note.");
-            }
+            var note = _context.Set<Notes>().FirstOrDefault(u => u.noteId == newStatus.noteId)
+                ?? throw new Exception("There is no such note.");
             note.statusId = newStatus.statusId;
             _context.SaveChanges();
         }
@@ -57,14 +49,14 @@ namespace MY_ScrumBoard.Services
             _context.SaveChanges();
         }
 
-        //get all
-        internal IEnumerable<Object> GetAllNotes()
+        //get all Do Not Use
+        internal IEnumerable<Notes> GetAllNotes()
         {
             return _context.Notes;
         }
 
         //get notes by scrum
-        public List<Notes>? GetNotesByScrum(string scrumId)
+        public ICollection<Notes>? GetNotesByScrum(string scrumId)
         {
             var notes = _context.Set<Notes>()
                     .Where(u => u.scrumId == scrumId)

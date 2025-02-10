@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Link } from "@mui/material";
+import { Box, Link, useMediaQuery, useTheme } from "@mui/material";
 import UserName from "../components/UserName";
 import WelcomeText from "../components/WelcomeText";
 import SendRequestButton from "../components/SendRequestButton";
@@ -10,57 +10,52 @@ function RequestChangePassword() {
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     //background
     <Box
+      width={1}
+      height={1}
       sx={{
-        overflowY: "auto",
         display: "flex",
-        flexDirection: "column",
-        gap: "15px",
-        width: "100vw",
-        height: "100vh",
+        justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#E6DFFF",
       }}
     >
-      {/* білий боксік */}
+      {/* Білий контейнер */}
       <Box
         sx={{
-          margin: "72px 280px",
           display: "flex",
-          flexDirection: "column",
-          gap: "15px",
-          width: 880,
-          height: "auto",
-          alignItems: "center",
+          width: "90vw",
+          maxWidth: "700px",
+          justifyContent: "center",
           backgroundColor: "#FFFFFFCC",
-          borderRadius: "60px",
+          borderRadius: isMobile ? "30px" : "60px",
+          padding: isMobile ? "20px" : "40px",
         }}
       >
         {/* бокс з компонентами */}
         <Box
           sx={{
-            margin: "115px 128px",
             display: "flex",
             flexDirection: "column",
-            gap: "15px",
-            width: 624,
-            height: 450,
+            maxWidth: "100%",
             alignItems: "center",
+            rowGap: isMobile ? 1.5 : 2,
           }}
         >
           <WelcomeText />
-          {/* box send request components */}
+          {/* Поля введення */}
           <Box
             sx={{
-              margin: "85px 16px",
+              width: "100%",
               display: "flex",
-              flexDirection: "column",
-              gap: "25px",
-              width: 592,
-              height: 364,
               alignItems: "center",
+              rowGap: isMobile ? 1.5 : 2,
+              flexDirection: "column",
             }}
           >
             <UserName
@@ -68,20 +63,18 @@ function RequestChangePassword() {
               onChange={handleUsername}
               isSubmitted={isSubmitted}
             />
-            <SendRequestButton
-              email={username}
-              setIsSubmitted={setIsSubmitted}
-            />
-            <Link
-              href="/"
-              underline="hover"
-              color="#440464"
-              textAlign={"center"}
-              marginTop={"-11px"}
-            >
-              {"Go back"}
-            </Link>
           </Box>
+          <SendRequestButton email={username} setIsSubmitted={setIsSubmitted} />
+          <Link
+            textAlign={"center"}
+            width={1}
+            href="/"
+            underline="hover"
+            color="#440464"
+            fontSize={isMobile ? "12px" : "16px"}
+          >
+            {"Go back"}
+          </Link>
         </Box>
       </Box>
     </Box>

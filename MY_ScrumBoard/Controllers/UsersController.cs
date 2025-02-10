@@ -15,6 +15,7 @@ namespace MY_ScrumBoard.Controllers
     {
         //Register
         [HttpPost]
+        [Route("/api/registration")]
         public IActionResult RegistrationUser([FromBody] UserLoginRegister userRegister)
         {
             if (userRegister == null)
@@ -33,14 +34,14 @@ namespace MY_ScrumBoard.Controllers
         }
 
         //log in
-        [HttpPut]
+        [HttpPost]
+        [Route("/api/login")]
         public IActionResult LogInUsers([FromBody] UserLoginRegister userLogin)
         {
             Console.WriteLine("Login");
             if (userLogin == null)
-            {
                 return BadRequest("User data is required.");
-            }
+            
             try
             {
                 var returnedUserId = _userServices.LogIn(userLogin)

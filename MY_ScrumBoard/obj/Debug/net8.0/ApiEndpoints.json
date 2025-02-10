@@ -58,6 +58,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "MY_ScrumBoard.Controllers.UsersController",
+    "Method": "LogInUsers",
+    "RelativePath": "api/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userLogin",
+        "Type": "MY_ScrumBoard.Models.UserLoginRegister",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MY_ScrumBoard.Controllers.NotesController",
     "Method": "CreateNote",
     "RelativePath": "api/Notes",
@@ -284,6 +300,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "MY_ScrumBoard.Controllers.UsersController",
+    "Method": "RegistrationUser",
+    "RelativePath": "api/registration",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userRegister",
+        "Type": "MY_ScrumBoard.Models.UserLoginRegister",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MY_ScrumBoard.Controllers.ScrumController",
     "Method": "CreateNewScrumBoard",
     "RelativePath": "api/Scrum",
@@ -352,38 +384,6 @@
       {
         "Name": "projectId",
         "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MY_ScrumBoard.Controllers.UsersController",
-    "Method": "RegistrationUser",
-    "RelativePath": "api/Users",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userRegister",
-        "Type": "MY_ScrumBoard.Models.UserLoginRegister",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MY_ScrumBoard.Controllers.UsersController",
-    "Method": "LogInUsers",
-    "RelativePath": "api/Users",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userLogin",
-        "Type": "MY_ScrumBoard.Models.UserLoginRegister",
         "IsRequired": true
       }
     ],

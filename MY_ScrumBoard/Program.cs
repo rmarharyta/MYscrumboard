@@ -11,7 +11,21 @@ namespace MY_ScrumBoard
     {
         public static void Main(string[] args)
         {
+            var AllowAllOrigins = "_allowAllOrigins";
+
             var builder = WebApplication.CreateBuilder(args);
+
+            //CORS - Cross-Origin Resource Sharing
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: AllowAllOrigins,
+                                  policy =>
+                                  {
+                                      policy.AllowAnyOrigin()
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod();
+                                  });
+            });
 
             // Add services to the container.
 
@@ -25,7 +39,7 @@ namespace MY_ScrumBoard
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddScoped<UserServices>();
+            builder.Services.AddScoped<IUserService, UserServices>();//Better
             builder.Services.AddScoped<PasswordServices>();
             builder.Services.AddScoped<ProjectServices>();
             builder.Services.AddScoped<CollaborationServices>();
@@ -58,6 +72,7 @@ namespace MY_ScrumBoard
 
             app.UseHttpsRedirection();
 
+            app.UseCors(AllowAllOrigins);
 
             app.UseAuthentication();
             app.UseAuthorization();

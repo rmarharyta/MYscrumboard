@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
-import { TextField } from "@mui/material";
+import { TextField, useMediaQuery, useTheme } from "@mui/material";
+
 
 interface Props {
   value: string;
@@ -21,17 +22,22 @@ const UserName = ({ value, onChange, isSubmitted }: Props) => {
   const handleBlur = () => {
     setIsTouched(true); // Позначаємо, що користувач завершив введення
   };
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <TextField
-      fullWidth //auto width
+      fullWidth
       sx={{
         backgroundColor: "#D9D9D9",
+        marginTop: "22px",
         color: "#565454",
-        height: 56,
+        width: "80vw",
+        maxWidth: "592px",
+        height: isMobile ? "36px" : "56px",
         fontFamily: "Poppins, sans-serif", // Шрифт
-        fontSize: "15px", // Розмір
+        fontSize: isMobile ? "9px" : "15px", // Розмір
         fontWeight: 400,
-        borderRadius: "20px", // Закруглення країв
+        borderRadius: isMobile ? "10px" : "20px", // Закруглення країв
         "& .MuiOutlinedInput-root": {
           borderRadius: "20px",
           color: "#565454",
@@ -50,7 +56,10 @@ const UserName = ({ value, onChange, isSubmitted }: Props) => {
       }}
       onChange={handleUsername}
       onBlur={handleBlur} // Перевірка після того, як користувач покидає поле
-      error={(isTouched && !isValidEmail(value)) || (isSubmitted && !isValidEmail(value))} // Помилка, якщо формат некоректний
+      error={
+        (isTouched && !isValidEmail(value)) ||
+        (isSubmitted && !isValidEmail(value))
+      } // Помилка, якщо формат некоректний
       label="Email"
       value={value}
       helperText={

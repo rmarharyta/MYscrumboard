@@ -13,14 +13,18 @@ function App() {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
+        width: "100vw",
       }}
     >
       <BrowserRouter>
         <Routes>
           <Route>
-            <Route path="/" element={<LoginPage />}/>
+            <Route path="/" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
-            <Route path="/requestchangepassword" element={<RequestChangePassword />} />
+            <Route
+              path="/requestchangepassword"
+              element={<RequestChangePassword />}
+            />
             <Route path="/changepassword" element={<ChangePassword />} />
           </Route>
         </Routes>

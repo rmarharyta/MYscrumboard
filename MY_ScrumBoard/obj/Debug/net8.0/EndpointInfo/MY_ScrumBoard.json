@@ -629,7 +629,7 @@
         }
       }
     },
-    "/api/Users": {
+    "/api/registration": {
       "post": {
         "tags": [
           "Users"
@@ -658,8 +658,10 @@
             "description": "OK"
           }
         }
-      },
-      "put": {
+      }
+    },
+    "/api/login": {
+      "post": {
         "tags": [
           "Users"
         ],
@@ -687,16 +689,6 @@
             "description": "OK"
           }
         }
-      },
-      "get": {
-        "tags": [
-          "Users"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
       }
     },
     "/api/Users/{Id}": {
@@ -713,6 +705,18 @@
               "type": "string"
             }
           }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Users": {
+      "get": {
+        "tags": [
+          "Users"
         ],
         "responses": {
           "200": {

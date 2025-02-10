@@ -4,7 +4,16 @@ using Org.BouncyCastle.Math.EC;
 
 namespace MY_ScrumBoard.Services
 {
-    public class UserServices(ApplicationDbContext _context)
+    //Interface for services
+    public interface IUserService
+    {
+        string Registration(UserLoginRegister userRegister);
+        void DeleteUser(string userId);
+        string? LogIn(UserLoginRegister userLogin);
+        IEnumerable<User> GetAllUsers();
+        List<User>? GetByProject(string projectId);
+    }
+    public class UserServices(ApplicationDbContext _context) : IUserService
     {
         public string Registration(UserLoginRegister userRegister)
         {
@@ -42,7 +51,7 @@ namespace MY_ScrumBoard.Services
             }
             return null;
         }
-        internal IEnumerable<Object> GetAllUsers()
+        public IEnumerable<User> GetAllUsers()
         {
             return _context.Users;
         }

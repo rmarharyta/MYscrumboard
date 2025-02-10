@@ -104,9 +104,9 @@ namespace MY_ScrumBoard.Controllers
             {
                 return Ok(_scrumServices.GetScrumBoardsByProject(projectId));
             }
-            catch
+            catch (Exception e)
             {
-                return NotFound("This project does not have scrum boards.");
+                return BadRequest($"Error: {e.Message}");
             }
         }
     }
