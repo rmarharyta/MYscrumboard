@@ -4,21 +4,17 @@ import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import RequestChangePassword from "./pages/RequestChangePassword";
 import ChangePassword from "./pages/ChangePassword";
+import DashboardPage from "./pages/DashboardPage";
+import AppBar from "./components/AppBar";
+import { Box} from "@mui/material";
 
 function App() {
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        width: "100vw",
-      }}
-    >
-      <BrowserRouter>
-        <Routes>
-          <Route>
+    <>
+      <Box sx={{ mt: 6 }}>
+        <AppBar />
+        <BrowserRouter>
+          <Routes>
             <Route path="/" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
             <Route
@@ -26,10 +22,11 @@ function App() {
               element={<RequestChangePassword />}
             />
             <Route path="/changepassword" element={<ChangePassword />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </div>
+            <Route path="/dashboard" element={<DashboardPage />} />
+          </Routes>
+        </BrowserRouter>
+      </Box>
+    </>
   );
 }
 
