@@ -57,16 +57,17 @@ namespace MY_ScrumBoard.Controllers
         }
 
         //delete project
-        [HttpDelete]
+        //Change: [HttpDelete] -> [HttpDelete("{projectId}")]
+        [HttpDelete("{projectId}")]
         [Authorize]
-        public IActionResult DeleteProject([FromBody] string projectId)
+        public IActionResult DeleteProject([FromRoute] string projectId)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (currentUserId == null)
             {
                 return Unauthorized("User ID not found in token.");
             }
-            if (projectId == null)
+            if (string.IsNullOrWhiteSpace(projectId))
             {
                 return BadRequest("Project ID is missing.");
             }

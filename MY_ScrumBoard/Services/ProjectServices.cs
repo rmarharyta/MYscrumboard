@@ -7,8 +7,8 @@ namespace MY_ScrumBoard.Services
         //створення
         public void CreateProject(string ownerId, string projectName)
         {
-            var project_exist=_context.Projects.FirstOrDefault(u => u.ownerId == ownerId&&u.projectName==projectName);
-            if (project_exist!=null)
+            var project_exist = _context.Projects.FirstOrDefault(u => u.ownerId == ownerId && u.projectName == projectName);
+            if (project_exist != null)
             {
                 throw new Exception("Project with that name already exist;");
             }
@@ -24,12 +24,9 @@ namespace MY_ScrumBoard.Services
         //видалення
         public void DeleteProject(string id, string ownerId)
         {
-            var project = _context.Set<Projects>().FirstOrDefault(u => u.projectId == id && u.ownerId==ownerId);
+            var project = _context.Set<Projects>().FirstOrDefault(u => u.projectId == id && u.ownerId == ownerId)
+                ?? throw new Exception("There is no such project or you cannot delete this project.");
 
-            if (project == null)
-            {
-                throw new Exception("There is no such project or you cannot delete this project.");
-            }
             _context.Set<Projects>().Remove(project);
             _context.SaveChanges();
         }
@@ -37,17 +34,15 @@ namespace MY_ScrumBoard.Services
         //перейменування
         public void RenameProject(string id, string newName)
         {
-            var project = _context.Set<Projects>().FirstOrDefault(u => u.projectId == id);
-            if (project == null)
-            {
-                throw new Exception("There is no such project");
-            }
+            var project = _context.Set<Projects>().FirstOrDefault(u => u.projectId == id)
+                ?? throw new Exception("There is no such project");
+
             project.projectName = newName;
             _context.SaveChanges();
         }
 
         //get all projects
-        internal IEnumerable<Object> GetAllProjects()
+        internal IEnumerable<Projects> GetAllProjects()
         {
             return _context.Projects;
         }
@@ -56,13 +51,9 @@ namespace MY_ScrumBoard.Services
         public List<Projects>? GetOwnersProjects(string ownerId)
         {
             var projects = _context.Set<Projects>()
-                .Where(u => u.ownerId == ownerId)
-                .ToList();
-            if (projects == null)
-            {
-                return null;
-            }
-            return projects;
+                .Where(u => u.ownerId == ownerId);
+
+            return projects.ToList();
         }
 
         //get by member/collaboration
@@ -70,38 +61,38 @@ namespace MY_ScrumBoard.Services
         {
             var collaborationProjects = _context.Set<Collaboration>()
                 .Where(u => u.userId == userId)
-                .Select(u => u.projectId)
-                .ToList();
-            if (collaborationProjects == null)
+                .Select(u => u.projectId);
+
+            if (!collaborationProjects.Any())
             {
                 return null;
             }
             var projects = _context.Set<Projects>()
-                .Where(u => collaborationProjects.Contains(u.projectId))
-                .ToList();
-            return projects;
+                .Where(u => collaborationProjects.Contains(u.projectId));
+
+            return projects.ToList();
         }
 
         //get all projects by user
         public List<Projects>? GetAllProjectsByUser(string userId)
         {
             var ownProjects = _context.Set<Projects>()
-                .Where(u => u.ownerId == userId)
-                .ToList();
+                .Where(u => u.ownerId == userId);
+
             var collaborationProjects = _context.Set<Collaboration>()
                 .Where(u => u.userId == userId)
                 .Select(u => u.projectId)
                 .ToList();
-            if (!ownProjects.Any() && !collaborationProjects.Any())
+
+            if (!ownProjects.Any() && collaborationProjects.Count == 0)
             {
                 return null;
             }
 
             var projects = _context.Set<Projects>()
-                .Where(p => collaborationProjects.Contains(p.projectId) || p.ownerId == userId)
-                .ToList();
+                .Where(p => collaborationProjects.Contains(p.projectId) || p.ownerId == userId);
 
-            return projects;
+            return projects.ToList();
         }
     }
 }
