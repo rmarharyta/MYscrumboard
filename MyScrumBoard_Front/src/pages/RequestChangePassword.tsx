@@ -17,8 +17,8 @@ function RequestChangePassword() {
     //background
     <Box
       width={1}
-      height={1}
       sx={{
+        height: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",

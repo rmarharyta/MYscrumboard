@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MY_ScrumBoard.Models
 {
@@ -30,6 +31,9 @@ namespace MY_ScrumBoard.Models
         public string ownerId { get; set; }
         [Required]
         public string projectName { get; set; }
+        [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime date_time { get; set; }
     }
 
     [PrimaryKey(nameof(projectId), nameof(userId))]

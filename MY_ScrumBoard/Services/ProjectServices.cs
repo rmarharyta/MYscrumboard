@@ -7,6 +7,11 @@ namespace MY_ScrumBoard.Services
         //створення
         public void CreateProject(string ownerId, string projectName)
         {
+            var project_exist=_context.Projects.FirstOrDefault(u => u.ownerId == ownerId&&u.projectName==projectName);
+            if (project_exist!=null)
+            {
+                throw new Exception("Project with that name already exist;");
+            }
             Projects project = new Projects();
             Guid id = Guid.NewGuid();
             project.projectId = id.ToString();

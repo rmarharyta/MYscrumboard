@@ -1,6 +1,5 @@
 ﻿
 using MY_ScrumBoard.Models;
-using Org.BouncyCastle.Math.EC;
 
 namespace MY_ScrumBoard.Services
 {
@@ -17,12 +16,13 @@ namespace MY_ScrumBoard.Services
     {
         public string Registration(UserLoginRegister userRegister)
         {
-            Guid id = Guid.NewGuid();
-            User user= new User();
-            user.userId = id.ToString();
             var password = BCrypt.Net.BCrypt.EnhancedHashPassword(userRegister.userPassword);
-            user.userPassword = password;
-            user.email=userRegister.email;
+            User user = new User
+            {
+                userId = Guid.NewGuid().ToString(),
+                userPassword = password,
+                email = userRegister.email
+            };
             _context.Users.Add(user);
             _context.SaveChanges();
             return user.userId;
@@ -45,9 +45,9 @@ namespace MY_ScrumBoard.Services
             {
                 return null;
             }
-            if (BCrypt.Net.BCrypt.EnhancedVerify(userLogin.userPassword,login.userPassword))
+            if (BCrypt.Net.BCrypt.EnhancedVerify(userLogin.userPassword, login.userPassword))
             {
-                return login.userId; 
+                return login.userId;
             }
             return null;
         }
@@ -59,10 +59,10 @@ namespace MY_ScrumBoard.Services
         //get users by project
         public List<User>? GetByProject(string projectId)
         {
-            var userIsOwner=_context.Set<Projects>().FirstOrDefault(u => u.projectId == projectId);
+            var userIsOwner = _context.Set<Projects>().FirstOrDefault(u => u.projectId == projectId);
             var userIsInCollaboration = _context.Set<Collaboration>()
                 .Where(u => u.projectId == projectId)
-                .Select(u=>u.userId)
+                .Select(u => u.userId)
                 .ToList();
             if (userIsOwner == null)
             {
@@ -75,6 +75,19 @@ namespace MY_ScrumBoard.Services
                 .Where(u => allUserIds.Contains(u.userId))
                 .ToList();
             return users;
+        }
+
+        public List<User>? SearchUsers(string searchTerm)
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return null;
+            }
+
+            return _context.Users
+                .Where(u => u.email.StartsWith(searchTerm))
+                .Take(50) 
+                .ToList();
         }
     }
 }

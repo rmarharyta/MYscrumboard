@@ -83,28 +83,31 @@ const PasswordRegister = ({
           (isSubmitted && !isValidPassword(valueFirst))
         }
         fullWidth
+        size={isMobile ? "small" : "medium"}
         sx={{
           backgroundColor: "#D9D9D9",
+          marginTop: "11px",
           color: "#565454",
-          maxWidth: "90vw",
-          height: 56,
-          fontFamily: "Poppins, sans-serif",
-          fontSize: "15px",
+          width: "80vw",
+          height: isMobile ? "40px" : "56px",
+          maxWidth: "592px",
+          fontFamily: "Poppins, sans-serif", // Шрифт
+          fontSize: isMobile ? "15px" : "15px", // Розмір
           fontWeight: 400,
-          borderRadius: "20px",
+          borderRadius: isMobile ? "15px" : "20px", // Закруглення країв
           "& .MuiOutlinedInput-root": {
-            borderRadius: "20px",
+            borderRadius: isMobile ? "15px" : "20px",
             color: "#565454",
             "& fieldset": {
               borderWidth: "1px",
-              borderColor: "#08031B",
+              borderColor: "#08031B", // Товщина лінії
             },
             "&:hover fieldset": {
               borderWidth: "2px",
-              borderColor: "#08031B",
+              borderColor: "#08031B", // Товстіша лінія при наведенні
             },
             "&.Mui-focused fieldset": {
-              borderWidth: "1px",
+              borderWidth: "1px", // Товстіша лінія при фокусі
             },
           },
         }}
@@ -148,28 +151,31 @@ const PasswordRegister = ({
           (isSubmitted && !isValidPassword(valueSecond))
         }
         fullWidth
+        size={isMobile ? "small" : "medium"}
         sx={{
           backgroundColor: "#D9D9D9",
+          marginTop: "11px",
           color: "#565454",
-          maxWidth: "90vw",
-          height: 56,
-          fontFamily: "Poppins, sans-serif",
-          fontSize: "15px",
+          width: "80vw",
+          height: isMobile ? "40px" : "56px",
+          maxWidth: "592px",
+          fontFamily: "Poppins, sans-serif", // Шрифт
+          fontSize: isMobile ? "15px" : "15px", // Розмір
           fontWeight: 400,
-          borderRadius: "20px",
+          borderRadius: isMobile ? "15px" : "20px", // Закруглення країв
           "& .MuiOutlinedInput-root": {
-            borderRadius: "20px",
+            borderRadius: isMobile ? "15px" : "20px",
             color: "#565454",
             "& fieldset": {
               borderWidth: "1px",
-              borderColor: "#08031B",
+              borderColor: "#08031B", // Товщина лінії
             },
             "&:hover fieldset": {
               borderWidth: "2px",
-              borderColor: "#08031B",
+              borderColor: "#08031B", // Товстіша лінія при наведенні
             },
             "&.Mui-focused fieldset": {
-              borderWidth: "1px",
+              borderWidth: "1px", // Товстіша лінія при фокусі
             },
           },
         }}

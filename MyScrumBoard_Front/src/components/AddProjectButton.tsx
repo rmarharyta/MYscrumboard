@@ -5,36 +5,40 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import useAuth from "../utils/Contexts/useAuth";
 import { useState } from "react";
+import useProject from "../utils/Contexts/useProject";
+import { useMutation } from "@tanstack/react-query";
 
 interface Props {
-  email: string;
-  password: string;
+  projectName: string;
+
   setIsSubmitted: (value: boolean) => void;
   isDisabled: boolean;
+  closeAddProjectDialog: ()=>void;
 }
 
-function LogInButton({ email, password, setIsSubmitted, isDisabled }: Props) {
-  const navigate = useNavigate();
-
-  const auth = useAuth();
-  const [error, setError] = useState<string | null>(null);
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: async () => auth.signin(email, password),
-    onSuccess: () => {
-      navigate("/dashboard"); // Перехід на головну сторінку
-    },
-    onError: (error) => {
-      setError(error.message);
-    },
-  });
-
+function AddProjectButton({
+  projectName,
+  setIsSubmitted,
+  isDisabled,
+  closeAddProjectDialog
+}: Props) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const project = useProject();
+  const [error, setError] = useState<string | null>(null);
+
+  const { mutate } = useMutation({
+    mutationFn: async () => project.addProject(projectName),
+    onError: () => {
+      setError("Something went wrong");
+    },
+    onSuccess: () => {
+      closeAddProjectDialog();
+      setError(null);
+    },
+  });
   return (
     <>
       <Snackbar
@@ -52,27 +56,25 @@ function LogInButton({ email, password, setIsSubmitted, isDisabled }: Props) {
         </Alert>
       </Snackbar>
       <Button
+        onClick={() => {
+          setIsSubmitted(true);
+          if (projectName && !isDisabled) mutate();
+        }}
         variant="contained"
         sx={{
           backgroundColor: "#08031B",
           color: "#FFFFFF",
-          width: isMobile ? "8rem" : "13rem",
-          height: isMobile ? "3rem" : "4rem",
           fontFamily: "Poppins, sans-serif", // Шрифт
-          fontSize: isMobile ? "20px" : "36px", // Розмір
+          fontSize: isMobile ? "15px" : "20px", // Розмір
           fontWeight: 400,
           borderRadius: "10px",
           textTransform: "none",
         }}
-        onClick={() => {
-          setIsSubmitted(true);
-          if (email && password && !isDisabled) mutate();
-        }}
       >
-        {isPending ? "Waiting..." : "Log in"}
+        Add
       </Button>
     </>
   );
 }
 
-export default LogInButton;
+export default AddProjectButton;

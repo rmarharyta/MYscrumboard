@@ -76,6 +76,13 @@ namespace MY_ScrumBoard.Controllers
             return Ok(_userServices.GetAllUsers());
         }
 
+        [HttpGet("search")]
+        public IActionResult SearchUsers([FromQuery] string searchTerm)
+        {
+            var users = _userServices.SearchUsers(searchTerm);
+            return Ok(users);
+        }
+
         //get by project
         [HttpGet("get_by_project")]
         public IActionResult GetByProject(string projectId)

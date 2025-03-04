@@ -39,7 +39,7 @@ namespace MY_ScrumBoard
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddScoped<IUserService, UserServices>();//Better
+            builder.Services.AddScoped<UserServices>();
             builder.Services.AddScoped<PasswordServices>();
             builder.Services.AddScoped<ProjectServices>();
             builder.Services.AddScoped<CollaborationServices>();

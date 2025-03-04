@@ -51,18 +51,20 @@ const Password = ({ value, onChange, isSubmitted }: Props) => {
         (isSubmitted && !isValidPassword(value))
       }
       fullWidth
+      size={isMobile ? "small" : "medium"}
       sx={{
         backgroundColor: "#D9D9D9",
+        marginTop: "11px",
         color: "#565454",
         width: "80vw",
+        height: isMobile ? "40px" : "56px",
         maxWidth: "592px",
-        height: isMobile ? "36px" : "56px",
         fontFamily: "Poppins, sans-serif", // Шрифт
-        fontSize: isMobile ? "9px" : "15px", // Розмір
+        fontSize: isMobile ? "15px" : "15px", // Розмір
         fontWeight: 400,
-        borderRadius: "20px", // Закруглення країв
+        borderRadius: isMobile ? "15px" : "20px", // Закруглення країв
         "& .MuiOutlinedInput-root": {
-          borderRadius: "20px",
+          borderRadius: isMobile ? "15px" : "20px",
           color: "#565454",
           "& fieldset": {
             borderWidth: "1px",

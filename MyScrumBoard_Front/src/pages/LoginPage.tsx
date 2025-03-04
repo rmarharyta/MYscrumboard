@@ -18,11 +18,25 @@ function LoginPage() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+  // Функція перевірки валідності пароля
+  const isValidPassword = (password: string) => {
+    return (
+      password.length >= 6 && /\d/.test(password) && /[A-Z]/.test(password)
+    );
+  };
+
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Простий регулярний вираз для перевірки email
+    return emailRegex.test(email);
+  };
+  // Визначаємо, чи кнопка має бути заблокована
+  const isButtonDisabled = !isValidEmail(username) || !isValidPassword(password);
+
   return (
     <Box
       width={1}
-      height={1}
       sx={{
+        height: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -89,6 +103,7 @@ function LoginPage() {
             email={username}
             password={password}
             setIsSubmitted={setIsSubmitted}
+            isDisabled={isButtonDisabled}
           />
           <SignUpLinkButton />
 
