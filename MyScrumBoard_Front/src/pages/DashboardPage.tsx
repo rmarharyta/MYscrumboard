@@ -29,21 +29,6 @@ import AddProjectButton from "../components/AddProjectButton";
 import useProject from "../utils/Contexts/useProject";
 import { useMutation } from "@tanstack/react-query";
 
-// const projects = [
-//   { id: "1", name: "Project A", createdAt: "2025-01-13", role: "owner" },
-//   { id: "2", name: "Project B", createdAt: "2025-01-12", role: "participant" },
-//   { id: "3", name: "Project C", createdAt: "2025-01-11", role: "owner" },
-//   { id: "4", name: "Project D", createdAt: "2025-01-10", role: "participant" },
-//   { id: "5", name: "Project E", createdAt: "2025-01-09", role: "owner" },
-//   { id: "6", name: "Project F", createdAt: "2025-01-08", role: "participant" },
-//   { id: "7", name: "Project G", createdAt: "2025-01-07", role: "participant" },
-//   { id: "8", name: "Project H", createdAt: "2025-01-06", role: "participant" },
-//   { id: "9", name: "Project I", createdAt: "2025-01-05", role: "owner" },
-//   { id: "10", name: "Project J", createdAt: "2025-01-04", role: "participant" },
-//   { id: "11", name: "Project K", createdAt: "2025-01-03", role: "participant" },
-//   { id: "12", name: "Project L", createdAt: "2025-01-02", role: "participant" },
-//   { id: "13", name: "Project M", createdAt: "2025-01-01", role: "owner" },
-// ];
 
 interface Project {
   projectId: string;
@@ -69,9 +54,28 @@ const Dashboard: React.FC = () => {
     },
   });
 
+  //Add: mutate for delete project
+  const { isPending: deleteIsPending, isError: deleteIsError, mutate: deletemutate } = useMutation({
+    mutationFn: async (projId: string) => {
+      deleteProject(projId); // або ваш API запит
+    },
+    onError: (error: Error) => {
+      console.error("Помилка ??? проектів: ", error.message);
+    },
+    onSuccess: () => {
+      console.log("Проекти ??? успішно");
+    },
+  });
+
   useEffect(() => {
     mutate(); // Викликаєте fetchProjects, щоб завантажити проекти
   }, []);
+
+  //Add:
+  const deleteProject = (projectId: string) => {
+    proj.deleteProject(projectId);
+    setProjects(projects.filter((p) => p.projectId !== projectId));
+  }
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -287,6 +291,7 @@ const Dashboard: React.FC = () => {
                   ownerId={project.ownerId}
                   projectName={project.projectName}
                   date_time={project.date_time}
+                  deletemutate={deletemutate}//Add:
                   defaultSrc="/src/assets/Mediamodifier-Design.svg"
                   hoverSrc="/src/assets/Mediamodifier-Design (1).svg"
                 />
