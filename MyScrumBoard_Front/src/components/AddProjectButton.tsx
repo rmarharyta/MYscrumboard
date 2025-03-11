@@ -6,39 +6,37 @@ import {
   useTheme,
 } from "@mui/material";
 import { useState } from "react";
-import useProject from "../utils/Contexts/useProject";
-import { useMutation } from "@tanstack/react-query";
 
 interface Props {
   projectName: string;
 
   setIsSubmitted: (value: boolean) => void;
   isDisabled: boolean;
-  closeAddProjectDialog: ()=>void;
+
+  addmutate: (string: string) => void; //Add
 }
 
 function AddProjectButton({
   projectName,
   setIsSubmitted,
   isDisabled,
-  closeAddProjectDialog
+  addmutate,
 }: Props) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const project = useProject();
   const [error, setError] = useState<string | null>(null);
 
-  const { mutate } = useMutation({
-    mutationFn: async () => project.addProject(projectName),
-    onError: () => {
-      setError("Something went wrong");
-    },
-    onSuccess: () => {
-      closeAddProjectDialog();
-      setError(null);
-    },
-  });
+  // const { mutate } = useMutation({
+  //   mutationFn: async () => addNewProject(projectName),
+  //   onError: () => {
+  //     setError("Something went wrong");
+  //   },
+  //   onSuccess: () => {
+  //     closeAddProjectDialog();
+  //     setError(null);
+  //   },
+  // });
   return (
     <>
       <Snackbar
@@ -58,7 +56,10 @@ function AddProjectButton({
       <Button
         onClick={() => {
           setIsSubmitted(true);
-          if (projectName && !isDisabled) mutate();
+          if (projectName && !isDisabled) {
+            addmutate(projectName);
+            // closeAddProjectDialog();
+          }
         }}
         variant="contained"
         sx={{

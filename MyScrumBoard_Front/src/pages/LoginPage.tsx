@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Link, useMediaQuery, useTheme } from "@mui/material";
 import UserName from "../components/UserName";
 import Password from "../components/Password";
@@ -7,6 +7,10 @@ import LogInButton from "../components/LogInButton";
 import SignUpLinkButton from "../components/SignUpLinkButton";
 
 function LoginPage() {
+  useEffect(() => {
+localStorage.removeItem('token')
+  }, [])
+  
   const [username, setUsername] = useState<string>("");
   const handleUsername = (newValue: string) => setUsername(newValue);
 
@@ -29,6 +33,7 @@ function LoginPage() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Простий регулярний вираз для перевірки email
     return emailRegex.test(email);
   };
+  
   // Визначаємо, чи кнопка має бути заблокована
   const isButtonDisabled = !isValidEmail(username) || !isValidPassword(password);
 

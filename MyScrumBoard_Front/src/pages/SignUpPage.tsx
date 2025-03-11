@@ -6,6 +6,7 @@ import SignUpButton from "../components/SignUpButton";
 import PasswordRegister from "../components/PasswordRegister";
 
 function SignUpPage() {
+  
   const [username, setUsername] = useState<string>("");
   const handleUsername = (newValue: string) => setUsername(newValue);
 

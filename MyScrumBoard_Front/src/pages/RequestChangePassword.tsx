@@ -5,6 +5,7 @@ import WelcomeText from "../components/WelcomeText";
 import SendRequestButton from "../components/SendRequestButton";
 
 function RequestChangePassword() {
+  
   const [username, setUsername] = useState<string>("");
   const handleUsername = (newValue: string) => setUsername(newValue);
 

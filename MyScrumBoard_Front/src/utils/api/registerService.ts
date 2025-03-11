@@ -2,7 +2,7 @@ import axiosInstance from "./axios";
 
 type RegisterResponse = {
     token: string,
-    UserId: string
+    returnedUserId: string
 }
 
 export const register = async (email: string, password: string) :Promise<RegisterResponse> => {

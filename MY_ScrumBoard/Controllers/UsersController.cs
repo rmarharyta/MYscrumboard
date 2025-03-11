@@ -41,17 +41,17 @@ namespace MY_ScrumBoard.Controllers
             Console.WriteLine("Login");
             if (userLogin == null)
                 return BadRequest("User data is required.");
-            
+
             try
             {
                 var returnedUserId = _userServices.LogIn(userLogin)
                     ?? throw new Exception("Login is failed");// Edited: New Null check
-                
-                return Ok( new { returnedUserId, Token = GenerateJWTToken(returnedUserId) });
+
+                return Ok(new { returnedUserId, Token = GenerateJWTToken(returnedUserId) });
             }
             catch (Exception ex)
             {
-                return BadRequest("Problem: "+ ex.Message);
+                return BadRequest("Problem: " + ex.Message);
             }
         }
 
@@ -84,8 +84,8 @@ namespace MY_ScrumBoard.Controllers
         }
 
         //get by project
-        [HttpGet("get_by_project")]
-        public IActionResult GetByProject(string projectId)
+        [HttpGet("get_by_project/{projectId}")]
+        public IActionResult GetByProject([FromRoute]string projectId)
         {
             if (projectId == null)
             {

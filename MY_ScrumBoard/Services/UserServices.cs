@@ -10,7 +10,8 @@ namespace MY_ScrumBoard.Services
         void DeleteUser(string userId);
         string? LogIn(UserLoginRegister userLogin);
         IEnumerable<User> GetAllUsers();
-        List<User>? GetByProject(string projectId);
+        List<object>? GetByProject(string projectId);
+        List<object>? SearchUsers(string searchTerm);
     }
     public class UserServices(ApplicationDbContext _context) : IUserService
     {
@@ -57,7 +58,7 @@ namespace MY_ScrumBoard.Services
         }
 
         //get users by project
-        public List<User>? GetByProject(string projectId)
+        public List<object>? GetByProject(string projectId)
         {
             var userIsOwner = _context.Set<Projects>().FirstOrDefault(u => u.projectId == projectId);
             var userIsInCollaboration = _context.Set<Collaboration>()
@@ -73,11 +74,12 @@ namespace MY_ScrumBoard.Services
                 .ToList();
             var users = _context.Set<User>()
                 .Where(u => allUserIds.Contains(u.userId))
-                .ToList();
+                .Select(u => new {u.userId, u.email})
+                .ToList<object>();
             return users;
         }
 
-        public List<User>? SearchUsers(string searchTerm)
+        public List<object>? SearchUsers(string searchTerm)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -86,8 +88,9 @@ namespace MY_ScrumBoard.Services
 
             return _context.Users
                 .Where(u => u.email.StartsWith(searchTerm))
-                .Take(50) 
-                .ToList();
+                .Take(50)
+                .Select(u => new { u.userId, u.email })
+                .ToList<object > ();
         }
     }
 }

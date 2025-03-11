@@ -423,38 +423,31 @@
           }
         }
       },
-      "delete": {
+      "get": {
         "tags": [
           "Projects"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "string"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "OK"
           }
         }
-      },
-      "get": {
+      }
+    },
+    "/api/Projects/{projectId}": {
+      "delete": {
         "tags": [
           "Projects"
+        ],
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -746,7 +739,7 @@
         }
       }
     },
-    "/api/Users/get_by_project": {
+    "/api/Users/get_by_project/{projectId}": {
       "get": {
         "tags": [
           "Users"
@@ -754,7 +747,8 @@
         "parameters": [
           {
             "name": "projectId",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string"
             }

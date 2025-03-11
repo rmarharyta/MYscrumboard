@@ -25,7 +25,8 @@ const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const response = await login(email, password);
       setIsAuthenticated(true);
-      setUserId(response.UserId);
+      setUserId(response.returnedUserId);
+      console.log(response)
       localStorage.setItem("token", response.token);
     } catch (error: any) {
       console.error("Помилка авторизації:", error);
@@ -39,7 +40,7 @@ const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const response = await register(email, password);
       setIsAuthenticated(true);
-      setUserId(response.UserId);
+      setUserId(response.returnedUserId);
       localStorage.setItem("token", response.token);
     } catch (error: any) {
       console.error("Помилка реєстрації:", error);

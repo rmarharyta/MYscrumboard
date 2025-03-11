@@ -19,6 +19,7 @@ import {
   useMediaQuery,
   useTheme,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import ProjectIcon from "../components/ProjectIcon";
 import AddIcon from "@mui/icons-material/Add";
@@ -26,9 +27,14 @@ import SortIcon from "@mui/icons-material/Sort";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { useState, MouseEvent, useEffect } from "react";
 import AddProjectButton from "../components/AddProjectButton";
-import useProject from "../utils/Contexts/useProject";
 import { useMutation } from "@tanstack/react-query";
-
+import {
+  addNewProject,
+  DeleteProject,
+  findAllUserProject,
+  RenameProject,
+} from "../utils/api/ProjectServices";
+import useAuth from "../utils/Contexts/useAuth";
 
 interface Project {
   projectId: string;
@@ -36,14 +42,15 @@ interface Project {
   projectName: string;
   date_time: Date;
 }
+
 const Dashboard: React.FC = () => {
+  const userId = useAuth().userId;
+  
   const [projects, setProjects] = useState<Project[]>([]);
 
-  const proj = useProject();
-
-  const { isPending, isError, mutate} = useMutation({
+  const { isPending, isError, mutate } = useMutation({
     mutationFn: async () => {
-      const response = await proj.allProjects(); // або ваш API запит
+      const response = await findAllUserProject(); // або ваш API запит
       setProjects(response); // зберігаємо отримані проекти
     },
     onError: (error: any) => {
@@ -54,8 +61,12 @@ const Dashboard: React.FC = () => {
     },
   });
 
-  //Add: mutate for delete project
-  const { isPending: deleteIsPending, isError: deleteIsError, mutate: deletemutate } = useMutation({
+  //mutate for delete project
+  const {
+    // isPending: deleteIsPending,
+    // isError: deleteIsError,
+    mutate: deletemutate,
+  } = useMutation({
     mutationFn: async (projId: string) => {
       deleteProject(projId); // або ваш API запит
     },
@@ -67,15 +78,70 @@ const Dashboard: React.FC = () => {
     },
   });
 
+  //mutate for add project
+  const {
+    // isPending: addIsPending,
+    // isError: addIsError,
+    mutate: addmutate,
+  } = useMutation({
+    mutationFn: async (projName: string) => {
+      addProject(projName); // або ваш API запит
+    },
+    onError: (error: Error) => {
+      console.error("Помилка ??? проектів: ", error.message);
+    },
+    onSuccess: () => {
+      closeAddProjectDialog();
+      mutate();
+      console.log("Проекти ??? успішно");
+    },
+  });
+
+  //mutate for rename project
+  const {
+    // isPending: addIsPending,
+    // isError: addIsError,
+    mutate: renamemutate,
+  } = useMutation({
+    mutationFn: async ({
+      projectId,
+      projectName,
+    }: {
+      projectId: string;
+      projectName: string;
+    }) => {
+      renameProject(projectId, projectName); // або ваш API запит
+    },
+    onError: (error: Error) => {
+      console.error("Помилка ??? проектів: ", error.message);
+    },
+    onSuccess: () => {
+      //mutate();
+      console.log("Проекти ??? успішно");
+    },
+  });
+
   useEffect(() => {
     mutate(); // Викликаєте fetchProjects, щоб завантажити проекти
   }, []);
 
-  //Add:
   const deleteProject = (projectId: string) => {
-    proj.deleteProject(projectId);
+    DeleteProject(projectId);
     setProjects(projects.filter((p) => p.projectId !== projectId));
-  }
+  };
+
+  const addProject = (projectName: string) => {
+    addNewProject(projectName);
+  };
+
+  const renameProject = (projectId: string, projectName: string) => {
+    RenameProject(projectId, projectName);
+    setProjects(
+      projects.map((p) =>
+        p.projectId === projectId ? { ...p, projectName } : p
+      )
+    );
+  };
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -88,11 +154,24 @@ const Dashboard: React.FC = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
 
+  const [isTouched, setIsTouched] = useState(false);
+  const handleBlur = () => {
+    setIsTouched(true); // Позначаємо, що користувач завершив введення
+  };
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const sortedProjects = [...projects]
-    // .filter((project) => !filterRole || project.role === filterRole)
+    .filter((project) => {
+      if (filterRole === "owner") {
+        return project.ownerId===userId
+      }
+      else if (filterRole === "participant") {
+        return project.ownerId!==userId
+      }
+      else return project
+    })
     .sort((a, b) => {
       if (sortBy === "name") {
         return a.projectName.localeCompare(b.projectName);
@@ -139,12 +218,9 @@ const Dashboard: React.FC = () => {
   };
 
   const openAddProjectDialog = () => setOpenDialog(true);
-  const closeAddProjectDialog = () => { setOpenDialog(false); setNewProjectName("") };
-
-  const [isTouched, setIsTouched] = useState(false);
-
-  const handleBlur = () => {
-    setIsTouched(true); // Позначаємо, що користувач завершив введення
+  const closeAddProjectDialog = () => {
+    setOpenDialog(false);
+    setNewProjectName("");
   };
 
   return (
@@ -254,7 +330,38 @@ const Dashboard: React.FC = () => {
       </Box>
       {/* проекти */}
       <Box sx={{ display: "flex", justifyContent: "center" }}>
-        {isError ? (
+        {isPending ? (
+          // <Typography
+          //   sx={{
+          //     justifyContent: "center",
+          //     color: "#8D0000",
+          //     fontFamily: "Poppins, sans-serif",
+          //     fontWeight: 600,
+          //     fontSize: isMobile ? "36px" : "64px",
+          //     textAlign: "center",
+          //     alignContent: "center",
+          //     alignItems: "center",
+          //   }}
+          // >
+          //   Loading...
+          // </Typography>
+          <Box
+            sx={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100vw",
+              height: "100vh",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(255, 255, 255, 0.17)",
+              zIndex: 9999,
+            }}
+          >
+            <CircularProgress color="inherit" />
+          </Box>
+        ) : isError ? (
           <Typography
             sx={{
               justifyContent: "center",
@@ -291,7 +398,8 @@ const Dashboard: React.FC = () => {
                   ownerId={project.ownerId}
                   projectName={project.projectName}
                   date_time={project.date_time}
-                  deletemutate={deletemutate}//Add:
+                  deletemutate={deletemutate}
+                  renamemutate={renamemutate}
                   defaultSrc="/src/assets/Mediamodifier-Design.svg"
                   hoverSrc="/src/assets/Mediamodifier-Design (1).svg"
                 />
@@ -302,12 +410,15 @@ const Dashboard: React.FC = () => {
       </Box>
 
       {/* Діалогове вікно додавання проекту */}
-      <Dialog open={openDialog} onClose={closeAddProjectDialog}>
+      <Dialog
+        open={openDialog}
+        onClose={closeAddProjectDialog}
+      >
         <DialogTitle sx={{ color: "#08031B" }}>Add New Project</DialogTitle>
         <DialogContent>
           <TextField
             sx={{
-              backgroundColor: "#D9D9D9",
+              // backgroundColor: "#D9D9D9",
               marginTop: "22px",
               color: "#565454",
               width: isMobile ? "60vw" : "40vw",
@@ -363,7 +474,7 @@ const Dashboard: React.FC = () => {
             projectName={newProjectName}
             setIsSubmitted={setIsSubmitted}
             isDisabled={!isTouched}
-            closeAddProjectDialog={closeAddProjectDialog}
+            addmutate={addmutate}
           />
         </DialogActions>
       </Dialog>
