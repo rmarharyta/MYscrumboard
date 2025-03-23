@@ -53,6 +53,24 @@ namespace MY_ScrumBoard.Models
         public string projectId { get; set; }
         [Required]
         public string scrumName { get; set; }
+        [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime date_time { get; set; }
+    }
+    public class GetScrums
+    {
+        [Required]
+        public List<Scrum> scrums { get; set; }
+        [Required]
+        public string ownerId { get; set; }
+    }
+
+    public class CreateScrum
+    {
+        [Required]
+        public string projectId { get; set; }
+        [Required]
+        public string scrumName { get; set; }
     }
 
     public class Statuses

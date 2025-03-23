@@ -501,17 +501,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Scrum"
+                "$ref": "#/components/schemas/CreateScrum"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Scrum"
+                "$ref": "#/components/schemas/CreateScrum"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Scrum"
+                "$ref": "#/components/schemas/CreateScrum"
               }
             }
           }
@@ -555,25 +555,16 @@
         "tags": [
           "Scrum"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "string"
-              }
+        "parameters": [
+          {
+            "name": "scrumId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -596,25 +587,16 @@
         "tags": [
           "Scrum"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "string"
-              }
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -684,29 +666,17 @@
         }
       }
     },
-    "/api/Users/{Id}": {
+    "/api/Users": {
       "delete": {
         "tags": [
           "Users"
-        ],
-        "parameters": [
-          {
-            "name": "Id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
         ],
         "responses": {
           "200": {
             "description": "OK"
           }
         }
-      }
-    },
-    "/api/Users": {
+      },
       "get": {
         "tags": [
           "Users"
@@ -824,6 +794,24 @@
         },
         "additionalProperties": false
       },
+      "CreateScrum": {
+        "required": [
+          "projectId",
+          "scrumName"
+        ],
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "scrumName": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "Notes": {
         "required": [
           "scrumId",
@@ -916,28 +904,6 @@
             "type": "string"
           },
           "newName": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "Scrum": {
-        "required": [
-          "projectId",
-          "scrumName"
-        ],
-        "type": "object",
-        "properties": {
-          "scrumId": {
-            "type": "string",
-            "nullable": true
-          },
-          "projectId": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "scrumName": {
             "minLength": 1,
             "type": "string"
           }

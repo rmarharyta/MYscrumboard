@@ -24,10 +24,22 @@ namespace MY_ScrumBoard.Services
         //видалення
         public void DeleteProject(string id, string ownerId)
         {
-            var project = _context.Set<Projects>().FirstOrDefault(u => u.projectId == id && u.ownerId == ownerId)
-                ?? throw new Exception("There is no such project or you cannot delete this project.");
+            var project = _context.Set<Projects>().FirstOrDefault(u => u.projectId == id)
+                ?? throw new Exception("There is no such project");
+            if (project.ownerId != ownerId)
+            {
+                var collaboration = _context.Collaboration
+                    .FirstOrDefault(c => c.projectId == project.projectId && c.userId == ownerId);
 
-            _context.Set<Projects>().Remove(project);
+                if (collaboration != null)
+                {
+                    _context.Collaboration.Remove(collaboration);
+                }
+            }
+            else
+            {
+                _context.Set<Projects>().Remove(project);
+            }
             _context.SaveChanges();
         }
 

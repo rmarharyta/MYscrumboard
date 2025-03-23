@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using MY_ScrumBoard.Models;
@@ -56,12 +57,18 @@ namespace MY_ScrumBoard.Controllers
         }
 
         //delete
-        [HttpDelete("{Id}")]
-        public IActionResult DeleteUsers([FromRoute] string Id)
+        [HttpDelete]
+        [Authorize]
+        public IActionResult DeleteUsers()
         {
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUserId == null)
+            {
+                return Unauthorized("User ID not found in token.");
+            }
             try
             {
-                _userServices.DeleteUser(Id);
+                _userServices.DeleteUser(currentUserId);
                 return Ok();
             }
             catch (Exception ex)

@@ -325,7 +325,7 @@
     "Parameters": [
       {
         "Name": "scrum",
-        "Type": "MY_ScrumBoard.Models.Scrum",
+        "Type": "MY_ScrumBoard.Models.CreateScrum",
         "IsRequired": true
       }
     ],
@@ -358,7 +358,7 @@
       {
         "Name": "scrumId",
         "Type": "System.String",
-        "IsRequired": true
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -384,9 +384,19 @@
       {
         "Name": "projectId",
         "Type": "System.String",
-        "IsRequired": true
+        "IsRequired": false
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.UsersController",
+    "Method": "DeleteUsers",
+    "RelativePath": "api/Users",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -397,22 +407,6 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MY_ScrumBoard.Controllers.UsersController",
-    "Method": "DeleteUsers",
-    "RelativePath": "api/Users/{Id}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "Id",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
     "ReturnTypes": []
   },
   {

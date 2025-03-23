@@ -36,14 +36,14 @@ namespace MY_ScrumBoard.Services
             var project = _context.Set<Projects>()
                 .FirstOrDefault(u => u.projectId == collaboration.projectId && u.ownerId == ownerId);
             if (project == null) {
-                throw new Exception("You cannot delete this project.");
+                throw new Exception("You cannot delete this collaboration.");
             }
             _context.Collaboration.Remove(collaboration);
             _context.SaveChanges();
         }
 
         //get all collaboration
-        internal IEnumerable<Object> GetAllCollaborations()
+        internal IEnumerable<Collaboration> GetAllCollaborations()
         {
             return _context.Collaboration;
         }

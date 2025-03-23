@@ -5,7 +5,7 @@ namespace MY_ScrumBoard.Services
     public class ScrumServices(ApplicationDbContext _context)
     {
         //create
-        public void CreateScrumBoard(Scrum scrum, string userId)
+        public void CreateScrumBoard(CreateScrum scrum, string userId)
         {
             var project = _context.Set<Projects>()
                 .FirstOrDefault(u => u.projectId == scrum.projectId && u.ownerId == userId);
@@ -13,9 +13,12 @@ namespace MY_ScrumBoard.Services
             {
                 throw new Exception("You cannot create it.");
             }
+            Scrum newScrum = new Scrum();
+            newScrum.projectId = scrum.projectId;
+            newScrum.scrumName = scrum.scrumName;
             Guid id = Guid.NewGuid();
-            scrum.scrumId = id.ToString();
-            _context.Set<Scrum>().Add(scrum);
+            newScrum.scrumId = id.ToString();
+            _context.Set<Scrum>().Add(newScrum);
             _context.SaveChanges();
         }
 
@@ -51,23 +54,35 @@ namespace MY_ScrumBoard.Services
         }
 
         //get all scrum
-        internal IEnumerable<Object> GetAllScrumBoards()
+        internal IEnumerable<Scrum> GetAllScrumBoards()
         {
             return _context.Scrum;
         }
 
         //get by project
-        public List<Scrum>? GetScrumBoardsByProject(string projectId)
+        public GetScrums? GetScrumBoardsByProject(string projectId)
         {
             if (string.IsNullOrWhiteSpace(projectId))
             {
                 throw new ArgumentException("projectId IsNullOrEmpty");
             }
             var scrum_boards = _context.Set<Scrum>()
-                .Where(u => u.projectId == projectId)?
+                .Where(u => u.projectId == projectId)
                 .ToList();
+            var project = _context.Set<Projects>().FirstOrDefault(p => p.projectId == projectId);
+            if (project == null)
+            {
+                throw new ArgumentException("project doesn`t exist");
+            }
+            var ownerId = project.ownerId;
+
+            GetScrums scrums = new GetScrums()
+            {
+                scrums = scrum_boards,
+                ownerId = ownerId
+            };
             
-            return scrum_boards;
+            return scrums;
         }
     }
 }

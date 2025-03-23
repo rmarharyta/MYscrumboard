@@ -39,7 +39,7 @@ namespace MY_ScrumBoard.Controllers
         //delete
         [HttpDelete]
         [Authorize]
-        public IActionResult DeleteCollaboration(Collaboration collaboration)
+        public IActionResult DeleteCollaboration([FromBody]Collaboration collaboration)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(currentUserId))
