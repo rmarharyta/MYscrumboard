@@ -5,7 +5,7 @@ namespace MY_ScrumBoard.Services
     public class ProjectServices(ApplicationDbContext _context)
     {
         //створення
-        public void CreateProject(string ownerId, string projectName)
+        public Projects CreateProject(string ownerId, string projectName)
         {
             var project_exist = _context.Projects.FirstOrDefault(u => u.ownerId == ownerId && u.projectName == projectName);
             if (project_exist != null)
@@ -19,6 +19,7 @@ namespace MY_ScrumBoard.Services
             project.ownerId = ownerId;
             _context.Set<Projects>().Add(project);
             _context.SaveChanges();
+            return project;
         }
 
         //видалення

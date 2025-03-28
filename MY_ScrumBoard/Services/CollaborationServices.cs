@@ -1,11 +1,12 @@
 ﻿using MY_ScrumBoard.Models;
+using System.Reflection.Metadata.Ecma335;
 
 namespace MY_ScrumBoard.Services
 {
     public class CollaborationServices(ApplicationDbContext _context)
     {
         //create collaboration
-        public void CreateCollaboration(Collaboration collaboration, string userId)
+        public Collaboration CreateCollaboration(Collaboration collaboration, string userId)
         {
             var project = _context.Set<Projects>()
                 .FirstOrDefault(u => u.projectId == collaboration.projectId && u.ownerId == userId);
@@ -24,7 +25,9 @@ namespace MY_ScrumBoard.Services
             }
             _context.Collaboration.Add(collaboration);
             _context.SaveChanges();
+            return collaboration;
         }
+        
 
         //delete
         public void DeleteCollaborationServ(Collaboration collaboration,string ownerId)

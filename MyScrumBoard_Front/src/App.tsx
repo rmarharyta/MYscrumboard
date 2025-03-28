@@ -8,13 +8,14 @@ import AppBar from "./components/AppBar";
 import { Box } from "@mui/material";
 import useAuth from "./utils/Contexts/useAuth";
 import ScrumsPage from "./pages/ScrumsPage";
+import ScrumBoardPage from "./pages/ScrumBoardPage";
 
 function App() {
   const { isAuthenticated } = useAuth();
   return (
     <Box>
       <BrowserRouter>
-      {isAuthenticated && <AppBar />}
+        {isAuthenticated && <AppBar />}
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
@@ -27,7 +28,8 @@ function App() {
         <Box sx={{ mt: 10 }}>
           <Routes>
             <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/scrum/:projectId" element={<ScrumsPage />}/>
+            <Route path="/scrum/:projectId" element={<ScrumsPage />} />
+            <Route path="/scrumboard/:scrumId/:ownerId" element={<ScrumBoardPage />} />
           </Routes>
         </Box>
       </BrowserRouter>

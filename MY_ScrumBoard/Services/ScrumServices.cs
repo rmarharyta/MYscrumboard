@@ -5,7 +5,7 @@ namespace MY_ScrumBoard.Services
     public class ScrumServices(ApplicationDbContext _context)
     {
         //create
-        public void CreateScrumBoard(CreateScrum scrum, string userId)
+        public Scrum CreateScrumBoard(CreateScrum scrum, string userId)
         {
             var project = _context.Set<Projects>()
                 .FirstOrDefault(u => u.projectId == scrum.projectId && u.ownerId == userId);
@@ -20,6 +20,7 @@ namespace MY_ScrumBoard.Services
             newScrum.scrumId = id.ToString();
             _context.Set<Scrum>().Add(newScrum);
             _context.SaveChanges();
+            return newScrum;
         }
 
         //rename

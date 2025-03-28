@@ -73,35 +73,41 @@ namespace MY_ScrumBoard.Models
         public string scrumName { get; set; }
     }
 
-    public class Statuses
-    {
-        [Key]
-        public int statusId { get; set; }
-        [Required]
-        public string statusDescription { get; set; }
-    }
-
     public class Notes
     {
         [Key]
         public string noteId { get; set; }
         [Required]
         public string scrumId { get; set; }
-        [Required]
-        public int statusId { get; set; }
         public string noteValue { get; set; }
+        [Required]
+        public int position { get; set; }
+        [Required]
+        public int colorId { get; set; }
     }
 
-    public class Deleted
+    public class CreateNotes
     {
-        [Key]
-        public string noteId { get; set; }
         [Required]
         public string scrumId { get; set; }
+        public string noteValue { get; set; }
         [Required]
-        public int statusId { get; set; }
-        public string noteValues { get; set; }
+        public int position { get; set; }
+        [Required]
+        public int colorId { get; set; }
     }
+
+    //public class Deleted
+    //{
+    //    [Key]
+    //    public string noteId { get; set; }
+    //    [Required]
+    //    public string scrumId { get; set; }
+    //    public string noteValues { get; set; }
+    //    [Required]
+    //    public int position { get; set; }
+    //}
+
 
     public class ChangePasswordData
     {
@@ -149,19 +155,30 @@ namespace MY_ScrumBoard.Models
         public string newName { get; set; }
     }
 
-    public class RenameNote
+    public class СhangeNote
     {
         [Required]
         public string noteId { get; set; }
+        public string noteValue { get; set; }
         [Required]
-        public string newValue { get; set; }
+        public int position { get; set; }
+        [Required]
+        public int colorId { get; set; }
     }
 
-    public class ChangeStatusNote
+    public class ChangePositionNote
     {
         [Required]
         public string noteId { get; set; }
         [Required]
-        public int statusId { get; set; }
+        public int position { get; set; }
+    }
+
+    public class ChangeColorNote
+    {
+        [Required]
+        public string noteId { get; set; }
+        [Required]
+        public int colorId { get; set; }
     }
 }

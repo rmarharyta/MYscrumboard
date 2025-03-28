@@ -18,7 +18,8 @@ export const addNewScrum = async (projectId: string, scrumName:string) => {
 
         if (!token) throw new Error("Token not found");
         const CreateScrum = { projectId, scrumName }
-        await axiosInstance.post("/Scrum", CreateScrum );
+        const response = await axiosInstance.post("/Scrum", CreateScrum);
+        return response.data as Scrum;
     } catch (error) {
         console.error(error)
         throw error;   
@@ -48,9 +49,7 @@ export const findAllProjectScrum = async (projectId:string) :Promise<ScrumRespon
     try {
         
         const response = await axiosInstance.get(`/Scrum/get_by_project/${projectId}`);
-        var xuy = response.data as ScrumResponse;
-        return xuy
-
+        return response.data as ScrumResponse;
     } catch (error) {
         console.error(error)
         throw error;   

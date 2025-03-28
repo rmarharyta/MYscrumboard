@@ -66,8 +66,10 @@ const ScrumsPage: React.FC = () => {
     // isError: deleteIsError,
     mutate: deletemutate,
   } = useMutation({
-    mutationFn: async (scumId: string) => {
-      deleteScrum(scumId); // або ваш API запит
+    mutationFn: async (scrumId: string) => {
+    await DeleteScrum(scrumId); // або ваш API запит
+    setScrums(Scrums.filter((p) => p.scrumId !== scrumId));
+
     },
     onError: (error: Error) => {
       console.error("Помилка ??? скрамів: ", error.message);
@@ -90,14 +92,14 @@ const ScrumsPage: React.FC = () => {
       projectId: string;
       scrumName: string;
     }) => {
-      addScrum(projectId, scrumName);
+      const newScrum = await addNewScrum(projectId, scrumName);
+      setScrums(currentScrums => [...currentScrums, newScrum]);
     },
     onError: (error: Error) => {
       console.error("Помилка ??? проектів: ", error.message);
     },
     onSuccess: () => {
       closeAddScrumDialog();
-      mutate();
       console.log("Проекти ??? успішно");
     },
   });
@@ -115,7 +117,10 @@ const ScrumsPage: React.FC = () => {
       scrumId: string;
       scrumName: string;
     }) => {
-      renameScrum(scrumId, scrumName); // або ваш API запит
+      await RenameScrum(scrumId, scrumName); // або ваш API запит
+      setScrums(
+        Scrums.map((p) => (p.scrumId === scrumId ? { ...p, scrumName } : p))
+      );
     },
     onError: (error: Error) => {
       console.error("Помилка ??? проектів: ", error.message);
@@ -129,22 +134,6 @@ const ScrumsPage: React.FC = () => {
   useEffect(() => {
     mutate(); // Викликаєте fetchScrums, щоб завантажити проекти
   }, []);
-
-  const deleteScrum = (scrumId: string) => {
-    DeleteScrum(scrumId);
-    setScrums(Scrums.filter((p) => p.scrumId !== scrumId));
-  };
-
-  const addScrum = (projectId: string, scrumName: string) => {
-    addNewScrum(projectId, scrumName);
-  };
-
-  const renameScrum = (scrumId: string, scrumName: string) => {
-    RenameScrum(scrumId, scrumName);
-    setScrums(
-      Scrums.map((p) => (p.scrumId === scrumId ? { ...p, scrumName } : p))
-    );
-  };
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -249,20 +238,6 @@ const ScrumsPage: React.FC = () => {
       {/* скрами */}
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         {isPending ? (
-          // <Typography
-          //   sx={{
-          //     justifyContent: "center",
-          //     color: "#8D0000",
-          //     fontFamily: "Poppins, sans-serif",
-          //     fontWeight: 600,
-          //     fontSize: isMobile ? "36px" : "64px",
-          //     textAlign: "center",
-          //     alignContent: "center",
-          //     alignItems: "center",
-          //   }}
-          // >
-          //   Loading...
-          // </Typography>
           <Box
             sx={{
               position: "fixed",

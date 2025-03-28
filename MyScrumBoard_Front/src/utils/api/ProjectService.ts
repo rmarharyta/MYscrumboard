@@ -19,7 +19,8 @@ export const addNewProject = async (projectName:string) => {
 
         if (!token) throw new Error("Token not found");
 
-        await axiosInstance.post("/Projects/create_new_project", projectName );
+        const response = await axiosInstance.post("/Projects/create_new_project", projectName);
+        return response.data as ProjectResponse;
     } catch (error) {
         console.error(error)
         throw error;   

@@ -27,13 +27,12 @@ namespace MY_ScrumBoard.Controllers
 
             try
             {
-                _collaborationServices.CreateCollaboration(collaboration, currentUserId);
+                return Ok(_collaborationServices.CreateCollaboration(collaboration, currentUserId));
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message + "Something went wrong.");
             }
-            return Ok();
         }
 
         //delete

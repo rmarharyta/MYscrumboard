@@ -63,12 +63,11 @@ const Dashboard: React.FC = () => {
 
   //mutate for delete project
   const {
-    // isPending: deleteIsPending,
-    // isError: deleteIsError,
     mutate: deletemutate,
   } = useMutation({
     mutationFn: async (projId: string) => {
-      deleteProject(projId); // або ваш API запит
+      await DeleteProject(projId); // або ваш API запит
+      setProjects(projects.filter((p) => p.projectId !== projectId));
     },
     onError: (error: Error) => {
       console.error("Помилка ??? проектів: ", error.message);
@@ -80,29 +79,23 @@ const Dashboard: React.FC = () => {
 
   //mutate for add project
   const {
-    // isPending: addIsPending,
-    // isError: addIsError,
     mutate: addmutate,
   } = useMutation({
     mutationFn: async (projName: string) => {
-      addProject(projName); // або ваш API запит
+      const newProject = await addNewProject(projName); // або ваш API запит
+      setProjects((projects) => [...projects, newProject]);
     },
     onError: (error: Error) => {
       console.error("Помилка ??? проектів: ", error.message);
     },
     onSuccess: () => {
       closeAddProjectDialog();
-      mutate();
       console.log("Проекти ??? успішно");
     },
   });
 
   //mutate for rename project
-  const {
-    // isPending: addIsPending,
-    // isError: addIsError,
-    mutate: renamemutate,
-  } = useMutation({
+  const { mutate: renamemutate } = useMutation({
     mutationFn: async ({
       projectId,
       projectName,
@@ -110,7 +103,12 @@ const Dashboard: React.FC = () => {
       projectId: string;
       projectName: string;
     }) => {
-      renameProject(projectId, projectName); // або ваш API запит
+      await RenameProject(projectId, projectName); // або ваш API запит
+      setProjects(
+        projects.map((p) =>
+          p.projectId === projectId ? { ...p, projectName } : p
+        )
+      );
     },
     onError: (error: Error) => {
       console.error("Помилка ??? проектів: ", error.message);
@@ -124,24 +122,6 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     mutate(); // Викликаєте fetchProjects, щоб завантажити проекти
   }, []);
-
-  const deleteProject = (projectId: string) => {
-    DeleteProject(projectId);
-    setProjects(projects.filter((p) => p.projectId !== projectId));
-  };
-
-  const addProject = (projectName: string) => {
-    addNewProject(projectName);
-  };
-
-  const renameProject = (projectId: string, projectName: string) => {
-    RenameProject(projectId, projectName);
-    setProjects(
-      projects.map((p) =>
-        p.projectId === projectId ? { ...p, projectName } : p
-      )
-    );
-  };
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -329,20 +309,6 @@ const Dashboard: React.FC = () => {
       {/* проекти */}
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         {isPending ? (
-          // <Typography
-          //   sx={{
-          //     justifyContent: "center",
-          //     color: "#8D0000",
-          //     fontFamily: "Poppins, sans-serif",
-          //     fontWeight: 600,
-          //     fontSize: isMobile ? "36px" : "64px",
-          //     textAlign: "center",
-          //     alignContent: "center",
-          //     alignItems: "center",
-          //   }}
-          // >
-          //   Loading...
-          // </Typography>
           <Box
             sx={{
               position: "fixed",

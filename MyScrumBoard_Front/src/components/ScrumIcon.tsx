@@ -19,6 +19,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import useAuth from "../utils/Contexts/useAuth";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   scrumId: string;
@@ -52,6 +53,8 @@ export default function ScrumIcon({
   const { userId } = useAuth();
   const [imageSrc, setImageSrc] = useState(defaultSrc);
 
+  const navigate = useNavigate();
+  
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -136,6 +139,7 @@ export default function ScrumIcon({
             alignItems: "center",
             justifyContent: "center",
           }}
+          onClick={() => navigate(`/scrumboard/${scrumId}/${ownerId}`)}
         >
           <img
             src={imageSrc}

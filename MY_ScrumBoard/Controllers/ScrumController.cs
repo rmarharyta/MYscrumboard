@@ -28,13 +28,12 @@ namespace MY_ScrumBoard.Controllers
 
             try
             {
-                _scrumServices.CreateScrumBoard(scrum, currentUserId);
+                return Ok(_scrumServices.CreateScrumBoard(scrum, currentUserId));
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message + "Something went wrong.");
             }
-            return Ok();
         }
 
         //rename
