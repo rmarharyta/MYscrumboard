@@ -10,8 +10,8 @@ namespace MY_ScrumBoard.Services
         void DeleteUser(string userId);
         string? LogIn(UserLoginRegister userLogin);
         IEnumerable<User> GetAllUsers();
-        List<object>? GetByProject(string projectId);
-        List<object>? SearchUsers(string searchTerm);
+        List<User> GetUsersByProject(string projectId);
+        List<User> SearchUsers(string searchTerm);
     }
     public class UserServices(ApplicationDbContext _context) : IUserService
     {
@@ -58,39 +58,39 @@ namespace MY_ScrumBoard.Services
         }
 
         //get users by project
-        public List<object>? GetByProject(string projectId)
+        public List<User> GetUsersByProject(string projectId)
         {
             var userIsOwner = _context.Set<Projects>().FirstOrDefault(u => u.projectId == projectId);
+            if (userIsOwner == null)
+                return [];
+
             var userIsInCollaboration = _context.Set<Collaboration>()
                 .Where(u => u.projectId == projectId)
                 .Select(u => u.userId)
                 .ToList();
-            if (userIsOwner == null)
-            {
-                return null;
-            }
+
             var allUserIds = new List<string> { userIsOwner.ownerId }
                 .Union(userIsInCollaboration)
                 .ToList();
             var users = _context.Set<User>()
-                .Where(u => allUserIds.Contains(u.userId))
-                .Select(u => new {u.userId, u.email})
-                .ToList<object>();
+                .Where(u => allUserIds.Contains(u.userId!))
+                .Select(u => new User { userId = u.userId, email = u.email })
+                .ToList();
             return users;
         }
 
-        public List<object>? SearchUsers(string searchTerm)
+        public List<User> SearchUsers(string searchTerm)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
-                return null;
+                return [];
             }
 
             return _context.Users
                 .Where(u => u.email.StartsWith(searchTerm))
                 .Take(50)
-                .Select(u => new { u.userId, u.email })
-                .ToList<object > ();
+                .Select(u => new User { userId = u.userId, email = u.email })
+                .ToList();
         }
     }
 }

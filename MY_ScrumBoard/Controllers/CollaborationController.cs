@@ -8,7 +8,7 @@ namespace MY_ScrumBoard.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CollaborationController(CollaborationServices _collaborationServices, IConfiguration _configuration) : ControllerBase
+    public class CollaborationController(CollaborationServices _collaborationServices) : ControllerBase
     {
         //add new collaboration
         [HttpPost]
@@ -53,10 +53,11 @@ namespace MY_ScrumBoard.Controllers
 
             try
             {
-                _collaborationServices.DeleteCollaborationServ(collaboration,currentUserId);
+                _collaborationServices.DeleteCollaborationServ(collaboration, currentUserId);
             }
-            catch (Exception ex) { 
-                return BadRequest(ex.Message+"There is no such collaboration");
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message + "There is no such collaboration");
             }
             return Ok();
         }
@@ -81,7 +82,7 @@ namespace MY_ScrumBoard.Controllers
             }
             try
             {
-                return Ok(_collaborationServices.GetProjectsCollaboration(projectId,currentUserId));
+                return Ok(_collaborationServices.GetProjectsCollaboration(projectId, currentUserId));
             }
             catch
             {

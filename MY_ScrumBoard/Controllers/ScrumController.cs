@@ -8,7 +8,7 @@ namespace MY_ScrumBoard.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ScrumController(ScrumServices _scrumServices, IConfiguration _configuration) : ControllerBase
+    public class ScrumController(ScrumServices _scrumServices) : ControllerBase
     {
         //create new scrum
         [HttpPost]
@@ -28,11 +28,11 @@ namespace MY_ScrumBoard.Controllers
 
             try
             {
-                _scrumServices.CreateScrumBoard(scrum,currentUserId);
+                _scrumServices.CreateScrumBoard(scrum, currentUserId);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message+ "Something went wrong.");
+                return BadRequest(ex.Message + "Something went wrong.");
             }
             return Ok();
         }
@@ -53,7 +53,7 @@ namespace MY_ScrumBoard.Controllers
             }
             try
             {
-                _scrumServices.RenameScrum(renameScrum,currentUserId);
+                _scrumServices.RenameScrum(renameScrum, currentUserId);
             }
             catch (Exception ex)
             {
@@ -79,7 +79,7 @@ namespace MY_ScrumBoard.Controllers
 
             try
             {
-                _scrumServices.DeleteScrumBoard(scrumId,currentUserId);
+                _scrumServices.DeleteScrumBoard(scrumId, currentUserId);
             }
             catch (Exception ex)
             {

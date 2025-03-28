@@ -20,7 +20,7 @@ namespace MY_ScrumBoard.Models
         [EmailAddress]
         public string email { get; set; }
         [Required]
-        public string userPassword { get; set; }
+        public string? userPassword { get; set; }
     }
 
     public class Projects

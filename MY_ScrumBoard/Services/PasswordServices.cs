@@ -25,7 +25,8 @@ namespace MY_ScrumBoard.Services
         {
             var passResetSys = _context.Set<PasswordResetSys>().FirstOrDefault(u => u.PasswordResetToken == model.ResetToken);
             var user = _context.Set<User>().FirstOrDefault(u => u.email == passResetSys.Email);
-            if (user == null) {
+            if (user == null)
+            {
                 throw new Exception("User Not Found");
             }
             user.userPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(model.newPassword);

@@ -11,55 +11,23 @@ namespace MY_ScrumBoard
     {
         public static void Main(string[] args)
         {
-            var AllowAllOrigins = "_allowAllOrigins";
 
             var builder = WebApplication.CreateBuilder(args);
-
-            //CORS - Cross-Origin Resource Sharing
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy(name: AllowAllOrigins,
-                                  policy =>
-                                  {
-                                      policy.AllowAnyOrigin()
-                                            .AllowAnyHeader()
-                                            .AllowAnyMethod();
-                                  });
-            });
+            builder.Services.AddCrossOrigins();
+            builder.Services.AddMemoryCache();
+            builder.Services.RegisterSecretKeys(builder.Configuration);
+            builder.Services.RegisterServices();
+            builder.Services.AddAuthorization();
+            builder.Services.AddJwtAuthentication(builder.Configuration);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
 
             //connect to MySQL 
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
+            builder.Services.AddDbContext<ApplicationDbContext>(options => { options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("No connection string")); });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddScoped<UserServices>();
-            builder.Services.AddScoped<PasswordServices>();
-            builder.Services.AddScoped<ProjectServices>();
-            builder.Services.AddScoped<CollaborationServices>();
-            builder.Services.AddScoped<ScrumServices>();
-            builder.Services.AddScoped<NotesServices>();
-
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = builder.Configuration["JwtConfig:Issuer"],
-                        ValidAudience = builder.Configuration["JwtConfig:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:Key"]))
-                    };
-                });
 
             var app = builder.Build();
 
@@ -72,7 +40,7 @@ namespace MY_ScrumBoard
 
             app.UseHttpsRedirection();
 
-            app.UseCors(AllowAllOrigins);
+            app.UseCors("_allowAllOrigins");
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -80,6 +48,8 @@ namespace MY_ScrumBoard
             app.MapControllers();
 
             app.Run();
+
+
         }
     }
 }

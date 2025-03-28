@@ -8,7 +8,7 @@ namespace MY_ScrumBoard.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class NotesController(NotesServices _notesServices, IConfiguration _configuration) : ControllerBase
+    public class NotesController(NotesServices _notesServices) : ControllerBase
     {
         //create
         [HttpPost]
@@ -76,7 +76,8 @@ namespace MY_ScrumBoard.Controllers
         public IActionResult DeleteNote([FromBody] Notes note)
         {
 
-            if (!ModelState.IsValid) { 
+            if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
             }
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -88,7 +89,8 @@ namespace MY_ScrumBoard.Controllers
             {
                 _notesServices.DeleteNoteFromScrum(note, currentUserId);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return BadRequest(ex.Message + "Something went wrong.");
             }
             return Ok();
@@ -106,7 +108,7 @@ namespace MY_ScrumBoard.Controllers
         [Authorize]
         public IActionResult GetByScrum([FromBody] string scrumId)
         {
-            if (scrumId==null)
+            if (scrumId == null)
             {
                 return BadRequest("The scrum id is required.");
             }

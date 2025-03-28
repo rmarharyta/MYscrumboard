@@ -36,7 +36,7 @@ namespace MY_ScrumBoard.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message+ "Something went wrong.");
+                return BadRequest(ex.Message + "Something went wrong.");
             }
         }
         //request for changing password
@@ -53,21 +53,21 @@ namespace MY_ScrumBoard.Controllers
                 return BadRequest("There is no such user");
             }
             string resetToken = GenerateJWTToken(returnedUser);
-            PasswordResetSys passResetSys = new PasswordResetSys
+            PasswordResetSys passResetSys = new()
             {
-                Id = returnedUser.userId,
+                Id = returnedUser.userId!,
                 Email = returnedUser.email,
                 PasswordResetToken = resetToken
             };
             try
             {
                 SendPasswordResetEmail(returnedUser.email, resetToken);
+                return Ok(new { message = "Password reset email sent." });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, "Error sending password reset email.");
             }
-            return Ok(new { message = "Password reset email sent." });
 
         }
         [HttpPost("reset_password")]
@@ -93,11 +93,11 @@ namespace MY_ScrumBoard.Controllers
         {
             var claims = new List<Claim>
             {
-                new(ClaimTypes.NameIdentifier, user.userId),
+                new(ClaimTypes.NameIdentifier, user.userId!),
                 new(ClaimTypes.Email, user.email)
             };
 
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtConfig:Key"]));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtConfig:Key"] ?? throw new InvalidOperationException("No JWT  Key")));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var jwtToken = new JwtSecurityToken(
@@ -115,24 +115,26 @@ namespace MY_ScrumBoard.Controllers
         {
             IConfiguration emailSettings = _configuration.GetSection("EmailSettings");
 
-            string smtpServer = emailSettings["SmtpServer"];
-            int smtpPort = int.Parse(emailSettings["SmtpPort"]);
-            string smtpEmail = emailSettings["SmtpEmail"];
-            string smtpPassword = emailSettings["SmtpPassword"];
+            string smtpServer = emailSettings["SmtpServer"] ?? throw new InvalidOperationException("No SmtpServer");
+            int smtpPort = int.Parse(emailSettings["SmtpPort"] ?? throw new InvalidOperationException("No SmtpPort"));
+            string smtpEmail = emailSettings["SmtpEmail"] ?? throw new InvalidOperationException("No SmtpEmail");
+            string smtpPassword = emailSettings["SmtpPassword"] ?? throw new InvalidOperationException("No SmtpPassword");
 
             // Construct the email message
-            MailAddress to = new MailAddress(email);
-            MailAddress from = new MailAddress(smtpEmail);
-            MailMessage emailMsg = new MailMessage(from, to);
+            MailMessage emailMsg = new()
+            {
+                To = { new MailAddress(email) },
+                From = new MailAddress(smtpEmail),
+                Subject = "Password Reset Request",
+                Body = $"You have requested to reset your password. Click on this link to reset it: {resetToken}"
+            };
 
-            emailMsg.Subject = "Password Reset Request";
-            emailMsg.Body = $"You have requested to reset your password. Click on this link to reset it: {resetToken}";
-
-            SmtpClient smtp = new SmtpClient(smtpServer, smtpPort);
-            smtp.Credentials = new NetworkCredential(smtpEmail, smtpPassword);
-
-            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-            smtp.EnableSsl = true;
+            SmtpClient smtp = new(smtpServer, smtpPort)
+            {
+                Credentials = new NetworkCredential(smtpEmail, smtpPassword),
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                EnableSsl = true
+            };
             smtp.Send(emailMsg);
         }
 

@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using MY_ScrumBoard.Models;
 using MY_ScrumBoard.Services;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -11,7 +14,7 @@ namespace MY_ScrumBoard.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController(UserServices _userServices, IConfiguration _configuration) : ControllerBase
+    public class UsersController(UserServices _userServices, IEncryptionService encryptionService, Services.IAuthenticationService authenticationService, IJwtService jwtService) : ControllerBase
     {
         //Register
         [HttpPost]
@@ -25,7 +28,18 @@ namespace MY_ScrumBoard.Controllers
             try
             {
                 var returnedUserId = _userServices.Registration(userRegister);
-                return CreatedAtAction(nameof(RegistrationUser), new { returnedUserId, Token = GenerateJWTToken(returnedUserId) });
+                var user = new User
+                {
+                    userId = returnedUserId
+                };
+                var tokenExpiration = DateTime.UtcNow.Add(AuthenticationSettings.TokenExpiration);
+
+                string token = jwtService.GenerateToken(user, tokenExpiration);
+                string refreshToken = encryptionService.Encrypt(encryptionService.SecretKeys.RefreshTokenEncryptionSecretKey, returnedUserId);
+
+                authenticationService.SetAuthCookies(HttpContext, token, refreshToken);
+
+                return CreatedAtAction(nameof(RegistrationUser), new { returnedUserId });
             }
             catch (Exception ex)
             {
@@ -45,14 +59,33 @@ namespace MY_ScrumBoard.Controllers
             try
             {
                 var returnedUserId = _userServices.LogIn(userLogin)
-                    ?? throw new Exception("Login is failed");// Edited: New Null check
+                    ?? throw new Exception("Login is failed");
 
-                return Ok(new { returnedUserId, Token = GenerateJWTToken(returnedUserId) });
+                var user = new User
+                {
+                    userId = returnedUserId
+                };
+                var tokenExpiration = DateTime.UtcNow.Add(AuthenticationSettings.TokenExpiration);
+
+                string token = jwtService.GenerateToken(user, tokenExpiration);
+                string refreshToken = encryptionService.Encrypt(encryptionService.SecretKeys.RefreshTokenEncryptionSecretKey, returnedUserId);
+
+                authenticationService.SetAuthCookies(HttpContext, token, refreshToken);
+
+                return Ok(new { returnedUserId });
             }
             catch (Exception ex)
             {
                 return BadRequest("Problem: " + ex.Message);
             }
+        }
+        //logout
+        [HttpGet]
+        [Route("/api/logout")]
+        public IActionResult LogOutUsers()
+        {
+            authenticationService.RemoveAuthCookies(HttpContext);
+            return Ok();
         }
 
         //delete
@@ -85,7 +118,7 @@ namespace MY_ScrumBoard.Controllers
 
         //get by project
         [HttpGet("get_by_project/{projectId}")]
-        public IActionResult GetByProject([FromRoute]string projectId)
+        public IActionResult GetByProject([FromRoute] string projectId)
         {
             if (projectId == null)
             {
@@ -93,32 +126,36 @@ namespace MY_ScrumBoard.Controllers
             }
             try
             {
-                return Ok(_userServices.GetByProject(projectId));
+                return Ok(_userServices.GetUsersByProject(projectId));
             }
-            catch (Exception ex) {
-                return BadRequest(ex.Message + "Something went wrong.");
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message + " Something went wrong.");
             }
         }
 
-        private string GenerateJWTToken(string userId)
+        [HttpGet("api/refresh")]
+        public IActionResult RefreshToken()
         {
-            var claims = new List<Claim>
+            string? refreshToken = HttpContext.Request.Cookies[CookieKeys.RefreshToken];
+            if (refreshToken is null)
+                return Unauthorized();
+
+            string userId = encryptionService.Decrypt(encryptionService.SecretKeys.RefreshTokenEncryptionSecretKey, refreshToken);
+            if (userId == null)
+                return Unauthorized();
+
+            try
             {
-                new(ClaimTypes.NameIdentifier, userId)
-            };
-
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtConfig:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var jwtToken = new JwtSecurityToken(
-                issuer: _configuration["JwtConfig:Issuer"],
-                audience: _configuration["JwtConfig:Audience"],
-                claims: claims,
-                notBefore: DateTime.UtcNow,
-                expires: DateTime.UtcNow.AddMinutes(30),
-                signingCredentials: credentials
-             );
-            return new JwtSecurityTokenHandler().WriteToken(jwtToken);
+                var user = new User { userId = userId };
+                var token = jwtService.GenerateToken(user, DateTime.UtcNow.Add(AuthenticationSettings.TokenExpiration));
+                authenticationService.SetAuthCookies(HttpContext, token, refreshToken);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return Unauthorized();
+            }
         }
     }
 }
