@@ -3,11 +3,6 @@ import {
   Grid2 as Grid,
   IconButton,
   Button,
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  Radio,
-  FormControlLabel,
   Tooltip,
   Menu,
   MenuItem,
@@ -21,93 +16,110 @@ import {
   Typography,
   CircularProgress,
 } from "@mui/material";
-import ProjectIcon from "../components/ProjectIcon";
 import AddIcon from "@mui/icons-material/Add";
 import SortIcon from "@mui/icons-material/Sort";
-import FilterListIcon from "@mui/icons-material/FilterList";
 import { useState, MouseEvent, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import {
-  addNewProject,
-  DeleteProject,
-  findAllUserProject,
-  RenameProject,
-} from "../utils/api/ProjectService";
-import useAuth from "../utils/Contexts/useAuth";
-import AddButtonProject from "../components/AddButtonProject";
-interface Project {
+  addNewScrum,
+  DeleteScrum,
+  findAllProjectScrum,
+  RenameScrum,
+} from "../utils/api/ScrumService";
+import ScrumIcon from "../components/ScrumIcon";
+import { useParams } from "react-router-dom";
+import AddButtonScrums from "../components/AddButtonScrums";
+
+interface Scrum {
+  scrumId: string;
   projectId: string;
-  ownerId: string;
-  projectName: string;
+  scrumName: string;
   date_time: Date;
 }
 
-const Dashboard: React.FC = () => {
-  const { userId } = useAuth();
-  console.log(userId);
+const ScrumsPage: React.FC = () => {
+  const { projectId } = useParams<{
+    projectId: string;
+  }>();
 
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [Scrums, setScrums] = useState<Scrum[]>([]);
+
+  const [ownerId, setOwnerId] = useState<string>("");
 
   const { isPending, isError, mutate } = useMutation({
     mutationFn: async () => {
-      const response = await findAllUserProject(); // або ваш API запит
-      setProjects(response); // зберігаємо отримані проекти
+      const response = await findAllProjectScrum(projectId ?? ""); // або ваш API запит
+      setScrums(response.scrums); // зберігаємо отримані проекти
+      setOwnerId(response.ownerId);
     },
     onError: (error: any) => {
-      console.error("Помилка завантаження проектів: ", error);
+      console.error("Помилка завантаження скрамів: ", error);
     },
     onSuccess: () => {
       console.log("Проекти завантажено успішно");
     },
   });
 
-  //mutate for delete project
+  //mutate for delete Scrum
   const {
+    // isPending: deleteIsPending,
+    // isError: deleteIsError,
     mutate: deletemutate,
   } = useMutation({
-    mutationFn: async (projId: string) => {
-      await DeleteProject(projId); // або ваш API запит
-      setProjects(projects.filter((p) => p.projectId !== projectId));
+    mutationFn: async (scrumId: string) => {
+    await DeleteScrum(scrumId); // або ваш API запит
+    setScrums(Scrums.filter((p) => p.scrumId !== scrumId));
+
     },
     onError: (error: Error) => {
-      console.error("Помилка ??? проектів: ", error.message);
+      console.error("Помилка ??? скрамів: ", error.message);
     },
     onSuccess: () => {
       console.log("Проекти ??? успішно");
     },
   });
 
-  //mutate for add project
+  //mutate for add Scrum
   const {
+    // isPending: addIsPending,
+    // isError: addIsError,
     mutate: addmutate,
   } = useMutation({
-    mutationFn: async (projName: string) => {
-      const newProject = await addNewProject(projName); // або ваш API запит
-      setProjects((projects) => [...projects, newProject]);
+    mutationFn: async ({
+      projectId,
+      scrumName,
+    }: {
+      projectId: string;
+      scrumName: string;
+    }) => {
+      const newScrum = await addNewScrum(projectId, scrumName);
+      setScrums(currentScrums => [...currentScrums, newScrum]);
     },
     onError: (error: Error) => {
       console.error("Помилка ??? проектів: ", error.message);
     },
     onSuccess: () => {
-      closeAddProjectDialog();
+      closeAddScrumDialog();
       console.log("Проекти ??? успішно");
     },
   });
 
-  //mutate for rename project
-  const { mutate: renamemutate } = useMutation({
+  //mutate for rename Scrum
+  const {
+    // isPending: addIsPending,
+    // isError: addIsError,
+    mutate: renamemutate,
+  } = useMutation({
     mutationFn: async ({
-      projectId,
-      projectName,
+      scrumId,
+      scrumName,
     }: {
-      projectId: string;
-      projectName: string;
+      scrumId: string;
+      scrumName: string;
     }) => {
-      await RenameProject(projectId, projectName); // або ваш API запит
-      setProjects(
-        projects.map((p) =>
-          p.projectId === projectId ? { ...p, projectName } : p
-        )
+      await RenameScrum(scrumId, scrumName); // або ваш API запит
+      setScrums(
+        Scrums.map((p) => (p.scrumId === scrumId ? { ...p, scrumName } : p))
       );
     },
     onError: (error: Error) => {
@@ -120,19 +132,15 @@ const Dashboard: React.FC = () => {
   });
 
   useEffect(() => {
-    mutate(); // Викликаєте fetchProjects, щоб завантажити проекти
+    mutate(); // Викликаєте fetchScrums, щоб завантажити проекти
   }, []);
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const [sortBy, setSortBy] = useState<"name" | "newest" | "oldest">("newest");
-  const [filterRole, setFilterRole] = useState<"" | "owner" | "participant">(
-    ""
-  );
-  const [filterAnchor, setFilterAnchor] = useState<null | HTMLElement>(null);
   const [sortAnchor, setSortAnchor] = useState<null | HTMLElement>(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [newProjectName, setNewProjectName] = useState("");
+  const [newscrumName, setNewscrumName] = useState("");
 
   const [isTouched, setIsTouched] = useState(false);
   const handleBlur = () => {
@@ -142,49 +150,19 @@ const Dashboard: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const sortedProjects = [...projects]
-    .filter((project) => {
-      if (filterRole === "owner") {
-        return project.ownerId === userId;
-      } else if (filterRole === "participant") {
-        return project.ownerId !== userId;
-      } else return project;
-    })
-    .sort((a, b) => {
-      if (sortBy === "name") {
-        return a.projectName.localeCompare(b.projectName);
-      } else if (sortBy === "newest") {
-        return (
-          new Date(b.date_time).getTime() - new Date(a.date_time).getTime()
-        );
-      } else {
-        return (
-          new Date(a.date_time).getTime() - new Date(b.date_time).getTime()
-        );
-      }
-    });
+  const sortedScrums = [...Scrums].sort((a, b) => {
+    if (sortBy === "name") {
+      return a.scrumName.localeCompare(b.scrumName);
+    } else if (sortBy === "newest") {
+      return new Date(b.date_time).getTime() - new Date(a.date_time).getTime();
+    } else {
+      return new Date(a.date_time).getTime() - new Date(b.date_time).getTime();
+    }
+  });
 
   const handleSortChange = (newSortBy: "name" | "newest" | "oldest") => {
     setSortBy(newSortBy);
     setSortAnchor(null);
-  };
-
-  const handleFilterRoleChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setFilterRole(event.target.value as "owner" | "participant");
-  };
-
-  const clearFilter = () => {
-    setFilterRole("");
-  };
-
-  const openFilterMenu = (event: MouseEvent<HTMLButtonElement>) => {
-    setFilterAnchor(event.currentTarget);
-  };
-
-  const closeFilterMenu = () => {
-    setFilterAnchor(null);
   };
 
   const openSortMenu = (event: MouseEvent<HTMLButtonElement>) => {
@@ -195,10 +173,10 @@ const Dashboard: React.FC = () => {
     setSortAnchor(null);
   };
 
-  const openAddProjectDialog = () => setOpenDialog(true);
-  const closeAddProjectDialog = () => {
+  const openAddScrumDialog = () => setOpenDialog(true);
+  const closeAddScrumDialog = () => {
     setOpenDialog(false);
-    setNewProjectName("");
+    setNewscrumName("");
   };
 
   return (
@@ -213,8 +191,8 @@ const Dashboard: React.FC = () => {
           mt: 4,
         }}
       >
-        <Tooltip title="Add project" color="#08031B" arrow>
-          <IconButton onClick={openAddProjectDialog}>
+        <Tooltip title="Add Scrum" color="#08031B" arrow>
+          <IconButton onClick={openAddScrumDialog}>
             <AddIcon />
           </IconButton>
         </Tooltip>
@@ -256,57 +234,8 @@ const Dashboard: React.FC = () => {
             By oldest data
           </MenuItem>
         </Menu>
-
-        {/* Кнопка фільтрації */}
-        <Tooltip title="Filter" color="#08031B" arrow>
-          <IconButton onClick={openFilterMenu}>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-
-        {/* Меню фільтрації */}
-        <Menu
-          sx={{
-            fontFamily: "Poppins, sans-serif", // Шрифт
-            fontSize: "15px", // Розмір
-            fontWeight: 400,
-          }}
-          anchorEl={filterAnchor}
-          open={Boolean(filterAnchor)}
-          onClose={closeFilterMenu}
-        >
-          <MenuItem sx={{ width: 240, justifyContent: "center" }}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Filter</FormLabel>
-              <RadioGroup
-                value={filterRole}
-                onChange={handleFilterRoleChange}
-                row
-              >
-                <FormControlLabel
-                  value="owner"
-                  control={<Radio />}
-                  label="I am owner"
-                />
-                <FormControlLabel
-                  value="participant"
-                  control={<Radio />}
-                  label="I am member"
-                />
-              </RadioGroup>
-            </FormControl>
-            {/* Кнопка очищення фільтра */}
-            <Button
-              onClick={clearFilter}
-              variant="outlined"
-              sx={{ color: "#08031B" }}
-            >
-              Clear
-            </Button>
-          </MenuItem>
-        </Menu>
       </Box>
-      {/* проекти */}
+      {/* скрами */}
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         {isPending ? (
           <Box
@@ -351,21 +280,22 @@ const Dashboard: React.FC = () => {
               width: "100%",
             }}
           >
-            {sortedProjects.map((project) => (
+            {sortedScrums.map((Scrum) => (
               <Grid
-                key={project.projectId}
+                key={Scrum.scrumId}
                 columns={{ xs: 6, sm: 4, md: 3, lg: 2 }}
                 sx={{ display: "flex", justifyContent: "center" }}
               >
-                <ProjectIcon
-                  projectId={project.projectId}
-                  ownerId={project.ownerId}
-                  projectName={project.projectName}
-                  date_time={project.date_time}
+                <ScrumIcon
+                  scrumId={Scrum.scrumId}
+                  projectId={Scrum.projectId}
+                  ownerId={ownerId}
+                  scrumName={Scrum.scrumName}
+                  date_time={Scrum.date_time}
                   deletemutate={deletemutate}
                   renamemutate={renamemutate}
-                  defaultSrc="/src/assets/Mediamodifier-Design.svg"
-                  hoverSrc="/src/assets/Mediamodifier-Design (1).svg"
+                  defaultSrc="/src/assets/scrum_close.svg"
+                  hoverSrc="/src/assets/scrum_open.svg"
                 />
               </Grid>
             ))}
@@ -374,8 +304,8 @@ const Dashboard: React.FC = () => {
       </Box>
 
       {/* Діалогове вікно додавання проекту */}
-      <Dialog open={openDialog} onClose={closeAddProjectDialog}>
-        <DialogTitle sx={{ color: "#08031B" }}>Add New Project</DialogTitle>
+      <Dialog open={openDialog} onClose={closeAddScrumDialog}>
+        <DialogTitle sx={{ color: "#08031B" }}>Add New Scrum</DialogTitle>
         <DialogContent>
           <TextField
             sx={{
@@ -408,16 +338,16 @@ const Dashboard: React.FC = () => {
             }}
             fullWidth
             onBlur={handleBlur}
-            label="Project Name"
+            label="Scrum Name"
             variant="outlined"
-            value={newProjectName}
-            onChange={(e) => setNewProjectName(e.target.value)}
+            value={newscrumName}
+            onChange={(e) => setNewscrumName(e.target.value)}
             error={!isTouched && isSubmitted}
           />
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={closeAddProjectDialog}
+            onClick={closeAddScrumDialog}
             variant="contained"
             sx={{
               backgroundColor: "#FFFFFF",
@@ -431,8 +361,9 @@ const Dashboard: React.FC = () => {
           >
             Cancel
           </Button>
-          <AddButtonProject
-            name={newProjectName}
+          <AddButtonScrums
+            name={newscrumName}
+            projectId={projectId ?? ""}
             setIsSubmitted={setIsSubmitted}
             isDisabled={!isTouched}
             addmutate={addmutate}
@@ -442,4 +373,4 @@ const Dashboard: React.FC = () => {
     </Box>
   );
 };
-export default Dashboard;
+export default ScrumsPage;

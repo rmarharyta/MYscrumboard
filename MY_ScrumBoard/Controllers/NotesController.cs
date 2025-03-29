@@ -13,7 +13,7 @@ namespace MY_ScrumBoard.Controllers
         //create
         [HttpPost]
         [Authorize]
-        public IActionResult CreateNote([FromBody] Notes note)
+        public IActionResult CreateNote([FromBody] CreateNotes note)
         {
             if (!ModelState.IsValid)
             {
@@ -21,19 +21,19 @@ namespace MY_ScrumBoard.Controllers
             }
             try
             {
-                _notesServices.CreateNewNote(note);
+                Console.WriteLine(note);
+                return Ok(_notesServices.CreateNewNote(note));
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message + "Something went wrong.");
             }
-            return Ok();
         }
 
         //change value
-        [HttpPut("change_value")]
+        [HttpPut("change_note")]
         [Authorize]
-        public IActionResult ChangeNoteValue([FromBody] RenameNote newValue)
+        public IActionResult ChangeWholeNote([FromBody] СhangeNote newValue)
         {
             if (!ModelState.IsValid)
             {
@@ -50,10 +50,10 @@ namespace MY_ScrumBoard.Controllers
             return Ok();
         }
 
-        //change status
-        [HttpPut("change_status")]
+        //change position
+        [HttpPut("change_position")]
         [Authorize]
-        public IActionResult ChangeNoteStatus([FromBody] ChangeStatusNote newStatus)
+        public IActionResult ChangeNotePosition([FromBody] ChangePositionNote newPosition)
         {
             if (!ModelState.IsValid)
             {
@@ -61,7 +61,27 @@ namespace MY_ScrumBoard.Controllers
             }
             try
             {
-                _notesServices.ChangeStatus(newStatus);
+                _notesServices.ChangePosition(newPosition);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message + "Something went wrong.");
+            }
+            return Ok();
+        }
+
+        //change status
+        [HttpPut("change_color")]
+        [Authorize]
+        public IActionResult ChangeNoteColor([FromBody] ChangeColorNote newColor)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                _notesServices.ChangeColor(newColor);
             }
             catch (Exception ex)
             {
@@ -71,9 +91,9 @@ namespace MY_ScrumBoard.Controllers
         }
 
         //delete note
-        [HttpDelete]
+        [HttpDelete("{noteId}")]
         [Authorize]
-        public IActionResult DeleteNote([FromBody] Notes note)
+        public IActionResult DeleteNote([FromRoute] string noteId)
         {
 
             if (!ModelState.IsValid)
@@ -87,7 +107,7 @@ namespace MY_ScrumBoard.Controllers
             }
             try
             {
-                _notesServices.DeleteNoteFromScrum(note, currentUserId);
+                _notesServices.DeleteNoteFromScrum(noteId, currentUserId);
             }
             catch (Exception ex)
             {
@@ -104,9 +124,9 @@ namespace MY_ScrumBoard.Controllers
         }
 
         //get by scrum
-        [HttpGet("get_by_scrum")]
+        [HttpGet("get_by_scrum/{scrumId}")]
         [Authorize]
-        public IActionResult GetByScrum([FromBody] string scrumId)
+        public IActionResult GetByScrum([FromRoute] string scrumId)
         {
             if (scrumId == null)
             {

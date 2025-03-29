@@ -5,7 +5,7 @@ namespace MY_ScrumBoard.Services
     public class ProjectServices(ApplicationDbContext _context)
     {
         //створення
-        public void CreateProject(string ownerId, string projectName)
+        public Projects CreateProject(string ownerId, string projectName)
         {
             var project_exist = _context.Projects.FirstOrDefault(u => u.ownerId == ownerId && u.projectName == projectName);
             if (project_exist != null)
@@ -19,15 +19,28 @@ namespace MY_ScrumBoard.Services
             project.ownerId = ownerId;
             _context.Set<Projects>().Add(project);
             _context.SaveChanges();
+            return project;
         }
 
         //видалення
         public void DeleteProject(string id, string ownerId)
         {
-            var project = _context.Set<Projects>().FirstOrDefault(u => u.projectId == id && u.ownerId == ownerId)
-                ?? throw new Exception("There is no such project or you cannot delete this project.");
+            var project = _context.Set<Projects>().FirstOrDefault(u => u.projectId == id)
+                ?? throw new Exception("There is no such project");
+            if (project.ownerId != ownerId)
+            {
+                var collaboration = _context.Collaboration
+                    .FirstOrDefault(c => c.projectId == project.projectId && c.userId == ownerId);
 
-            _context.Set<Projects>().Remove(project);
+                if (collaboration != null)
+                {
+                    _context.Collaboration.Remove(collaboration);
+                }
+            }
+            else
+            {
+                _context.Set<Projects>().Remove(project);
+            }
             _context.SaveChanges();
         }
 

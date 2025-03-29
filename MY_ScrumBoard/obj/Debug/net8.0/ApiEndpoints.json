@@ -83,23 +83,7 @@
     "Parameters": [
       {
         "Name": "note",
-        "Type": "MY_ScrumBoard.Models.Notes",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MY_ScrumBoard.Controllers.NotesController",
-    "Method": "DeleteNote",
-    "RelativePath": "api/Notes",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "note",
-        "Type": "MY_ScrumBoard.Models.Notes",
+        "Type": "MY_ScrumBoard.Models.CreateNotes",
         "IsRequired": true
       }
     ],
@@ -117,15 +101,15 @@
   },
   {
     "ContainingType": "MY_ScrumBoard.Controllers.NotesController",
-    "Method": "ChangeNoteStatus",
-    "RelativePath": "api/Notes/change_status",
-    "HttpMethod": "PUT",
+    "Method": "DeleteNote",
+    "RelativePath": "api/Notes/{noteId}",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "newStatus",
-        "Type": "MY_ScrumBoard.Models.ChangeStatusNote",
+        "Name": "noteId",
+        "Type": "System.String",
         "IsRequired": true
       }
     ],
@@ -133,15 +117,47 @@
   },
   {
     "ContainingType": "MY_ScrumBoard.Controllers.NotesController",
-    "Method": "ChangeNoteValue",
-    "RelativePath": "api/Notes/change_value",
+    "Method": "ChangeNoteColor",
+    "RelativePath": "api/Notes/change_color",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "newColor",
+        "Type": "MY_ScrumBoard.Models.ChangeColorNote",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.NotesController",
+    "Method": "ChangeWholeNote",
+    "RelativePath": "api/Notes/change_note",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "newValue",
-        "Type": "MY_ScrumBoard.Models.RenameNote",
+        "Type": "MY_ScrumBoard.Models.\u0421hangeNote",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.NotesController",
+    "Method": "ChangeNotePosition",
+    "RelativePath": "api/Notes/change_position",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "newPosition",
+        "Type": "MY_ScrumBoard.Models.ChangePositionNote",
         "IsRequired": true
       }
     ],
@@ -150,7 +166,7 @@
   {
     "ContainingType": "MY_ScrumBoard.Controllers.NotesController",
     "Method": "GetByScrum",
-    "RelativePath": "api/Notes/get_by_scrum",
+    "RelativePath": "api/Notes/get_by_scrum/{scrumId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -325,7 +341,7 @@
     "Parameters": [
       {
         "Name": "scrum",
-        "Type": "MY_ScrumBoard.Models.Scrum",
+        "Type": "MY_ScrumBoard.Models.CreateScrum",
         "IsRequired": true
       }
     ],
@@ -349,8 +365,18 @@
   },
   {
     "ContainingType": "MY_ScrumBoard.Controllers.ScrumController",
-    "Method": "DeleteScrum",
+    "Method": "GetScrums",
     "RelativePath": "api/Scrum",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.ScrumController",
+    "Method": "DeleteScrum",
+    "RelativePath": "api/Scrum/{scrumId}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -365,18 +391,8 @@
   },
   {
     "ContainingType": "MY_ScrumBoard.Controllers.ScrumController",
-    "Method": "GetScrums",
-    "RelativePath": "api/Scrum",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MY_ScrumBoard.Controllers.ScrumController",
     "Method": "GetScrumByProject",
-    "RelativePath": "api/Scrum/get_by_project",
+    "RelativePath": "api/Scrum/get_by_project/{projectId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -391,9 +407,9 @@
   },
   {
     "ContainingType": "MY_ScrumBoard.Controllers.UsersController",
-    "Method": "GetAllUsers",
+    "Method": "DeleteUsers",
     "RelativePath": "api/Users",
-    "HttpMethod": "GET",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
@@ -401,18 +417,12 @@
   },
   {
     "ContainingType": "MY_ScrumBoard.Controllers.UsersController",
-    "Method": "DeleteUsers",
-    "RelativePath": "api/Users/{Id}",
-    "HttpMethod": "DELETE",
+    "Method": "GetAllUsers",
+    "RelativePath": "api/Users",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [
-      {
-        "Name": "Id",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

@@ -115,17 +115,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Notes"
+                "$ref": "#/components/schemas/CreateNotes"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Notes"
+                "$ref": "#/components/schemas/CreateNotes"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Notes"
+                "$ref": "#/components/schemas/CreateNotes"
               }
             }
           }
@@ -136,132 +136,147 @@
           }
         }
       },
+      "get": {
+        "tags": [
+          "Notes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Notes/change_note": {
+      "put": {
+        "tags": [
+          "Notes"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/СhangeNote"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/СhangeNote"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/СhangeNote"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Notes/change_position": {
+      "put": {
+        "tags": [
+          "Notes"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePositionNote"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePositionNote"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePositionNote"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Notes/change_color": {
+      "put": {
+        "tags": [
+          "Notes"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeColorNote"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeColorNote"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeColorNote"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Notes/{noteId}": {
       "delete": {
         "tags": [
           "Notes"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Notes"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Notes"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Notes"
-              }
+        "parameters": [
+          {
+            "name": "noteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK"
           }
         }
-      },
+      }
+    },
+    "/api/Notes/get_by_scrum/{scrumId}": {
       "get": {
         "tags": [
           "Notes"
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Notes/change_value": {
-      "put": {
-        "tags": [
-          "Notes"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RenameNote"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RenameNote"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/RenameNote"
-              }
+        "parameters": [
+          {
+            "name": "scrumId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Notes/change_status": {
-      "put": {
-        "tags": [
-          "Notes"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangeStatusNote"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangeStatusNote"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangeStatusNote"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Notes/get_by_scrum": {
-      "get": {
-        "tags": [
-          "Notes"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "string"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "OK"
@@ -501,17 +516,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Scrum"
+                "$ref": "#/components/schemas/CreateScrum"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Scrum"
+                "$ref": "#/components/schemas/CreateScrum"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Scrum"
+                "$ref": "#/components/schemas/CreateScrum"
               }
             }
           }
@@ -551,35 +566,6 @@
           }
         }
       },
-      "delete": {
-        "tags": [
-          "Scrum"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
       "get": {
         "tags": [
           "Scrum"
@@ -591,30 +577,43 @@
         }
       }
     },
-    "/api/Scrum/get_by_project": {
+    "/api/Scrum/{scrumId}": {
+      "delete": {
+        "tags": [
+          "Scrum"
+        ],
+        "parameters": [
+          {
+            "name": "scrumId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Scrum/get_by_project/{projectId}": {
       "get": {
         "tags": [
           "Scrum"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "string"
-              }
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -684,29 +683,17 @@
         }
       }
     },
-    "/api/Users/{Id}": {
+    "/api/Users": {
       "delete": {
         "tags": [
           "Users"
-        ],
-        "parameters": [
-          {
-            "name": "Id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
         ],
         "responses": {
           "200": {
             "description": "OK"
           }
         }
-      }
-    },
-    "/api/Users": {
+      },
       "get": {
         "tags": [
           "Users"
@@ -764,6 +751,24 @@
   },
   "components": {
     "schemas": {
+      "ChangeColorNote": {
+        "required": [
+          "colorId",
+          "noteId"
+        ],
+        "type": "object",
+        "properties": {
+          "noteId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "colorId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "ChangePasswordData": {
         "required": [
           "email",
@@ -788,10 +793,10 @@
         },
         "additionalProperties": false
       },
-      "ChangeStatusNote": {
+      "ChangePositionNote": {
         "required": [
           "noteId",
-          "statusId"
+          "position"
         ],
         "type": "object",
         "properties": {
@@ -799,7 +804,7 @@
             "minLength": 1,
             "type": "string"
           },
-          "statusId": {
+          "position": {
             "type": "integer",
             "format": "int32"
           }
@@ -824,28 +829,47 @@
         },
         "additionalProperties": false
       },
-      "Notes": {
+      "CreateNotes": {
         "required": [
-          "scrumId",
-          "statusId"
+          "colorId",
+          "position",
+          "scrumId"
         ],
         "type": "object",
         "properties": {
-          "noteId": {
-            "type": "string",
-            "nullable": true
-          },
           "scrumId": {
             "minLength": 1,
             "type": "string"
           },
-          "statusId": {
-            "type": "integer",
-            "format": "int32"
-          },
           "noteValue": {
             "type": "string",
             "nullable": true
+          },
+          "position": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "colorId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateScrum": {
+        "required": [
+          "projectId",
+          "scrumName"
+        ],
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "scrumName": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -862,24 +886,6 @@
             "type": "string"
           },
           "newPassword": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "RenameNote": {
-        "required": [
-          "newValue",
-          "noteId"
-        ],
-        "type": "object",
-        "properties": {
-          "noteId": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "newValue": {
             "minLength": 1,
             "type": "string"
           }
@@ -922,28 +928,6 @@
         },
         "additionalProperties": false
       },
-      "Scrum": {
-        "required": [
-          "projectId",
-          "scrumName"
-        ],
-        "type": "object",
-        "properties": {
-          "scrumId": {
-            "type": "string",
-            "nullable": true
-          },
-          "projectId": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "scrumName": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "UserLoginRegister": {
         "required": [
           "email",
@@ -959,6 +943,33 @@
           "userPassword": {
             "minLength": 1,
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "СhangeNote": {
+        "required": [
+          "colorId",
+          "noteId",
+          "position"
+        ],
+        "type": "object",
+        "properties": {
+          "noteId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "noteValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "position": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "colorId": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

@@ -1,6 +1,7 @@
 import React from "react";
 import { login } from "../api/loginService";
 import { register } from "../api/registerService";
+import axiosInstance from "../api/axios";
 
 export type UserContextType = {
   isAuthenticated: boolean;
@@ -8,6 +9,7 @@ export type UserContextType = {
   signin: (email: string, password: string) => void;
   signup: (email: string, password: string) => void;
   logout: () => void;
+  deleteaccount: () => void;
 };
 
 export const UserContext = React.createContext<UserContextType | null>(null);
@@ -15,7 +17,7 @@ export const UserContext = React.createContext<UserContextType | null>(null);
 const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [userId, setUserId] = React.useState<string | null>(null);
+  const [userId, setUserId] = React.useState(localStorage.getItem("userId"));
 
   const [isAuthenticated, setIsAuthenticated] = React.useState(
     !!localStorage.getItem("token")
@@ -25,9 +27,8 @@ const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const response = await login(email, password);
       setIsAuthenticated(true);
-      setUserId(response.returnedUserId);
-      console.log(response)
       localStorage.setItem("token", response.token);
+      localStorage.setItem("userId", response.returnedUserId);
     } catch (error: any) {
       console.error("Помилка авторизації:", error);
       throw new Error(
@@ -40,8 +41,8 @@ const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const response = await register(email, password);
       setIsAuthenticated(true);
-      setUserId(response.returnedUserId);
       localStorage.setItem("token", response.token);
+      localStorage.setItem("userId", response.returnedUserId);
     } catch (error: any) {
       console.error("Помилка реєстрації:", error);
       return Promise.reject(error); // Передаємо помилку далі
@@ -54,9 +55,21 @@ const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.clear();
   };
 
+  const deleteaccount = async () => {
+    try {
+      await axiosInstance.delete("/Users")
+      setIsAuthenticated(false);
+      setUserId(null);
+      localStorage.clear();
+    }
+    catch {
+      
+    }
+    };
+
   return (
     <UserContext.Provider
-      value={{ isAuthenticated, userId, signin, signup, logout }}
+      value={{ isAuthenticated, userId, signin, signup, logout, deleteaccount }}
     >
       {children}
     </UserContext.Provider>

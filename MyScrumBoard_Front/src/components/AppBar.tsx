@@ -16,6 +16,12 @@ import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
+import { useNavigate } from "react-router-dom";
+import { Dialog, DialogActions, DialogContent, DialogTitle, ListItemIcon } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import useAuth from "../utils/Contexts/useAuth";
+import { useMutation } from "@tanstack/react-query";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -61,6 +67,28 @@ const drawerWidth = 240;
 const navItems = ["View all"];
 
 export default function DrawerAppBar() {
+  const navigate = useNavigate();
+
+  const auth = useAuth();
+  const { mutate: mutateExit, /*isPending: isPendingExit*/ } = useMutation({
+    mutationFn: async () => auth.logout(),
+    onSuccess: () => {
+      navigate("/");
+    },
+    onError: (error) => {
+      console.log("Сталася помилка ", error);
+    },
+  });
+  const { mutate: mutateDeleteAccount, /*isPending: isPendingDelete*/ } =
+    useMutation({
+      mutationFn: async () => auth.deleteaccount(),
+      onSuccess: () => {
+        navigate("/");
+      },
+      onError: (error) => {
+        console.log("Сталася помилка ", error);
+      },
+    });
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   // Функція відкриття/закриття Drawer
@@ -87,17 +115,42 @@ export default function DrawerAppBar() {
       </Typography>
       <Divider />
       <List sx={{ textAlign: "left" }}>
-        {["Invitation", "Exit", "Delete account"].map((text) => (
+        {["Exit", "Delete account"].map((text) => (
           <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemText primary={text} />
+            <ListItemButton
+              onClick={() => {
+                if (text === "Exit") mutateExit();
+                if (text === "Delete account") {setOpenDialogDelete(true) }
+              }}
+            >
+              {/* Іконка для Exit */}
+              {text === "Exit" && (
+                <ListItemIcon>
+                  <ExitToAppIcon sx={{ color: "#8D0000" }} />
+                </ListItemIcon>
+              )}
+              {/* Іконка для Delete account */}
+              {text === "Delete account" && (
+                <ListItemIcon>
+                  <DeleteIcon sx={{ color: "#8D0000" }} />
+                </ListItemIcon>
+              )}
+              <ListItemText primary={text} sx={{ color: "#8D0000" }} />
             </ListItemButton>
           </ListItem>
         ))}
       </List>
     </Box>
   );
-
+  const [openDialogDelete, setOpenDialogDelete] = React.useState(false);
+    const handleCancelDelete = () => {
+    setOpenDialogDelete(false);
+  };
+  const handleConfirmDelete = () => {
+    setOpenDialogDelete(false); // Тут можна додати логіку видалення
+    mutateDeleteAccount();
+  };
+  
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -158,6 +211,7 @@ export default function DrawerAppBar() {
                   fontFamily: "Ledger, sans-serif",
                   fontWeight: 400,
                 }}
+                onClick={() => navigate("/dashboard")}
               >
                 {item}
               </Button>
@@ -181,6 +235,27 @@ export default function DrawerAppBar() {
       >
         {drawer}
       </Drawer>
+      {/* delete account */}
+      <Dialog open={openDialogDelete} onClose={handleCancelDelete}>
+        <DialogTitle sx={{ color: "#08031B" }}>Delete account</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure that you want to delete our account?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelDelete} sx={{ color: "#08031B" }}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleConfirmDelete}
+            sx={{ backgroundColor: "#08031B" }}
+            variant="contained"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

@@ -8,7 +8,7 @@ import {
 import { useState } from "react";
 
 interface Props {
-  projectName: string;
+  name: string;
 
   setIsSubmitted: (value: boolean) => void;
   isDisabled: boolean;
@@ -17,7 +17,7 @@ interface Props {
 }
 
 function AddProjectButton({
-  projectName,
+  name,
   setIsSubmitted,
   isDisabled,
   addmutate,
@@ -28,7 +28,7 @@ function AddProjectButton({
   const [error, setError] = useState<string | null>(null);
 
   // const { mutate } = useMutation({
-  //   mutationFn: async () => addNewProject(projectName),
+  //   mutationFn: async () => addNewProject(name),
   //   onError: () => {
   //     setError("Something went wrong");
   //   },
@@ -56,8 +56,8 @@ function AddProjectButton({
       <Button
         onClick={() => {
           setIsSubmitted(true);
-          if (projectName && !isDisabled) {
-            addmutate(projectName);
+          if (name && !isDisabled) {
+            addmutate(name);
             // closeAddProjectDialog();
           }
         }}

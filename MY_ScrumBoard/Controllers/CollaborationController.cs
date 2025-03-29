@@ -27,19 +27,18 @@ namespace MY_ScrumBoard.Controllers
 
             try
             {
-                _collaborationServices.CreateCollaboration(collaboration, currentUserId);
+                return Ok(_collaborationServices.CreateCollaboration(collaboration, currentUserId));
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message + "Something went wrong.");
             }
-            return Ok();
         }
 
         //delete
         [HttpDelete]
         [Authorize]
-        public IActionResult DeleteCollaboration(Collaboration collaboration)
+        public IActionResult DeleteCollaboration([FromBody]Collaboration collaboration)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(currentUserId))

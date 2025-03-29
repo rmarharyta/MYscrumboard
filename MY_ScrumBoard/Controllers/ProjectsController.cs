@@ -26,13 +26,12 @@ namespace MY_ScrumBoard.Controllers
             }
             try
             {
-                _projectServices.CreateProject(currentUserId, projectName);
+                return Ok(_projectServices.CreateProject(currentUserId, projectName));
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message + "Something went wrong.");
             }
-            return Ok();
         }
 
         //rename project

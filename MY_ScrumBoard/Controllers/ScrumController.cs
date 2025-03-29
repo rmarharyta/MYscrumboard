@@ -13,7 +13,7 @@ namespace MY_ScrumBoard.Controllers
         //create new scrum
         [HttpPost]
         [Authorize]
-        public IActionResult CreateNewScrumBoard([FromBody] Scrum scrum)
+        public IActionResult CreateNewScrumBoard([FromBody] CreateScrum scrum)
         {
             if (!ModelState.IsValid)
             {
@@ -28,13 +28,12 @@ namespace MY_ScrumBoard.Controllers
 
             try
             {
-                _scrumServices.CreateScrumBoard(scrum, currentUserId);
+                return Ok(_scrumServices.CreateScrumBoard(scrum, currentUserId));
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message + "Something went wrong.");
             }
-            return Ok();
         }
 
         //rename
@@ -63,9 +62,9 @@ namespace MY_ScrumBoard.Controllers
         }
 
         //delete
-        [HttpDelete]
+        [HttpDelete("{scrumId}")]
         [Authorize]
-        public IActionResult DeleteScrum([FromBody] string scrumId)
+        public IActionResult DeleteScrum([FromRoute] string scrumId)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (currentUserId == null)
@@ -96,10 +95,11 @@ namespace MY_ScrumBoard.Controllers
         }
 
         //get by project
-        [HttpGet("get_by_project")]
+        [HttpGet("get_by_project/{projectId}")]
         [Authorize]
-        public IActionResult GetScrumByProject([FromBody] string projectId)
+        public IActionResult GetScrumByProject([FromRoute] string projectId)
         {
+
             try
             {
                 return Ok(_scrumServices.GetScrumBoardsByProject(projectId));
