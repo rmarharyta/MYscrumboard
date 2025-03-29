@@ -40,8 +40,8 @@ namespace MY_ScrumBoard.Controllers
 
             try
             {
-                _collaborationServices.CreateCollaboration(collaboration, currentUserId.Value);
-                return Ok();
+                
+                return Ok(_collaborationServices.CreateCollaboration(collaboration, currentUserId.Value));
             }
             catch (Exception ex)
             {
@@ -52,7 +52,7 @@ namespace MY_ScrumBoard.Controllers
         //delete
         [HttpDelete]
         [Authorize]
-        public IActionResult DeleteCollaboration(Collaboration collaboration)
+        public IActionResult DeleteCollaboration([FromBody]Collaboration collaboration)
         {
             var currentUserId = GetUserIdFromToken();
             if (currentUserId.IsError)

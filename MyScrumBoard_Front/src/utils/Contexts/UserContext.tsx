@@ -8,6 +8,7 @@ export type UserContextType = {
   signin: (email: string, password: string) => void;
   signup: (email: string, password: string) => void;
   logout: () => void;
+  deleteaccount: () => void;
 };
 
 export const UserContext = React.createContext<UserContextType | undefined>(undefined);
@@ -46,6 +47,18 @@ const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children, }) =>
     setUserId(null);
     localStorage.clear();
   };
+
+  const deleteaccount = async () => {
+    try {
+      await axiosInstance.delete("/Users")
+      setIsAuthenticated(false);
+      setUserId(null);
+      localStorage.clear();
+    }
+    catch {
+      
+    }
+    };
 
   return (
     <UserContext.Provider

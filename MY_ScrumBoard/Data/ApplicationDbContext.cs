@@ -12,8 +12,7 @@ namespace MY_ScrumBoard.Data
         public DbSet<Projects> Projects { get; set; }
         public DbSet<Collaboration> Collaboration { get; set; }
         public DbSet<Scrum> Scrum { get; set; }
-        public DbSet<Statuses> Statuses { get; set; }
         public DbSet<Notes> Notes { get; set; }
-        public DbSet<Deleted> Deleted { get; set; }
+ //       public DbSet<Deleted> Deleted { get; set; }
     }
 }

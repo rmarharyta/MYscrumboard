@@ -1,4 +1,6 @@
 import { Button, useMediaQuery, useTheme } from "@mui/material";
+import { useMutation } from "@tanstack/react-query";
+import { requestResetPassword } from "../utils/api/PasswordService";
 
 interface Props {
   email: string;
@@ -7,7 +9,19 @@ interface Props {
 
 function SendRequestButton({ email, setIsSubmitted }: Props) {
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  
+
+    const { mutate, isPending } = useMutation({
+      mutationFn: async (email:string) => requestResetPassword(email),
+      onSuccess: () => {
+        console.log("Успішно відправлено!")
+      },
+      onError: (error) => {
+        console.error("Сталася помилка ", error)
+      },
+    });
+  
   return (
     <Button
       variant="contained"
@@ -24,7 +38,10 @@ function SendRequestButton({ email, setIsSubmitted }: Props) {
         marginTop: "22px",
         lineHeight: 1
       }}
-      onClick={() => setIsSubmitted(true)}
+      onClick={() => {
+        setIsSubmitted(true) 
+        mutate(email);
+      }}
     >
       Send request
     </Button>

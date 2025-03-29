@@ -44,7 +44,6 @@ namespace MY_ScrumBoard.Controllers
             {
                 return BadRequest(ex.Message + "Something went wrong.");
             }
-            return Ok();
         }
 
         //rename project

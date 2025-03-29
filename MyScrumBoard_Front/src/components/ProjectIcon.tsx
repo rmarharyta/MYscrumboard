@@ -25,9 +25,14 @@ import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
-import { findParticipants, findUser } from "../utils/api/ProjectServices";
+import { findParticipants, findUser } from "../utils/api/ProjectService";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import useAuth from "../utils/Contexts/useAuth";
+import {
+  addParticipant,
+  deleteParticipant,
+} from "../utils/api/CollaborationService";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   projectId: string;
@@ -53,7 +58,7 @@ interface Participants {
 
 export default function ProjectIcon({
   projectId,
-  // ownerId,
+  ownerId,
   projectName,
   // date_time,
   defaultSrc,
@@ -63,7 +68,9 @@ export default function ProjectIcon({
 }: Props) {
   const [imageSrc, setImageSrc] = useState(defaultSrc);
 
-  const userId = useAuth();
+  const { userId } = useAuth();
+
+  const navigate = useNavigate();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -95,10 +102,6 @@ export default function ProjectIcon({
     },
   });
 
-  // useEffect(() => {
-  //   mutate(projectId); // Викликаєте fetchProjects, щоб завантажити проекти
-  // }, []);
-
   const { isLoading, data } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
@@ -110,6 +113,61 @@ export default function ProjectIcon({
     //   // Тут ви можете обробити помилки, наприклад, відобразити повідомлення про помилку
     // },
   });
+  //delete user from project
+  const {
+    // isPending: deleteIsPending,
+    // isError: deleteIsError,
+    mutate: deleteParticinatMutate,
+  } = useMutation({
+    mutationFn: async ({
+      projId,
+      userId,
+    }: {
+      projId: string;
+      userId: string;
+    }) => {
+      DeleteParticipant(projId, userId); // або ваш API запит
+    },
+    onError: (error: Error) => {
+      console.error("Помилка ??? учасника: ", error.message);
+    },
+    onSuccess: () => {
+      console.log("учасник ??? успішно");
+    },
+  });
+
+  //mutate for add project
+  const {
+    // isPending: addIsPending,
+    // isError: addIsError,
+    mutate: addParticipantMutate,
+  } = useMutation({
+    mutationFn: async ({
+      projId,
+      userId,
+    }: {
+      projId: string;
+      userId: string;
+    }) => {
+      AddParticipant(projId, userId); // або ваш API запит
+    },
+    onError: (error: Error) => {
+      console.error("Помилка ??? учасника: ", error.message);
+    },
+    onSuccess: () => {
+      mutate(projectId);
+      console.log("Учасник ??? успішно");
+    },
+  });
+
+  const DeleteParticipant = (projId: string, userId: string) => {
+    deleteParticipant(projId, userId);
+    setParticipants(participants.filter((p) => p.userId !== userId));
+  };
+
+  const AddParticipant = (projId: string, userId: string) => {
+    addParticipant(projId, userId);
+  };
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     setMenuAnchor(event.currentTarget);
@@ -170,6 +228,7 @@ export default function ProjectIcon({
           {error}
         </Alert>
       </Snackbar>
+
       <Box
         sx={{
           display: "flex",
@@ -192,6 +251,7 @@ export default function ProjectIcon({
             alignItems: "center",
             justifyContent: "center",
           }}
+          onClick={() => navigate(`/scrum/${projectId}`)}
         >
           <img
             src={imageSrc}
@@ -235,13 +295,17 @@ export default function ProjectIcon({
           open={Boolean(menuAnchor)}
           onClose={handleMenuClose}
         >
-          <MenuItem onClick={openRenameProjectDialog}>Rename</MenuItem>
+          {userId === ownerId && (
+            <MenuItem onClick={openRenameProjectDialog}>Rename</MenuItem>
+          )}
           <MenuItem onClick={handleOpenCollaboration}>
             Переглянути учасників
           </MenuItem>
-          <MenuItem onClick={handleDeleteClick} sx={{ color: "#8D0000" }}>
-            Delete
-          </MenuItem>
+          {userId === ownerId && (
+            <MenuItem onClick={handleDeleteClick} sx={{ color: "#8D0000" }}>
+              Delete
+            </MenuItem>
+          )}
         </Menu>
       </Box>
       {/* Діалогове вікно для CollaborationList */}
@@ -251,122 +315,142 @@ export default function ProjectIcon({
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle>"{projectName}"" Participants</DialogTitle>
+        <DialogTitle>"{projectName}" Participants</DialogTitle>
         <DialogContent>
           <List>
             {participants.map((participant) => (
               <ListItem
                 key={participant.userId}
                 secondaryAction={
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    sx={{ color: "#08031B" }}
-                  >
-                    <DeleteIcon sx={{ color: "#08031B" }} />
-                  </IconButton>
+                  userId === ownerId && (
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      sx={{ color: "#08031B" }}
+                      onClick={() =>
+                        deleteParticinatMutate({
+                          projId: projectId,
+                          userId: participant.userId,
+                        })
+                      }
+                    >
+                      <DeleteIcon sx={{ color: "#08031B" }} />
+                    </IconButton>
+                  )
                 }
               >
                 <ListItemText primary={participant.email} />
               </ListItem>
             ))}
           </List>
-          <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
-            <Stack spacing={1} sx={{ width: "100%" }}>
-              <Autocomplete
-                disableClearable
-                autoHighlight
-                loading={isLoading}
-                options={data || []}
-                getOptionLabel={(option) => option?.email ?? ""}
-                dir={theme.direction}
-                onChange={(_, value) => {
-                  handlerSetOnBehalf(value);
-                }}
-                value={onBehalf}
-                renderInput={(params) => (
-                  <TextField
-                    dir={theme.direction}
-                    {...params}
-                    label={"Email"}
-                    slotProps={{
-                      input: {
-                        ...params.InputProps,
-                      },
-                    }}
-                    sx={{
-                      color: "#565454",
-                      fontFamily: "Poppins, sans-serif", // Шрифт
-                      fontSize: isMobile ? "15px" : "15px", // Розмір
-                      fontWeight: 400,
-                      borderRadius: isMobile ? "15px" : "20px", // Закруглення країв
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: isMobile ? "15px" : "20px",
-                        color: "#565454",
-                        "& fieldset": {
-                          borderWidth: "1px",
-                          borderColor: "#08031B", // Товщина лінії
+          {userId === ownerId && (
+            <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
+              <Stack spacing={1} sx={{ width: "100%" }}>
+                <Autocomplete
+                  disableClearable
+                  autoHighlight
+                  loading={isLoading}
+                  options={data || []}
+                  getOptionLabel={(option) => option?.email ?? ""}
+                  dir={theme.direction}
+                  onChange={(_, value) => {
+                    handlerSetOnBehalf(value);
+                  }}
+                  value={onBehalf}
+                  renderInput={(params) => (
+                    <TextField
+                      dir={theme.direction}
+                      {...params}
+                      label={"Email"}
+                      slotProps={{
+                        input: {
+                          ...params.InputProps,
                         },
-                        "&:hover fieldset": {
-                          borderWidth: "2px",
-                          borderColor: "#08031B", // Товстіша лінія при наведенні
-                        },
-                        "&.Mui-focused fieldset": {
-                          borderWidth: "1px", // Товстіша лінія при фокусі
-                          borderColor: "#08031B",
-                        },
-                      },
-                    }}
-                  />
-                )}
-                renderOption={(props, option) => {
-                  const { key, ...optionProps } = props;
-                  return (
-                    <Box
-                      className={key}
-                      key={option.userId}
-                      component="li"
-                      {...optionProps}
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        flexDirection: "column",
                       }}
-                    >
-                      <Typography
-                        variant="body1"
-                        sx={{
+                      sx={{
+                        color: "#565454",
+                        fontFamily: "Poppins, sans-serif", // Шрифт
+                        fontSize: isMobile ? "15px" : "15px", // Розмір
+                        fontWeight: 400,
+                        borderRadius: isMobile ? "15px" : "20px", // Закруглення країв
+                        "& .MuiOutlinedInput-root": {
+                          borderRadius: isMobile ? "15px" : "20px",
                           color: "#565454",
-                          fontFamily: "Poppins, sans-serif", // Шрифт
-                          fontSize: isMobile ? "15px" : "15px", // Розмір
-                          fontWeight: 400,
+                          "& fieldset": {
+                            borderWidth: "1px",
+                            borderColor: "#08031B", // Товщина лінії
+                          },
+                          "&:hover fieldset": {
+                            borderWidth: "2px",
+                            borderColor: "#08031B", // Товстіша лінія при наведенні
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderWidth: "1px", // Товстіша лінія при фокусі
+                            borderColor: "#08031B",
+                          },
+                        },
+                      }}
+                    />
+                  )}
+                  renderOption={(props, option) => {
+                    const { key, ...optionProps } = props;
+                    return (
+                      <Box
+                        className={key}
+                        key={option.userId}
+                        component="li"
+                        {...optionProps}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          flexDirection: "column",
                         }}
                       >
-                        {option.email}
-                      </Typography>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            color: "#565454",
+                            fontFamily: "Poppins, sans-serif", // Шрифт
+                            fontSize: isMobile ? "15px" : "15px", // Розмір
+                            fontWeight: 400,
+                          }}
+                        >
+                          {option.email}
+                        </Typography>
 
-                      {/* <Typography variant="caption" color="text.secondary">
+                        {/* <Typography variant="caption" color="text.secondary">
                         {option.firstname + " " + option.lastname}
                       </Typography> */}
-                    </Box>
-                  );
-                }}
-                filterOptions={(options, state) => {
-                  if (state.inputValue.length > 2) {
-                    return options.filter((item) => {
-                      return String(item.email)
-                        .toLowerCase()
-                        .includes(state.inputValue.toLowerCase());
+                      </Box>
+                    );
+                  }}
+                  filterOptions={(options, state) => {
+                    if (state.inputValue.length > 2) {
+                      return options.filter((item) => {
+                        return String(item.email)
+                          .toLowerCase()
+                          .includes(state.inputValue.toLowerCase());
+                      });
+                    }
+                    return [];
+                  }}
+                />
+              </Stack>
+              <IconButton
+                sx={{ color: "#08031B" }}
+                onClick={() => {
+                  if (onBehalf && "userId" in onBehalf) {
+                    addParticipantMutate({
+                      projId: projectId,
+                      userId: onBehalf?.userId,
                     });
                   }
-                  return [];
                 }}
-              />
-            </Stack>
-            <IconButton sx={{ color: "#08031B" }}>
-              <AddIcon sx={{ color: "#08031B" }} />
-            </IconButton>
-          </Box>
+              >
+                <AddIcon sx={{ color: "#08031B" }} />
+              </IconButton>
+            </Box>
+          )}
         </DialogContent>
       </Dialog>
 
