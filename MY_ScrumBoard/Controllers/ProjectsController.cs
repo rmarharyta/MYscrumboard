@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ErrorOr;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MY_ScrumBoard.Models;
 using MY_ScrumBoard.Services;
@@ -8,25 +9,36 @@ namespace MY_ScrumBoard.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProjectsController(ProjectServices _projectServices) : ControllerBase
+    public class ProjectsController(ProjectServices _projectServices, IUserClaimsMapper<User> userClaimsMapper) : ControllerBase
     {
+        private ErrorOr<string> GetUserIdFromToken()
+        {
+            var token = HttpContext.Request.Cookies[CookieKeys.Token];
+            if (string.IsNullOrEmpty(token))
+                return Error.Unauthorized("Token not found");
+
+            var user = userClaimsMapper.FromClaims(token);
+            if (string.IsNullOrEmpty(user.userId))
+                return Error.Unauthorized("User ID claim not found");
+
+            return user.userId;
+        }
         //create new project
         [HttpPost("create_new_project")]
         [Authorize]
         public IActionResult CreateNewProject([FromBody] string projectName)
         {
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (currentUserId == null)
-            {
-                return Unauthorized("User ID not found in token.");
-            }
+            var currentUserId = GetUserIdFromToken();
+            if (currentUserId.IsError)
+                return Unauthorized(currentUserId.FirstError.Code);
+
             if (projectName == null)
             {
                 return BadRequest("There is no name for project");
             }
             try
             {
-                _projectServices.CreateProject(currentUserId, projectName);
+                _projectServices.CreateProject(currentUserId.Value, projectName);
             }
             catch (Exception ex)
             {
@@ -62,11 +74,10 @@ namespace MY_ScrumBoard.Controllers
         [Authorize]
         public IActionResult DeleteProject([FromRoute] string projectId)
         {
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (currentUserId == null)
-            {
-                return Unauthorized("User ID not found in token.");
-            }
+            var currentUserId = GetUserIdFromToken();
+            if (currentUserId.IsError)
+                return Unauthorized(currentUserId.FirstError.Code);
+
             if (string.IsNullOrWhiteSpace(projectId))
             {
                 return BadRequest("Project ID is missing.");
@@ -74,11 +85,11 @@ namespace MY_ScrumBoard.Controllers
 
             try
             {
-                _projectServices.DeleteProject(projectId, currentUserId);
+                _projectServices.DeleteProject(projectId, currentUserId.Value);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message + "Something went wrong.");
+                return BadRequest("Something went wrong: " + ex.Message);
             }
             return Ok();
         }
@@ -95,20 +106,19 @@ namespace MY_ScrumBoard.Controllers
         [Authorize]
         public IActionResult GetProjectsByOwner()
         {
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (currentUserId == null)
-            {
-                return Unauthorized("User ID not found in token.");
-            }
+            var currentUserId = GetUserIdFromToken();
+            if (currentUserId.IsError)
+                return Unauthorized(currentUserId.FirstError.Code);
+
 
             try
             {
 
-                return Ok(_projectServices.GetOwnersProjects(currentUserId));
+                return Ok(_projectServices.GetOwnersProjects(currentUserId.Value));
             }
-            catch
+            catch (Exception e)
             {
-                return NotFound("This user has no own projects.");
+                return BadRequest("Couldn't get projects: " + e.Message);
             }
         }
 
@@ -117,19 +127,18 @@ namespace MY_ScrumBoard.Controllers
         [Authorize]
         public IActionResult GetOwners()
         {
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (currentUserId == null)
-            {
-                return Unauthorized("User ID not found in token.");
-            }
+            var currentUserId = GetUserIdFromToken();
+            if (currentUserId.IsError)
+                return Unauthorized(currentUserId.FirstError.Code);
+
             try
             {
 
-                return Ok(_projectServices.GetProjectsByMembership(currentUserId));
+                return Ok(_projectServices.GetProjectsByMembership(currentUserId.Value));
             }
-            catch
+            catch (Exception e)
             {
-                return NotFound("This user is not in other people's collaborations.");
+                return BadRequest("Couldn't get projects: " + e.Message);
             }
         }
 
@@ -138,19 +147,17 @@ namespace MY_ScrumBoard.Controllers
         [Authorize]
         public IActionResult GetByUser()
         {
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (currentUserId == null)
-            {
-                return Unauthorized("User ID not found in token.");
-            }
+            var currentUserId = GetUserIdFromToken();
+            if (currentUserId.IsError)
+                return Unauthorized(currentUserId.FirstError.Code);
+
             try
             {
-
-                return Ok(_projectServices.GetAllProjectsByUser(currentUserId));
+                return Ok(_projectServices.GetAllProjectsByUser(currentUserId.Value));
             }
-            catch
+            catch (Exception e)
             {
-                return NotFound("This user haven`t any projects.");
+                return BadRequest("Couldn't get projects: " + e.Message);
             }
         }
     }

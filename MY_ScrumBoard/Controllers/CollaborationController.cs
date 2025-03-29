@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ErrorOr;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MY_ScrumBoard.Models;
 using MY_ScrumBoard.Services;
@@ -8,18 +9,30 @@ namespace MY_ScrumBoard.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CollaborationController(CollaborationServices _collaborationServices) : ControllerBase
+    public class CollaborationController(CollaborationServices _collaborationServices, IUserClaimsMapper<User> userClaimsMapper) : ControllerBase
     {
+        private ErrorOr<string> GetUserIdFromToken()
+        {
+            var token = HttpContext.Request.Cookies[CookieKeys.Token];
+            if (string.IsNullOrEmpty(token))
+                return Error.Unauthorized("Token not found");
+
+            var user = userClaimsMapper.FromClaims(token);
+            if (string.IsNullOrEmpty(user.userId))
+                return Error.Unauthorized("User ID claim not found");
+
+            return user.userId;
+        }
+
         //add new collaboration
         [HttpPost]
         [Authorize]
         public IActionResult AddNewCollaboration([FromBody] Collaboration collaboration)
         {
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(currentUserId))
-            {
-                return Unauthorized("User ID not found in token.");
-            }
+            var currentUserId = GetUserIdFromToken();
+            if (currentUserId.IsError)
+                return Unauthorized(currentUserId.FirstError.Code);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest("Collaboration data is required.");
@@ -27,13 +40,13 @@ namespace MY_ScrumBoard.Controllers
 
             try
             {
-                _collaborationServices.CreateCollaboration(collaboration, currentUserId);
+                _collaborationServices.CreateCollaboration(collaboration, currentUserId.Value);
+                return Ok();
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message + "Something went wrong.");
             }
-            return Ok();
         }
 
         //delete
@@ -41,11 +54,10 @@ namespace MY_ScrumBoard.Controllers
         [Authorize]
         public IActionResult DeleteCollaboration(Collaboration collaboration)
         {
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(currentUserId))
-            {
-                return Unauthorized("User ID not found in token.");
-            }
+            var currentUserId = GetUserIdFromToken();
+            if (currentUserId.IsError)
+                return Unauthorized(currentUserId.FirstError.Code);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest("Collaboration data is required.");
@@ -53,7 +65,7 @@ namespace MY_ScrumBoard.Controllers
 
             try
             {
-                _collaborationServices.DeleteCollaborationServ(collaboration, currentUserId);
+                _collaborationServices.DeleteCollaborationServ(collaboration, currentUserId.Value);
             }
             catch (Exception ex)
             {
@@ -75,14 +87,13 @@ namespace MY_ScrumBoard.Controllers
         [Authorize]
         public IActionResult GetCollaborationByProject([FromBody] string projectId)
         {
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (currentUserId == null)
-            {
-                return Unauthorized("User ID not found in token.");
-            }
+            var currentUserId = GetUserIdFromToken();
+            if (currentUserId.IsError)
+                return Unauthorized(currentUserId.FirstError.Code);
+
             try
             {
-                return Ok(_collaborationServices.GetProjectsCollaboration(projectId, currentUserId));
+                return Ok(_collaborationServices.GetProjectsCollaboration(projectId, currentUserId.Value));
             }
             catch
             {

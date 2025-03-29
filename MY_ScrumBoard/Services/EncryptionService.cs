@@ -12,8 +12,6 @@ namespace MY_ScrumBoard.Services
     public class SecretKeys
     {
         public const string Position = "SecretKeys";
-        public string JwtSecretKey { get; set; } = string.Empty;
-        public string OtpSecretKey { get; set; } = string.Empty;
         public string TokenEncryptionSecretKey { get; set; } = string.Empty;
         public string RefreshTokenEncryptionSecretKey { get; set; } = string.Empty;
     }

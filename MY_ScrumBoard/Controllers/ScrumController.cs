@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ErrorOr;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MY_ScrumBoard.Models;
 using MY_ScrumBoard.Services;
@@ -8,8 +9,21 @@ namespace MY_ScrumBoard.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ScrumController(ScrumServices _scrumServices) : ControllerBase
+    public class ScrumController(ScrumServices _scrumServices, IUserClaimsMapper<User> userClaimsMapper) : ControllerBase
     {
+        private ErrorOr<string> GetUserIdFromToken()
+        {
+            var token = HttpContext.Request.Cookies[CookieKeys.Token];
+            if (string.IsNullOrEmpty(token))
+                return Error.Unauthorized("Token not found");
+
+            var user = userClaimsMapper.FromClaims(token);
+            if (string.IsNullOrEmpty(user.userId))
+                return Error.Unauthorized("User ID claim not found");
+
+            return user.userId;
+        }
+
         //create new scrum
         [HttpPost]
         [Authorize]
@@ -20,15 +34,14 @@ namespace MY_ScrumBoard.Controllers
                 return BadRequest(ModelState);
             }
 
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (currentUserId == null)
-            {
-                return Unauthorized("User ID not found in token.");
-            }
+            var currentUserId = GetUserIdFromToken();
+            if (currentUserId.IsError)
+                return Unauthorized(currentUserId.FirstError.Code);
+
 
             try
             {
-                _scrumServices.CreateScrumBoard(scrum, currentUserId);
+                _scrumServices.CreateScrumBoard(scrum, currentUserId.Value);
             }
             catch (Exception ex)
             {
@@ -42,18 +55,16 @@ namespace MY_ScrumBoard.Controllers
         [Authorize]
         public IActionResult RenameScrumBoard([FromBody] RequestRenameScrum renameScrum)
         {
-            if (renameScrum.scrumId == null || renameScrum.newName == null)
-            {
+            if (string.IsNullOrEmpty(renameScrum.scrumId) || string.IsNullOrEmpty(renameScrum.newName))
                 return BadRequest("Scrum ID or new name is missing.");
-            }
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (currentUserId == null)
-            {
-                return Unauthorized("User ID not found in token.");
-            }
+
+            var currentUserId = GetUserIdFromToken();
+            if (currentUserId.IsError)
+                return Unauthorized(currentUserId.FirstError.Code);
+
             try
             {
-                _scrumServices.RenameScrum(renameScrum, currentUserId);
+                _scrumServices.RenameScrum(renameScrum, currentUserId.Value);
             }
             catch (Exception ex)
             {
@@ -67,19 +78,18 @@ namespace MY_ScrumBoard.Controllers
         [Authorize]
         public IActionResult DeleteScrum([FromBody] string scrumId)
         {
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (currentUserId == null)
-            {
-                return Unauthorized("User ID not found in token.");
-            }
-            if (scrumId == null)
+            var currentUserId = GetUserIdFromToken();
+            if (currentUserId.IsError)
+                return Unauthorized(currentUserId.FirstError.Code);
+
+            if (string.IsNullOrEmpty(scrumId))
             {
                 return BadRequest("Scrum ID is missing.");
             }
 
             try
             {
-                _scrumServices.DeleteScrumBoard(scrumId, currentUserId);
+                _scrumServices.DeleteScrumBoard(scrumId, currentUserId.Value);
             }
             catch (Exception ex)
             {
@@ -100,6 +110,11 @@ namespace MY_ScrumBoard.Controllers
         [Authorize]
         public IActionResult GetScrumByProject([FromBody] string projectId)
         {
+            if (string.IsNullOrEmpty(projectId))
+            {
+                return BadRequest("Project ID is missing.");
+            }
+
             try
             {
                 return Ok(_scrumServices.GetScrumBoardsByProject(projectId));

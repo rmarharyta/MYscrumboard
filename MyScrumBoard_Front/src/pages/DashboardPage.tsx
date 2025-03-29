@@ -44,8 +44,8 @@ interface Project {
 }
 
 const Dashboard: React.FC = () => {
-  const userId = useAuth().userId;
-  
+  const { userId } = useAuth();
+
   const [projects, setProjects] = useState<Project[]>([]);
 
   const { isPending, isError, mutate } = useMutation({
@@ -82,7 +82,7 @@ const Dashboard: React.FC = () => {
   const {
     // isPending: addIsPending,
     // isError: addIsError,
-    mutate: addmutate,
+    mutate: addProjectMutate,
   } = useMutation({
     mutationFn: async (projName: string) => {
       addProject(projName); // або ваш API запит
@@ -101,7 +101,7 @@ const Dashboard: React.FC = () => {
   const {
     // isPending: addIsPending,
     // isError: addIsError,
-    mutate: renamemutate,
+    mutate: renameProjectMutate,
   } = useMutation({
     mutationFn: async ({
       projectId,
@@ -146,9 +146,7 @@ const Dashboard: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const [sortBy, setSortBy] = useState<"name" | "newest" | "oldest">("newest");
-  const [filterRole, setFilterRole] = useState<"" | "owner" | "participant">(
-    ""
-  );
+  const [filterRole, setFilterRole] = useState<"" | "owner" | "participant">("");
   const [filterAnchor, setFilterAnchor] = useState<null | HTMLElement>(null);
   const [sortAnchor, setSortAnchor] = useState<null | HTMLElement>(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -165,10 +163,10 @@ const Dashboard: React.FC = () => {
   const sortedProjects = [...projects]
     .filter((project) => {
       if (filterRole === "owner") {
-        return project.ownerId===userId
+        return project.ownerId === userId
       }
       else if (filterRole === "participant") {
-        return project.ownerId!==userId
+        return project.ownerId !== userId
       }
       else return project
     })
@@ -217,7 +215,10 @@ const Dashboard: React.FC = () => {
     setSortAnchor(null);
   };
 
-  const openAddProjectDialog = () => setOpenDialog(true);
+  const openAddProjectDialog = () => {
+    setOpenDialog(true)
+  };
+
   const closeAddProjectDialog = () => {
     setOpenDialog(false);
     setNewProjectName("");
@@ -399,7 +400,7 @@ const Dashboard: React.FC = () => {
                   projectName={project.projectName}
                   date_time={project.date_time}
                   deletemutate={deletemutate}
-                  renamemutate={renamemutate}
+                  renamemutate={renameProjectMutate}
                   defaultSrc="/src/assets/Mediamodifier-Design.svg"
                   hoverSrc="/src/assets/Mediamodifier-Design (1).svg"
                 />
@@ -474,7 +475,7 @@ const Dashboard: React.FC = () => {
             projectName={newProjectName}
             setIsSubmitted={setIsSubmitted}
             isDisabled={!isTouched}
-            addmutate={addmutate}
+            addmutate={addProjectMutate}
           />
         </DialogActions>
       </Dialog>

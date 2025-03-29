@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Typography,
@@ -68,7 +68,7 @@ export default function ProjectIcon({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const [menuAnchor, setMenuAnchor] = useState(null);
+  const [menuAnchor, setMenuAnchor] = useState<Element>();
   const [openCollab, setOpenCollab] = useState(false);
   const [openDialogDelete, setOpenDialogDelete] = useState(false);
 
@@ -79,7 +79,7 @@ export default function ProjectIcon({
 
   const [error, setError] = useState<string | null>(null);
 
-  const [onBehalf, setOnBehalf] = useState<Participants | []>([]);
+  const [onBehalf, setOnBehalf] = useState<Participants>();
 
   const { /*isPending,*/ /*isError,*/ mutate } = useMutation({
     mutationFn: async (projectId: string) => {
@@ -116,7 +116,7 @@ export default function ProjectIcon({
   };
 
   const handleMenuClose = () => {
-    setMenuAnchor(null);
+    setMenuAnchor(undefined);
   };
   const handleOpenCollaboration = () => {
     setOpenCollab(true);
@@ -137,7 +137,7 @@ export default function ProjectIcon({
     setOpenDialogDelete(false);
   };
 
-  function handlerSetOnBehalf(value: Participants | []): void {
+  function handlerSetOnBehalf(value: Participants): void {
     setOnBehalf(value);
   }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using ErrorOr;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using MY_ScrumBoard.Models;
 using MY_ScrumBoard.Services;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 
@@ -14,7 +16,7 @@ namespace MY_ScrumBoard.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController(UserServices _userServices, IEncryptionService encryptionService, Services.IAuthenticationService authenticationService, IJwtService jwtService) : ControllerBase
+    public class UsersController(UserServices _userServices, IEncryptionService encryptionService, Services.IAuthenticationService authenticationService, IJwtService jwtService, IUserClaimsMapper<User> userClaimsMapper) : ControllerBase
     {
         //Register
         [HttpPost]
@@ -58,8 +60,9 @@ namespace MY_ScrumBoard.Controllers
 
             try
             {
-                var returnedUserId = _userServices.LogIn(userLogin)
-                    ?? throw new Exception("Login is failed");
+                //var returnedUserId = _userServices.LogIn(userLogin)
+                //    ?? throw new Exception("Login is failed");
+                var returnedUserId = "_userServices.LogIn(userLogin)";
 
                 var user = new User
                 {
@@ -82,7 +85,7 @@ namespace MY_ScrumBoard.Controllers
         //logout
         [HttpGet]
         [Route("/api/logout")]
-        public IActionResult LogOutUsers()
+        public IActionResult Logout()
         {
             authenticationService.RemoveAuthCookies(HttpContext);
             return Ok();
@@ -134,7 +137,8 @@ namespace MY_ScrumBoard.Controllers
             }
         }
 
-        [HttpGet("api/refresh")]
+        [HttpGet]
+        [Route("/api/refresh")]
         public IActionResult RefreshToken()
         {
             string? refreshToken = HttpContext.Request.Cookies[CookieKeys.RefreshToken];
@@ -156,6 +160,29 @@ namespace MY_ScrumBoard.Controllers
             {
                 return Unauthorized();
             }
+        }
+
+        [HttpGet]
+        [Route("/api/me")]
+        public IActionResult GetUser()
+        {
+            var user = GetUserFromToken();
+            if (!user.IsError)
+                return Ok(new { user.Value.userId });
+            return BadRequest(new { Error = user.FirstError.Code });
+        }
+
+        private ErrorOr<User> GetUserFromToken()
+        {
+            var token = HttpContext.Request.Cookies[CookieKeys.Token];
+            if (string.IsNullOrEmpty(token))
+                return Error.Unauthorized("Token not found");
+
+            var user = userClaimsMapper.FromClaims(token);
+            if (user is not null)
+                return user;
+
+            return Error.Unauthorized("User ID claim not found");
         }
     }
 }

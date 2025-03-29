@@ -1,6 +1,9 @@
-import React from "react";
+import { useContext } from "react";
 import { UserContext, UserContextType } from "./UserContext";
 
 export default function useAuth() {
-    return React.useContext(UserContext) as UserContextType;
+    const ctx = useContext(UserContext) as UserContextType;
+    if (!ctx)
+        throw Error("useAuth must be called under UserProvider")
+    return ctx;
 }

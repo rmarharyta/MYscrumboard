@@ -11,20 +11,21 @@ namespace MY_ScrumBoard
     {
         public static void Main(string[] args)
         {
-
             var builder = WebApplication.CreateBuilder(args);
+
             builder.Services.AddCrossOrigins();
             builder.Services.AddMemoryCache();
             builder.Services.RegisterSecretKeys(builder.Configuration);
             builder.Services.RegisterServices();
-            builder.Services.AddAuthorization();
             builder.Services.AddJwtAuthentication(builder.Configuration);
+            builder.Services.AddAuthorization();
 
             // Add services to the container.
             builder.Services.AddControllers();
 
             //connect to MySQL 
-            builder.Services.AddDbContext<ApplicationDbContext>(options => { options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("No connection string")); });
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("No connection string")));
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

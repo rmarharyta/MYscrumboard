@@ -26,8 +26,9 @@ namespace MY_ScrumBoard
                 options.AddPolicy(name: AllowAllOrigins,
                                   policy =>
                                   {
-                                      policy.AllowAnyOrigin()
+                                      policy.WithOrigins("http://localhost:7070")
                                             .AllowAnyHeader()
+                                            .AllowCredentials()
                                             .AllowAnyMethod();
                                   });
             });
@@ -52,8 +53,6 @@ namespace MY_ScrumBoard
 
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            var secretKeys = configuration.GetSection(SecretKeys.Position).Get<SecretKeys>();
-
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
                     {
