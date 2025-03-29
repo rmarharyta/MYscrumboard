@@ -61,9 +61,8 @@ namespace MY_ScrumBoard.Controllers
 
             try
             {
-                //var returnedUserId = _userServices.LogIn(userLogin)
-                //    ?? throw new Exception("Login is failed");
-                var returnedUserId = "_userServices.LogIn(userLogin)";
+                var returnedUserId = _userServices.LogIn(userLogin)
+                    ?? throw new Exception("Login is failed");
 
                 var user = new User
                 {
