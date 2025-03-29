@@ -38,7 +38,7 @@ namespace MY_ScrumBoard.Controllers
             }
             try
             {
-                _projectServices.CreateProject(currentUserId.Value, projectName);
+                return Ok(_projectServices.CreateProject(currentUserId.Value, projectName));
             }
             catch (Exception ex)
             {
