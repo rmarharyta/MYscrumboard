@@ -28,6 +28,19 @@
           }
         }
       },
+      "ErrorOr/2.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/ErrorOr.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/ErrorOr.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Google.Protobuf/3.26.1": {
         "type": "package",
         "compile": {
@@ -1013,6 +1026,23 @@
         "lib/netstandard2.0/BouncyCastle.Cryptography.dll",
         "lib/netstandard2.0/BouncyCastle.Cryptography.xml",
         "packageIcon.png"
+      ]
+    },
+    "ErrorOr/2.0.1": {
+      "sha512": "aje9lUVEAsusPFmaRcVM5EUqWBofd7hYtb9N8+ycgPYrtOzyFajMpzRgIO4uuiCllNLBc3x48+cpA+4v4koUDQ==",
+      "type": "package",
+      "path": "erroror/2.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "erroror.2.0.1.nupkg.sha512",
+        "erroror.nuspec",
+        "icon-square.png",
+        "lib/net6.0/ErrorOr.dll",
+        "lib/net6.0/ErrorOr.xml",
+        "lib/netstandard2.0/ErrorOr.dll",
+        "lib/netstandard2.0/ErrorOr.xml"
       ]
     },
     "Google.Protobuf/3.26.1": {
@@ -3045,6 +3075,7 @@
   "projectFileDependencyGroups": {
     "net8.0": [
       "BCrypt.Net-Next >= 4.0.3",
+      "ErrorOr >= 2.0.1",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 8.0.11",
       "Microsoft.EntityFrameworkCore >= 8.0.11",
       "MySql.EntityFrameworkCore >= 8.0.8",
@@ -3053,23 +3084,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Marharyta\\.nuget\\packages\\": {},
+    "C:\\Users\\misha\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\MY_ScrumBoard.csproj",
+      "projectUniqueName": "F:\\GitProject\\MYscrumboard\\MY_ScrumBoard\\MY_ScrumBoard.csproj",
       "projectName": "MY_ScrumBoard",
-      "projectPath": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\MY_ScrumBoard.csproj",
-      "packagesPath": "C:\\Users\\Marharyta\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\obj\\",
+      "projectPath": "F:\\GitProject\\MYscrumboard\\MY_ScrumBoard\\MY_ScrumBoard.csproj",
+      "packagesPath": "C:\\Users\\misha\\.nuget\\packages\\",
+      "outputPath": "F:\\GitProject\\MYscrumboard\\MY_ScrumBoard\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Marharyta\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\misha\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -3078,8 +3109,8 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {},
+        "https://pkgs.dev.azure.com/rotem-dynamics/_packaging/rotem-dynamics-org/nuget/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
@@ -3106,6 +3137,10 @@
           "BCrypt.Net-Next": {
             "target": "Package",
             "version": "[4.0.3, )"
+          },
+          "ErrorOr": {
+            "target": "Package",
+            "version": "[2.0.1, )"
           },
           "Microsoft.AspNetCore.Authentication.JwtBearer": {
             "target": "Package",
@@ -3147,7 +3182,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MY_ScrumBoard")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d8da6a2e9be8af478ac41f6cdb40bb8e71e1a251")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d33e6d78377b7c2b5112db653286015a1351822c")]
 [assembly: System.Reflection.AssemblyProductAttribute("MY_ScrumBoard")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MY_ScrumBoard")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
