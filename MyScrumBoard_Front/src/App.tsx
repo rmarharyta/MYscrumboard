@@ -6,6 +6,9 @@ import ChangePassword from "./pages/ChangePassword";
 import DashboardPage from "./pages/DashboardPage";
 import { Box } from "@mui/material";
 import { SingedIn, SingedOut } from "./utils/Contexts/UserContext";
+import AppBar from "./components/AppBar";
+import ScrumsPage from "./pages/ScrumsPage";
+import ScrumBoardPage from "./pages/ScrumBoardPage";
 
 function App() {
   return (
@@ -23,9 +26,15 @@ function App() {
           </Routes>
         </SingedOut>
         <SingedIn>
+          <AppBar />
           <Box sx={{ mt: 10 }}>
             <Routes>
               <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/scrum/:projectId" element={<ScrumsPage />} />
+              <Route
+                path="/scrumboard/:scrumId/:ownerId"
+                element={<ScrumBoardPage />}
+              />
             </Routes>
           </Box>
         </SingedIn>

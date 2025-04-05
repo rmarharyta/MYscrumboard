@@ -19,6 +19,18 @@ namespace MY_ScrumBoard.Controllers
     [Route("api/[controller]")]
     public class UsersController(UserServices _userServices, IEncryptionService encryptionService, Services.IAuthenticationService authenticationService, IJwtService jwtService, IUserClaimsMapper<User> userClaimsMapper) : ControllerBase
     {
+        private ErrorOr<string> GetUserIdFromToken()
+        {
+            var token = HttpContext.Request.Cookies[CookieKeys.Token];
+            if (string.IsNullOrEmpty(token))
+                return Error.Unauthorized("Token not found");
+
+            var user = userClaimsMapper.FromClaims(token);
+            if (string.IsNullOrEmpty(user.userId))
+                return Error.Unauthorized("User ID claim not found");
+
+            return user.userId;
+        }
         //Register
         [HttpPost]
         [Route("/api/registration")]
@@ -96,14 +108,14 @@ namespace MY_ScrumBoard.Controllers
         [Authorize]
         public IActionResult DeleteUsers()
         {
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (currentUserId == null)
-            {
-                return Unauthorized("User ID not found in token.");
-            }
+            var currentUserId = GetUserIdFromToken();
+            if (currentUserId.IsError)
+                return Unauthorized(currentUserId.FirstError.Code);
+
+
             try
             {
-                _userServices.DeleteUser(currentUserId);
+                _userServices.DeleteUser(currentUserId.Value);
                 return Ok();
             }
             catch (Exception ex)

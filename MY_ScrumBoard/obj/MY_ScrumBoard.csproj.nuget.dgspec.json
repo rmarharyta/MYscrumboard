@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "F:\\GitProject\\MYscrumboard\\MY_ScrumBoard\\MY_ScrumBoard.csproj": {}
+    "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\MY_ScrumBoard.csproj": {}
   },
   "projects": {
-    "F:\\GitProject\\MYscrumboard\\MY_ScrumBoard\\MY_ScrumBoard.csproj": {
+    "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\MY_ScrumBoard.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\GitProject\\MYscrumboard\\MY_ScrumBoard\\MY_ScrumBoard.csproj",
+        "projectUniqueName": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\MY_ScrumBoard.csproj",
         "projectName": "MY_ScrumBoard",
-        "projectPath": "F:\\GitProject\\MYscrumboard\\MY_ScrumBoard\\MY_ScrumBoard.csproj",
-        "packagesPath": "C:\\Users\\misha\\.nuget\\packages\\",
-        "outputPath": "F:\\GitProject\\MYscrumboard\\MY_ScrumBoard\\obj\\",
+        "projectPath": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\MY_ScrumBoard.csproj",
+        "packagesPath": "C:\\Users\\Marharyta\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\misha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Marharyta\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,8 +26,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://pkgs.dev.azure.com/rotem-dynamics/_packaging/rotem-dynamics-org/nuget/v3/index.json": {}
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
@@ -99,7 +99,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

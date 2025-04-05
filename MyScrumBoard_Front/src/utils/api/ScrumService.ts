@@ -14,9 +14,6 @@ type ScrumResponse={
 
 export const addNewScrum = async (projectId: string, scrumName:string) => {
     try {
-        const token = localStorage.getItem("token"); // або використовуйте контекст чи інший механізм
-
-        if (!token) throw new Error("Token not found");
         const CreateScrum = { projectId, scrumName }
         const response = await axiosInstance.post("/Scrum", CreateScrum);
         return response.data as Scrum;

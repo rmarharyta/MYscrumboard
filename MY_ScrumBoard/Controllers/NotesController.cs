@@ -10,8 +10,20 @@ namespace MY_ScrumBoard.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
-    public class NotesController(NotesServices _notesServices) : ControllerBase
+    public class NotesController(NotesServices _notesServices, IUserClaimsMapper<User> userClaimsMapper) : ControllerBase
     {
+        private ErrorOr<string> GetUserIdFromToken()
+        {
+            var token = HttpContext.Request.Cookies[CookieKeys.Token];
+            if (string.IsNullOrEmpty(token))
+                return Error.Unauthorized("Token not found");
+
+            var user = userClaimsMapper.FromClaims(token);
+            if (string.IsNullOrEmpty(user.userId))
+                return Error.Unauthorized("User ID claim not found");
+
+            return user.userId;
+        }
         //create
         [HttpPost]
         [Authorize]
@@ -102,14 +114,13 @@ namespace MY_ScrumBoard.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(currentUserId))
-            {
-                return Unauthorized("User ID not found in token.");
-            }
+            var currentUserId = GetUserIdFromToken();
+            if (currentUserId.IsError)
+                return Unauthorized(currentUserId.FirstError.Code);
+
             try
             {
-                _notesServices.DeleteNoteFromScrum(noteId, currentUserId);
+                _notesServices.DeleteNoteFromScrum(noteId, currentUserId.Value);
             }
             catch (Exception ex)
             {

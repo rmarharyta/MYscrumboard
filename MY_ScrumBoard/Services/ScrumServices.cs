@@ -8,7 +8,7 @@ namespace MY_ScrumBoard.Services
         public Scrum CreateScrumBoard(CreateScrum scrum, string userId)
         {
             var project = _context.Set<Projects>()
-                .FirstOrDefault(u => u.projectId == scrum.projectId && u.ownerId == userId);
+                .FirstOrDefault(u => u.projectId == scrum.projectId );//тут
             if (project == null)
             {
                 throw new Exception("You cannot create it.");
