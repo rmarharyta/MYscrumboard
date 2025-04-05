@@ -4,34 +4,40 @@ import SignUpPage from "./pages/SignUpPage";
 import RequestChangePassword from "./pages/RequestChangePassword";
 import ChangePassword from "./pages/ChangePassword";
 import DashboardPage from "./pages/DashboardPage";
-import AppBar from "./components/AppBar";
 import { Box } from "@mui/material";
-import useAuth from "./utils/Contexts/useAuth";
+import { SingedIn, SingedOut } from "./utils/Contexts/UserContext";
+import AppBar from "./components/AppBar";
 import ScrumsPage from "./pages/ScrumsPage";
 import ScrumBoardPage from "./pages/ScrumBoardPage";
 
 function App() {
-  const { isAuthenticated } = useAuth();
   return (
     <Box>
       <BrowserRouter>
-        {isAuthenticated && <AppBar />}
-        <Routes>
-          <Route path="/" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route
-            path="/requestchangepassword"
-            element={<RequestChangePassword />}
-          />
-          <Route path="/changepassword" element={<ChangePassword />} />
-        </Routes>
-        <Box sx={{ mt: 10 }}>
+        <SingedOut>
           <Routes>
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/scrum/:projectId" element={<ScrumsPage />} />
-            <Route path="/scrumboard/:scrumId/:ownerId" element={<ScrumBoardPage />} />
+            <Route path="/" element={<LoginPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+            <Route
+              path="/requestchangepassword"
+              element={<RequestChangePassword />}
+            />
+            <Route path="/changepassword" element={<ChangePassword />} />
           </Routes>
-        </Box>
+        </SingedOut>
+        <SingedIn>
+          <AppBar />
+          <Box sx={{ mt: 10 }}>
+            <Routes>
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/scrum/:projectId" element={<ScrumsPage />} />
+              <Route
+                path="/scrumboard/:scrumId/:ownerId"
+                element={<ScrumBoardPage />}
+              />
+            </Routes>
+          </Box>
+        </SingedIn>
       </BrowserRouter>
     </Box>
   );

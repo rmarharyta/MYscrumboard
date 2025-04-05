@@ -1,34 +1,35 @@
-import React from "react";
-import { login } from "../api/loginService";
+import React, { FC, ReactNode, useEffect } from "react";
+import { getUserDetails, login, logout } from "../api/loginService";
 import { register } from "../api/registerService";
+import useAuth from "./useAuth";
 import axiosInstance from "../api/axios";
 
 export type UserContextType = {
-  isAuthenticated: boolean;
-  userId: string | null;
+  userId: string | undefined;
   signin: (email: string, password: string) => void;
   signup: (email: string, password: string) => void;
   logout: () => void;
   deleteaccount: () => void;
 };
 
-export const UserContext = React.createContext<UserContextType | null>(null);
+export const UserContext = React.createContext<UserContextType | undefined>(
+  undefined
+);
 
 const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [userId, setUserId] = React.useState(localStorage.getItem("userId"));
+  const [userId, setUserId] = React.useState<string>();
 
-  const [isAuthenticated, setIsAuthenticated] = React.useState(
-    !!localStorage.getItem("token")
-  );
+  useEffect(() => {
+    getUserDetails().then((user) => setUserId(user));
+  }, []);
 
   const signin = async (email: string, password: string) => {
     try {
       const response = await login(email, password);
-      setIsAuthenticated(true);
-      localStorage.setItem("token", response.token);
-      localStorage.setItem("userId", response.returnedUserId);
+      setUserId(response.returnedUserId);
+      console.log(response);
     } catch (error: any) {
       console.error("Помилка авторизації:", error);
       throw new Error(
@@ -40,40 +41,54 @@ const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   const signup = async (email: string, password: string) => {
     try {
       const response = await register(email, password);
-      setIsAuthenticated(true);
-      localStorage.setItem("token", response.token);
-      localStorage.setItem("userId", response.returnedUserId);
+      setUserId(response.returnedUserId);
     } catch (error: any) {
       console.error("Помилка реєстрації:", error);
       return Promise.reject(error); // Передаємо помилку далі
     }
   };
 
-  const logout = () => {
-    setIsAuthenticated(false);
-    setUserId(null);
-    localStorage.clear();
+  const signout = () => {
+    logout()
+      .then(() => {
+        setUserId(undefined);
+        localStorage.clear();
+      })
+      .catch((error) => {
+        console.error("Помилка виходу:", error);
+        throw error;
+      });
   };
 
   const deleteaccount = async () => {
     try {
-      await axiosInstance.delete("/Users")
-      setIsAuthenticated(false);
-      setUserId(null);
+      await axiosInstance.delete("/Users");
+      setUserId(undefined);
       localStorage.clear();
+    } catch (e) {
+      console.error("Помилка видалення аккаунта:", e);
+      throw e;
     }
-    catch {
-      
-    }
-    };
+  };
 
   return (
     <UserContext.Provider
-      value={{ isAuthenticated, userId, signin, signup, logout, deleteaccount }}
+      value={{ deleteaccount, userId, signin, signup, logout: signout }}
     >
       {children}
     </UserContext.Provider>
   );
 };
 
+export const SingedIn: FC<{ children: ReactNode }> = ({ children }) => {
+  const { userId } = useAuth();
+  if (userId) return <>{children}</>;
+  else return <></>;
+};
+
+export const SingedOut: FC<{ children: ReactNode }> = ({ children }) => {
+  const { userId } = useAuth();
+  if (!userId) return <>{children}</>;
+  return <></>;
+};
 export default UserProvider;

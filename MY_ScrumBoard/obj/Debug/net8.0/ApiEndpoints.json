@@ -74,6 +74,26 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "MY_ScrumBoard.Controllers.UsersController",
+    "Method": "Logout",
+    "RelativePath": "api/logout",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.UsersController",
+    "Method": "GetUser",
+    "RelativePath": "api/me",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MY_ScrumBoard.Controllers.NotesController",
     "Method": "CreateNote",
     "RelativePath": "api/Notes",
@@ -309,6 +329,16 @@
     "ContainingType": "MY_ScrumBoard.Controllers.ProjectsController",
     "Method": "GetByUser",
     "RelativePath": "api/Projects/get_by_user",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MY_ScrumBoard.Controllers.UsersController",
+    "Method": "RefreshToken",
+    "RelativePath": "api/refresh",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
