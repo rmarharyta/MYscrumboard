@@ -1,17 +1,18 @@
 import { Button, useMediaQuery, useTheme } from "@mui/material";
 
 interface Props {
-  password: string;
-  setIsSubmitted: (value: boolean) => void;
+  onClick?: (event: any) => void;
+  type?: "button" | "submit" | "reset" | undefined;
 }
 
-function ChangePasswordButton({ password, setIsSubmitted }: Props) {
+function ChangePasswordButton({ onClick, type }: Props) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <Button
       variant="contained"
+      type={type}
       sx={{
         backgroundColor: "#08031B",
         color: "#FFFFFF",
@@ -25,9 +26,7 @@ function ChangePasswordButton({ password, setIsSubmitted }: Props) {
         textTransform: "none",
         marginTop: "22px",
       }}
-      onClick={() => {
-        setIsSubmitted(true);
-      }}
+      onClick={onClick}
     >
       Change password
     </Button>

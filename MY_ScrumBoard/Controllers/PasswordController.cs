@@ -14,9 +14,9 @@ namespace MY_ScrumBoard.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class PasswordController(PasswordServices _passwordServices, IConfiguration _configuration, IJwtService jwtService) : ControllerBase
+    public class PasswordController(PasswordServices _passwordServices, UserServices _userServices, IConfiguration _configuration, IJwtService jwtService, IUserClaimsMapper<User> claimsMapper) : ControllerBase
     {
-
+        static readonly Dictionary<string, PasswordResetSys> _passwordResetTokens = [];
         //changePassword
         [HttpPut]
         [Authorize]
@@ -44,10 +44,17 @@ namespace MY_ScrumBoard.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var returnedUser = _passwordServices.ResetPasswordEmail(email);
+            //var returnedUser = _userServices.GetUserByEmail(email);
+            var returnedUser = new User
+            {
+                userId = Guid.NewGuid().ToString(),
+                email = email,
+                userPassword = "hashedpassword"
+            };
+
             if (returnedUser == null)
             {
-                return BadRequest("There is no such user");
+                return Ok();
             }
             string resetToken = jwtService.GenerateToken(returnedUser, DateTime.Now.AddMinutes(10));
             PasswordResetSys passResetSys = new()
@@ -56,6 +63,7 @@ namespace MY_ScrumBoard.Controllers
                 Email = returnedUser.email,
                 PasswordResetToken = resetToken
             };
+            _passwordResetTokens.Add(resetToken, passResetSys);
             try
             {
                 SendPasswordResetEmail(returnedUser.email, resetToken);
@@ -68,7 +76,6 @@ namespace MY_ScrumBoard.Controllers
 
         }
         [HttpPost("reset_password")]
-        [Authorize]
         public IActionResult ResetPassword([FromBody] PasswordResetModel model)
         {
             if (!ModelState.IsValid)
@@ -77,13 +84,19 @@ namespace MY_ScrumBoard.Controllers
             }
             try
             {
-                _passwordServices.ChangeForgottenPassword(model);
+                //_passwordServices.ChangeForgottenPassword(model);
+                if (_passwordResetTokens.TryGetValue(model.ResetToken, out var passReset))
+                {
+                    var userId = claimsMapper.FromClaims(model.ResetToken)?.userId ?? throw new Exception("UserID is not Found");
+                    //_passwordServices.ChangeForgottenPassword(userId, passReset.PasswordResetToken);
+                    _passwordResetTokens.Remove(model.ResetToken);
+                }
+                return Ok("Password reset successfully");
             }
             catch (Exception ex)
             {
                 return StatusCode(500, "Error resetting password" + ex.Message);
             }
-            return Ok("Password reset successfully");
         }
 
         //send email to the user
@@ -102,7 +115,7 @@ namespace MY_ScrumBoard.Controllers
                 To = { new MailAddress(email) },
                 From = new MailAddress(smtpEmail),
                 Subject = "Password Reset Request",
-                Body = $"You have requested to reset your password. Click on this link to reset it: {resetToken}"
+                Body = $"You have requested to reset your password. Click on this link to reset it: http://localhost:7070/changepassword/{resetToken}"
             };
 
             SmtpClient smtp = new(smtpServer, smtpPort)

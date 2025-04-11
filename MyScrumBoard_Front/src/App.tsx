@@ -22,7 +22,7 @@ function App() {
               path="/requestchangepassword"
               element={<RequestChangePassword />}
             />
-            <Route path="/changepassword" element={<ChangePassword />} />
+            <Route path="/changepassword/:resettoken" element={<ChangePassword />} />
           </Routes>
         </SingedOut>
         <SingedIn>

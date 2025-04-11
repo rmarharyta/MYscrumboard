@@ -1,21 +1,37 @@
 import { useState } from "react";
 import { Box, useMediaQuery, useTheme } from "@mui/material";
 import WelcomeText from "../components/WelcomeText";
-import PasswordRegister from "../components/PasswordRegister";
 import ChangePasswordButton from "../components/ChangePasswordButton";
+import { resetPassword } from "../utils/api/PasswordService";
+import { useNavigate, useParams } from "react-router-dom";
+import PasswordInput from "../components/PasswordInput";
+import { useMutation } from "@tanstack/react-query";
 
 function ChangePassword() {
-  const [password, setPassword] = useState<string>("");
-  const handlePassword = (newValue: string) => setPassword(newValue);
-
-  const [repeatPassword, setRepeadPassword] = useState<string>("");
-  const handleRepeatedPassword = (newValue: string) =>
-    setRepeadPassword(newValue);
-
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const navigate = useNavigate();
+
+  const { resettoken } = useParams();
+
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const { mutateAsync: changePasswordRequest, } = useMutation({
+    mutationFn: async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      setIsSubmitted(true);
+      await resetPassword(password, resettoken);
+    },
+    onSuccess: () => {
+      navigate("/");
+    },
+    onError: () => {
+      setIsSubmitted(false);
+    }
+  });
+
 
   return (
     //background
@@ -61,23 +77,33 @@ function ChangePassword() {
               rowGap: isMobile ? 1.5 : 2,
               flexDirection: "column",
             }}
+            component="form"
+            onSubmit={changePasswordRequest}
+            autoComplete="off"
           >
-            {" "}
-            <PasswordRegister
-              valueFirst={password}
-              valueSecond={repeatPassword}
-              onChangeFirst={handlePassword}
-              onChangeSecond={handleRepeatedPassword}
+
+            <PasswordInput
+              id="password"
+              label="Password"
+              value={password}
+              onChange={setPassword}
               isSubmitted={isSubmitted}
             />
+            <PasswordInput
+              id="confirm-password"
+              label="Confirm Password"
+              value={confirmPassword}
+              onChange={setConfirmPassword}
+              isSubmitted={isSubmitted}
+              validateMatch={true}
+              otherPasswordValue={password}
+            />
+            <ChangePasswordButton type="submit" />
+
           </Box>
-          <ChangePasswordButton
-            password={password}
-            setIsSubmitted={setIsSubmitted}
-          />
         </Box>
       </Box>
-    </Box>
+    </Box >
   );
 }
 

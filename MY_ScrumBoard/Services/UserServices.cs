@@ -92,5 +92,10 @@ namespace MY_ScrumBoard.Services
                 .Select(u => new User { userId = u.userId, email = u.email })
                 .ToList();
         }
+        public User? GetUserByEmail(string email)
+        {
+            var user = _context.Set<User>().FirstOrDefault(u => u.email == email);
+            return user;
+        }
     }
 }

@@ -3,10 +3,10 @@ import { Box, Link, useMediaQuery, useTheme } from "@mui/material";
 import UserName from "../components/UserName";
 import WelcomeText from "../components/WelcomeText";
 import SignUpButton from "../components/SignUpButton";
-import PasswordRegister from "../components/PasswordRegister";
+import PasswordRegister from "../components/PasswordInput";
 
 function SignUpPage() {
-  
+
   const [username, setUsername] = useState<string>("");
   const handleUsername = (newValue: string) => setUsername(newValue);
 
