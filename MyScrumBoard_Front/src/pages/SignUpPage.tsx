@@ -6,17 +6,13 @@ import SignUpButton from "../components/SignUpButton";
 import PasswordInput from "../components/PasswordInput";
 
 function SignUpPage() {
-
-  const [username, setUsername] = useState<string>("");
-
-  const [password, setPassword] = useState<string>("");
-
-  const [confirmPassword, setRepeatPassword] = useState<string>("");
-
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setRepeatPassword] = useState<string>("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   // Функція перевірки валідності пароля
   const isValidPassword = (password: string) => {

@@ -1,6 +1,6 @@
 import axiosInstance from "./axios";
 
-type ProjectResponse = {
+export type Project = {
     projectId: string;
     ownerId: string;
     projectName: string;
@@ -15,7 +15,7 @@ export type UserResponse = {
 
 export const addNewProject = async (projectName: string) => {
     try {
-        await axiosInstance.post("/Projects/create_new_project", projectName);
+        return (await axiosInstance.post("/Projects/create_new_project", projectName)).data as Project;
     } catch (error) {
         console.error(error)
         throw error;
@@ -41,10 +41,10 @@ export const RenameProject = async (projectId: string, projectName: string) => {
     }
 }
 
-export const findAllUserProject = async (): Promise<ProjectResponse[]> => {
+export const findAllUserProject = async (): Promise<Project[]> => {
     try {
         const response = await axiosInstance.get("/Projects/get_by_user");
-        return response.data as ProjectResponse[];
+        return response.data as Project[];
 
     } catch (error) {
         console.error(error)

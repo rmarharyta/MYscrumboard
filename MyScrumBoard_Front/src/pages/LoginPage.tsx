@@ -5,12 +5,13 @@ import Password from "../components/Password";
 import WelcomeText from "../components/WelcomeText";
 import LogInButton from "../components/LogInButton";
 import SignUpLinkButton from "../components/SignUpLinkButton";
+import { NavLink } from "react-router-dom";
 
 function LoginPage() {
   useEffect(() => {
-localStorage.removeItem('token')
+    localStorage.removeItem('token')
   }, [])
-  
+
   const [username, setUsername] = useState<string>("");
   const handleUsername = (newValue: string) => setUsername(newValue);
 
@@ -33,7 +34,7 @@ localStorage.removeItem('token')
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Простий регулярний вираз для перевірки email
     return emailRegex.test(email);
   };
-  
+
   // Визначаємо, чи кнопка має бути заблокована
   const isButtonDisabled = !isValidEmail(username) || !isValidPassword(password);
 
@@ -96,10 +97,15 @@ localStorage.removeItem('token')
           <Link
             textAlign={"right"}
             width={1}
-            href="/requestchangepassword"
             underline="hover"
             color="#440464"
             fontSize={isMobile ? "12px" : "16px"}
+            component={NavLink}  // Use NavLink as the component
+            to="/requestchangepassword" // Pass the 'to' prop directly to NavLink
+            sx={{          // Apply styles to the NavLink directly
+              color: "#440464",
+              fontFamily: "Poppins, sans-serif",
+            }}
           >
             {"Forgot password?"}
           </Link>
@@ -113,7 +119,7 @@ localStorage.removeItem('token')
           <SignUpLinkButton />
 
           {/* Кнопка входу через Google */}
-          <Link
+          {/* <Link
             href="#"
             underline="hover"
             sx={{
@@ -134,10 +140,10 @@ localStorage.removeItem('token')
               width={isMobile ? "24px" : "36px"}
             />
             Continue with Google
-          </Link>
+          </Link> */}
         </Box>
       </Box>
-    </Box>
+    </Box >
   );
 }
 

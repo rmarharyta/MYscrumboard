@@ -3,33 +3,29 @@ import { getUserDetails, login, logout } from "../api/loginService";
 import { register } from "../api/registerService";
 import useAuth from "./useAuth";
 import axiosInstance from "../api/axios";
+import { Navigate } from "react-router-dom";
 
 export type UserContextType = {
-  userId: string | undefined;
+  userId: string | undefined
   signin: (email: string, password: string) => void;
   signup: (email: string, password: string) => void;
   logout: () => void;
   deleteaccount: () => void;
 };
 
-export const UserContext = React.createContext<UserContextType | undefined>(
-  undefined
-);
+export const UserContext = React.createContext<UserContextType | undefined>(undefined);
 
-const UserProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children, }) => {
   const [userId, setUserId] = React.useState<string>();
 
   useEffect(() => {
-    getUserDetails().then((user) => setUserId(user));
+    getUserDetails().then((user) => setUserId(user)).catch(() => setUserId(undefined));
   }, []);
 
   const signin = async (email: string, password: string) => {
     try {
       const response = await login(email, password);
       setUserId(response.returnedUserId);
-      console.log(response);
     } catch (error: any) {
       console.error("Помилка авторизації:", error);
       throw new Error(
@@ -82,13 +78,21 @@ const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
 export const SingedIn: FC<{ children: ReactNode }> = ({ children }) => {
   const { userId } = useAuth();
-  if (userId) return <>{children}</>;
-  else return <></>;
+
+  if (userId) {
+    return <>{children}</>;
+  } else {
+    return <Navigate to="/login" />;
+  }
 };
 
 export const SingedOut: FC<{ children: ReactNode }> = ({ children }) => {
   const { userId } = useAuth();
-  if (!userId) return <>{children}</>;
-  return <></>;
+
+  if (!userId) {
+    return <>{children}</>;
+  } else {
+    return <Navigate to="/dashboard" />;
+  }
 };
 export default UserProvider;

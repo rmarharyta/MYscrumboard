@@ -27,27 +27,16 @@ import SortIcon from "@mui/icons-material/Sort";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { useState, MouseEvent, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
-import {
-  addNewProject,
-  DeleteProject,
-  findAllUserProject,
-  RenameProject,
-} from "../utils/api/ProjectService";
+import { addNewProject, DeleteProject, findAllUserProject, Project, RenameProject, } from "../utils/api/ProjectService";
 import useAuth from "../utils/Contexts/useAuth";
 import AddButtonProject from "../components/AddButtonProject";
-interface Project {
-  projectId: string;
-  ownerId: string;
-  projectName: string;
-  date_time: Date;
-}
+import { Navigate } from "react-router-dom";
 
 const Dashboard: React.FC = () => {
   const { userId } = useAuth();
-
   const [projects, setProjects] = useState<Project[]>([]);
 
-  const { isPending, isError, mutate } = useMutation({
+  const { isPending, isError, mutateAsync: findAllUserProjectMutate } = useMutation({
     mutationFn: async () => {
       const response = await findAllUserProject(); // або ваш API запит
       setProjects(response); // зберігаємо отримані проекти
@@ -61,12 +50,10 @@ const Dashboard: React.FC = () => {
   });
 
   //mutate for delete project
-  const {
-    mutate: deletemutate,
-  } = useMutation({
+  const { mutateAsync: deletemutate, } = useMutation({
     mutationFn: async (projId: string) => {
       await DeleteProject(projId); // або ваш API запит
-      setProjects(projects.filter((p) => p.projectId !== projectId));
+      setProjects(projects.filter((p) => p.projectId !== projId));
     },
     onError: (error: Error) => {
       console.error("Помилка ??? проектів: ", error.message);
@@ -80,10 +67,10 @@ const Dashboard: React.FC = () => {
   const {
     // isPending: addIsPending,
     // isError: addIsError,
-    mutate: addProjectMutate,
+    mutateAsync: addProjectMutate,
   } = useMutation({
     mutationFn: async (projName: string) => {
-      const newProject = await addNewProject(projName); // або ваш API запит
+      const newProject = await addNewProject(projName);
       setProjects((projects) => [...projects, newProject]);
     },
     onError: (error: Error) => {
@@ -99,7 +86,7 @@ const Dashboard: React.FC = () => {
   const {
     // isPending: addIsPending,
     // isError: addIsError,
-    mutate: renameProjectMutate,
+    mutateAsync: renameProjectMutate,
   } = useMutation({
     mutationFn: async ({
       projectId,
@@ -125,7 +112,7 @@ const Dashboard: React.FC = () => {
   });
 
   useEffect(() => {
-    mutate(); // Викликаєте fetchProjects, щоб завантажити проекти
+    findAllUserProjectMutate(); // Викликаєте fetchProjects, щоб завантажити проекти
   }, []);
 
   const [isSubmitted, setIsSubmitted] = useState(false);
