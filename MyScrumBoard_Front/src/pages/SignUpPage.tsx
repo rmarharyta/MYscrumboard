@@ -3,19 +3,15 @@ import { Box, Link, useMediaQuery, useTheme } from "@mui/material";
 import UserName from "../components/UserName";
 import WelcomeText from "../components/WelcomeText";
 import SignUpButton from "../components/SignUpButton";
-import PasswordRegister from "../components/PasswordInput";
+import PasswordInput from "../components/PasswordInput";
 
 function SignUpPage() {
 
   const [username, setUsername] = useState<string>("");
-  const handleUsername = (newValue: string) => setUsername(newValue);
 
   const [password, setPassword] = useState<string>("");
-  const handlePassword = (newValue: string) => setPassword(newValue);
 
-  const [repeatPassword, setRepeatPassword] = useState<string>("");
-  const handleRepeatedPassword = (newValue: string) =>
-    setRepeatPassword(newValue);
+  const [confirmPassword, setRepeatPassword] = useState<string>("");
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -34,8 +30,7 @@ function SignUpPage() {
     return emailRegex.test(email);
   };
   // Визначаємо, чи кнопка має бути заблокована
-  const isButtonDisabled =
-    !isValidEmail(username) || !isValidPassword(password);
+  const isButtonDisabled = !isValidEmail(username) || !isValidPassword(password);
 
   return (
     <Box
@@ -96,15 +91,24 @@ function SignUpPage() {
           >
             <UserName
               value={username}
-              onChange={handleUsername}
+              onChange={setUsername}
               isSubmitted={isSubmitted}
             />
-            <PasswordRegister
-              valueFirst={password}
-              valueSecond={repeatPassword}
-              onChangeFirst={handlePassword}
-              onChangeSecond={handleRepeatedPassword}
+            <PasswordInput
+              id="password"
+              label="Password"
+              value={password}
+              onChange={setPassword}
               isSubmitted={isSubmitted}
+            />
+            <PasswordInput
+              id="confirm-password"
+              label="Confirm Password"
+              value={confirmPassword}
+              onChange={setRepeatPassword}
+              isSubmitted={isSubmitted}
+              validateMatch={true}
+              otherPasswordValue={password}
             />
           </Box>
           <SignUpButton

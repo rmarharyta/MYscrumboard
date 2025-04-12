@@ -12,9 +12,10 @@ interface Props {
 }
 
 function SignUpButton({ email, password, setIsSubmitted, isDisabled }: Props) {
-  const navigate = useNavigate();
-
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const auth = useAuth();
+  const navigate = useNavigate();
 
   const [error, setError] = useState<string | null>(null);
 
@@ -24,12 +25,11 @@ function SignUpButton({ email, password, setIsSubmitted, isDisabled }: Props) {
       navigate("/dashboard"); // Перехід на головну сторінку
     },
     onError: () => {
-      setError("This user is already registered");
+      setError("Something went wrong, try again later."); // Встановлення повідомлення про помилку
     },
   });
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <>
       <Snackbar
