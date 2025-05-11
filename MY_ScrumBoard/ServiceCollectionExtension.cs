@@ -19,11 +19,11 @@ namespace MY_ScrumBoard
         }
         public static IServiceCollection AddCrossOrigins(this IServiceCollection services)
         {
-            var AllowAllOrigins = "_allowAllOrigins";
+            var myPolicy = "_myPolicy";
             //CORS - Cross-Origin Resource Sharing
             services.AddCors(options =>
             {
-                options.AddPolicy(name: AllowAllOrigins,
+                options.AddPolicy(name: myPolicy,
                                   policy =>
                                   {
                                       policy.WithOrigins("https://myscrumboardmanaging.netlify.app")
@@ -37,7 +37,6 @@ namespace MY_ScrumBoard
         public static IServiceCollection RegisterServices(this IServiceCollection services)
         {
             services.AddScoped<IAuthenticationService, AuthenticationService>();
-
             services.AddScoped<CollaborationServices>();
             services.AddSingleton<IEncryptionService, EncryptionService>();
             services.AddScoped<IJwtService, JwtService>();

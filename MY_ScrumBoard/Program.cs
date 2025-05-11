@@ -41,7 +41,7 @@ namespace MY_ScrumBoard
 
             app.UseHttpsRedirection();
 
-            app.UseCors("_allowAllOrigins");
+            app.UseCors("_myPolicy");
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -49,8 +49,6 @@ namespace MY_ScrumBoard
             app.MapControllers();
 
             app.Run();
-
-
         }
     }
 }
