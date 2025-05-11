@@ -144,7 +144,6 @@ C:\Users\Marharyta\Desktop\MYscrumboard\MY_ScrumBoard\obj\Debug\net8.0\staticweb
 C:\Users\Marharyta\Desktop\MYscrumboard\MY_ScrumBoard\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.MY_ScrumBoard.props
 C:\Users\Marharyta\Desktop\MYscrumboard\MY_ScrumBoard\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.MY_ScrumBoard.props
 C:\Users\Marharyta\Desktop\MYscrumboard\MY_ScrumBoard\obj\Debug\net8.0\staticwebassets.pack.json
-C:\Users\Marharyta\Desktop\MYscrumboard\MY_ScrumBoard\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\Marharyta\Desktop\MYscrumboard\MY_ScrumBoard\obj\Debug\net8.0\MY_Scrum.9389138E.Up2Date
 C:\Users\Marharyta\Desktop\MYscrumboard\MY_ScrumBoard\obj\Debug\net8.0\MY_ScrumBoard.dll
 C:\Users\Marharyta\Desktop\MYscrumboard\MY_ScrumBoard\obj\Debug\net8.0\refint\MY_ScrumBoard.dll
@@ -230,3 +229,4 @@ F:\GitProject\MYscrumboard\MY_ScrumBoard\obj\Debug\net8.0\MY_ScrumBoard.pdb
 F:\GitProject\MYscrumboard\MY_ScrumBoard\obj\Debug\net8.0\MY_ScrumBoard.genruntimeconfig.cache
 F:\GitProject\MYscrumboard\MY_ScrumBoard\obj\Debug\net8.0\ref\MY_ScrumBoard.dll
 C:\Users\Marharyta\Desktop\MYscrumboard\MY_ScrumBoard\bin\Debug\net8.0\ErrorOr.dll
+C:\Users\Marharyta\Desktop\MYscrumboard\MY_ScrumBoard\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

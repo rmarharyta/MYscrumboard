@@ -294,8 +294,8 @@ const ScrumsPage: React.FC = () => {
                   date_time={Scrum.date_time}
                   deletemutate={deletemutate}
                   renamemutate={renamemutate}
-                  defaultSrc="/src/assets/scrum_close.svg"
-                  hoverSrc="/src/assets/scrum_open.svg"
+                  defaultSrc="/scrum_close.png"
+                  hoverSrc="/scrum_open.png"
                 />
               </Grid>
             ))}

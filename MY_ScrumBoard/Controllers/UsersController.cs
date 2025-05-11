@@ -10,6 +10,7 @@ using MY_ScrumBoard.Services;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
+using System.Runtime.Intrinsics.X86;
 using System.Security.Claims;
 using System.Text;
 
@@ -204,3 +205,4 @@ namespace MY_ScrumBoard.Controllers
         }
     }
 }
+

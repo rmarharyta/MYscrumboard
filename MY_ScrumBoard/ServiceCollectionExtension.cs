@@ -26,7 +26,7 @@ namespace MY_ScrumBoard
                 options.AddPolicy(name: AllowAllOrigins,
                                   policy =>
                                   {
-                                      policy.WithOrigins("http://localhost:7070")
+                                      policy.WithOrigins("https://myscrumboardmanaging.netlify.app")
                                             .AllowAnyHeader()
                                             .AllowCredentials()
                                             .AllowAnyMethod();

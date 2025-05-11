@@ -12,7 +12,7 @@ function SendRequestButton({ email, setIsSubmitted }: Props) {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   
 
-    const { mutate, isPending } = useMutation({
+    const { mutate: requestResetPasswordMutate } = useMutation({
       mutationFn: async (email:string) => requestResetPassword(email),
       onSuccess: () => {
         console.log("Успішно відправлено!")
@@ -40,7 +40,7 @@ function SendRequestButton({ email, setIsSubmitted }: Props) {
       }}
       onClick={() => {
         setIsSubmitted(true) 
-        mutate(email);
+        requestResetPasswordMutate(email);
       }}
     >
       Send request

@@ -54,11 +54,13 @@ export default function ScrumIcon({
   const [imageSrc, setImageSrc] = useState(defaultSrc);
 
   const navigate = useNavigate();
-  
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const [menuAnchor, setMenuAnchor] = useState(null);
+  const [menuAnchor, setMenuAnchor] = useState<
+    EventTarget & HTMLButtonElement
+  >();
   const [openDialogDelete, setOpenDialogDelete] = useState(false);
 
   const [openDialog, setOpenDialog] = useState(false);
@@ -71,7 +73,7 @@ export default function ScrumIcon({
   };
 
   const handleMenuClose = () => {
-    setMenuAnchor(null);
+    setMenuAnchor(undefined);
   };
 
   const handleDeleteClick = () => {

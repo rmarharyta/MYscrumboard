@@ -30,7 +30,6 @@ import { useMutation } from "@tanstack/react-query";
 import { addNewProject, DeleteProject, findAllUserProject, Project, RenameProject, } from "../utils/api/ProjectService";
 import useAuth from "../utils/Contexts/useAuth";
 import AddButtonProject from "../components/AddButtonProject";
-import { Navigate } from "react-router-dom";
 
 const Dashboard: React.FC = () => {
   const { userId } = useAuth();
@@ -357,8 +356,8 @@ const Dashboard: React.FC = () => {
                   date_time={project.date_time}
                   deletemutate={deletemutate}
                   renamemutate={renameProjectMutate}
-                  defaultSrc="/src/assets/Mediamodifier-Design.svg"
-                  hoverSrc="/src/assets/Mediamodifier-Design (1).svg"
+                  defaultSrc="/Mediamodifier-Design.png"
+                  hoverSrc="/Mediamodifier-Design (1).png"
                 />
               </Grid>
             ))}
