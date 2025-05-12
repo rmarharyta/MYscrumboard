@@ -20,7 +20,7 @@ function App() {
         <Box sx={userId ? { mt: 10 } : {}}>
           <Routes>
             <Route
-              path="/login"
+              path="/"
               element={<PublicRoute><LoginPage /></PublicRoute>}
             />
             <Route

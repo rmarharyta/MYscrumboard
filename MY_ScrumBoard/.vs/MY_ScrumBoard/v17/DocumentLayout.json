@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{EFC5B4F9-74A3-40F0-8810-C16483156CB5}|MY_ScrumBoard.csproj|c:\\users\\marharyta\\desktop\\myscrumboard\\my_scrumboard\\services\\scrumservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EFC5B4F9-74A3-40F0-8810-C16483156CB5}|MY_ScrumBoard.csproj|solutionrelative:services\\scrumservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EFC5B4F9-74A3-40F0-8810-C16483156CB5}|MY_ScrumBoard.csproj|c:\\users\\marharyta\\desktop\\myscrumboard\\my_scrumboard\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{EFC5B4F9-74A3-40F0-8810-C16483156CB5}|MY_ScrumBoard.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{EFC5B4F9-74A3-40F0-8810-C16483156CB5}|MY_ScrumBoard.csproj|c:\\users\\marharyta\\desktop\\myscrumboard\\my_scrumboard\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EFC5B4F9-74A3-40F0-8810-C16483156CB5}|MY_ScrumBoard.csproj|solutionrelative:controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -19,10 +27,6 @@
       "RelativeMoniker": "D:0:0:{EFC5B4F9-74A3-40F0-8810-C16483156CB5}|MY_ScrumBoard.csproj|solutionrelative:my_scrumboard.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EFC5B4F9-74A3-40F0-8810-C16483156CB5}|MY_ScrumBoard.csproj|c:\\users\\marharyta\\desktop\\myscrumboard\\my_scrumboard\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{EFC5B4F9-74A3-40F0-8810-C16483156CB5}|MY_ScrumBoard.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Marharyta\\AppData\\Local\\Temp\\.vsdbgsrc\\3f39b457a3b2254505a013cf5a93189a5ae0282290dfa91f8d025389ce8b75bc\\CancellationTokenSource.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -32,10 +36,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{EFC5B4F9-74A3-40F0-8810-C16483156CB5}|MY_ScrumBoard.csproj|c:\\users\\marharyta\\desktop\\myscrumboard\\my_scrumboard\\controllers\\scrumcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EFC5B4F9-74A3-40F0-8810-C16483156CB5}|MY_ScrumBoard.csproj|solutionrelative:controllers\\scrumcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EFC5B4F9-74A3-40F0-8810-C16483156CB5}|MY_ScrumBoard.csproj|c:\\users\\marharyta\\desktop\\myscrumboard\\my_scrumboard\\services\\scrumservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EFC5B4F9-74A3-40F0-8810-C16483156CB5}|MY_ScrumBoard.csproj|solutionrelative:services\\scrumservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EFC5B4F9-74A3-40F0-8810-C16483156CB5}|MY_ScrumBoard.csproj|c:\\users\\marharyta\\desktop\\myscrumboard\\my_scrumboard\\controllers\\notescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -53,7 +53,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -62,6 +62,32 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-05-10T11:09:49.222Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ScrumServices.cs",
+              "DocumentMoniker": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\Services\\ScrumServices.cs",
+              "RelativeDocumentMoniker": "Services\\ScrumServices.cs",
+              "ToolTip": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\Services\\ScrumServices.cs",
+              "RelativeToolTip": "Services\\ScrumServices.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAoAAABLAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-29T16:05:49.803Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "ServiceCollectionExtension.cs",
               "DocumentMoniker": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\ServiceCollectionExtension.cs",
               "RelativeDocumentMoniker": "ServiceCollectionExtension.cs",
@@ -74,20 +100,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\appsettings.json",
-              "RelativeDocumentMoniker": "appsettings.json",
-              "ToolTip": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\appsettings.json",
-              "RelativeToolTip": "appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAUAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-05-10T11:09:49.222Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "UsersController.cs",
               "DocumentMoniker": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\Controllers\\UsersController.cs",
               "RelativeDocumentMoniker": "Controllers\\UsersController.cs",
@@ -100,7 +113,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "CollaborationController.cs",
               "DocumentMoniker": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\Controllers\\CollaborationController.cs",
               "RelativeDocumentMoniker": "Controllers\\CollaborationController.cs",
@@ -125,7 +138,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "ScrumController.cs",
               "DocumentMoniker": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\Controllers\\ScrumController.cs",
               "RelativeDocumentMoniker": "Controllers\\ScrumController.cs",
@@ -137,19 +150,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "ScrumServices.cs",
-              "DocumentMoniker": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\Services\\ScrumServices.cs",
-              "RelativeDocumentMoniker": "Services\\ScrumServices.cs",
-              "ToolTip": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\Services\\ScrumServices.cs",
-              "RelativeToolTip": "Services\\ScrumServices.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAoAAABLAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-29T16:05:49.803Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "MY_ScrumBoard.csproj",
               "DocumentMoniker": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\MY_ScrumBoard.csproj",
               "RelativeDocumentMoniker": "MY_ScrumBoard.csproj",
@@ -162,13 +163,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAQwCsAAAApAAAAAAAAAA==",
+              "ViewState": "AgIAABkAAAAAAAAAAAAQwCsAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-29T15:50:03.547Z",
               "EditorCaption": ""
@@ -187,7 +188,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "CancellationTokenSource.cs",
               "DocumentMoniker": "C:\\Users\\Marharyta\\AppData\\Local\\Temp\\.vsdbgsrc\\3f39b457a3b2254505a013cf5a93189a5ae0282290dfa91f8d025389ce8b75bc\\CancellationTokenSource.cs",
               "RelativeDocumentMoniker": "..\\..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\3f39b457a3b2254505a013cf5a93189a5ae0282290dfa91f8d025389ce8b75bc\\CancellationTokenSource.cs",
