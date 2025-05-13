@@ -12,7 +12,7 @@ interface Props {
 
   setIsSubmitted: (value: boolean) => void;
   isDisabled: boolean;
-
+  isPanding: boolean;
   addmutate: (string: string) => void; //Add
 }
 
@@ -21,6 +21,7 @@ function AddProjectButton({
   setIsSubmitted,
   isDisabled,
   addmutate,
+  isPanding
 }: Props) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -62,6 +63,7 @@ function AddProjectButton({
           }
         }}
         variant="contained"
+        disabled={isPanding}
         sx={{
           backgroundColor: "#08031B",
           color: "#FFFFFF",

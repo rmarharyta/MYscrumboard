@@ -41,7 +41,7 @@ export const RenameProject = async (projectId: string, projectName: string) => {
     }
 }
 
-export const findAllUserProject = async (): Promise<Project[]> => {
+export const getAllUserProject = async (): Promise<Project[]> => {
     try {
         const response = await axiosInstance.get("/Projects/get_by_user");
         return response.data as Project[];

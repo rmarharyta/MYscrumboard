@@ -19,7 +19,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import SortIcon from "@mui/icons-material/Sort";
 import { useState, MouseEvent, useEffect } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   addNewScrum,
   DeleteScrum,
@@ -43,22 +43,17 @@ const ScrumsPage: React.FC = () => {
   }>();
 
   const [Scrums, setScrums] = useState<Scrum[]>([]);
-
   const [ownerId, setOwnerId] = useState<string>("");
 
-  const { isPending, isError, mutate } = useMutation({
-    mutationFn: async () => {
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["scrums", projectId],
+    queryFn: async () => {
       const response = await findAllProjectScrum(projectId ?? ""); // або ваш API запит
       setScrums(response.scrums); // зберігаємо отримані проекти
       setOwnerId(response.ownerId);
+      return response;
     },
-    onError: (error: any) => {
-      console.error("Помилка завантаження скрамів: ", error);
-    },
-    onSuccess: () => {
-      console.log("Проекти завантажено успішно");
-    },
-  });
+  })
 
   //mutate for delete Scrum
   const {
@@ -67,8 +62,8 @@ const ScrumsPage: React.FC = () => {
     mutate: deletemutate,
   } = useMutation({
     mutationFn: async (scrumId: string) => {
-    await DeleteScrum(scrumId); // або ваш API запит
-    setScrums(Scrums.filter((p) => p.scrumId !== scrumId));
+      await DeleteScrum(scrumId); // або ваш API запит
+      setScrums(Scrums.filter((p) => p.scrumId !== scrumId));
 
     },
     onError: (error: Error) => {
@@ -132,8 +127,10 @@ const ScrumsPage: React.FC = () => {
   });
 
   useEffect(() => {
-    mutate(); // Викликаєте fetchScrums, щоб завантажити проекти
-  }, []);
+    // mutate(); // Викликаєте fetchScrums, щоб завантажити проекти
+    setScrums(data?.scrums || []); // зберігаємо отримані проекти
+    setOwnerId(data?.ownerId || ""); // зберігаємо ownerId
+  }, [data]);
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -294,8 +291,8 @@ const ScrumsPage: React.FC = () => {
                   date_time={Scrum.date_time}
                   deletemutate={deletemutate}
                   renamemutate={renamemutate}
-                  defaultSrc="/scrum_close.png"
-                  hoverSrc="/scrum_open.png"
+                  defaultSrc="/Scrum_close.png"
+                  hoverSrc="/Scrum_open.png"
                 />
               </Grid>
             ))}

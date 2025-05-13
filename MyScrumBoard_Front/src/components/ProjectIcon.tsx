@@ -98,7 +98,7 @@ export default function ProjectIcon({
     onSuccess: (response) => {
       setParticipants(response);
       console.log("Учасники завантажено успішно");
-      console.log(userId);
+      // console.log(userId);
     },
   });
 
@@ -299,7 +299,7 @@ export default function ProjectIcon({
             <MenuItem onClick={openRenameProjectDialog}>Rename</MenuItem>
           )}
           <MenuItem onClick={handleOpenCollaboration}>
-            Переглянути учасників
+            View participants
           </MenuItem>
           {userId === ownerId && (
             <MenuItem onClick={handleDeleteClick} sx={{ color: "#8D0000" }}>
@@ -457,15 +457,13 @@ export default function ProjectIcon({
       {/* Діалог для перейменування */}
       <Dialog open={openDialog} onClose={closeRenameProjectDialog}>
         <DialogTitle sx={{ color: "#08031B" }}>Rename project</DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ width: isMobile ? "70vw" : "30vw" }}>
           <TextField
             sx={{
               //   backgroundColor: "#D9D9D9",
               marginTop: "22px",
               color: "#565454",
-              width: isMobile ? "60vw" : "40vw",
               height: "56px",
-              maxWidth: "592px",
               fontFamily: "Poppins, sans-serif", // Шрифт
               fontSize: isMobile ? "15px" : "15px", // Розмір
               fontWeight: 400,

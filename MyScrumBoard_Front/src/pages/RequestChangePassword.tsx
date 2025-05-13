@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Box, Link, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Link,  useMediaQuery, useTheme } from "@mui/material";
 import UserName from "../components/UserName";
 import WelcomeText from "../components/WelcomeText";
 import SendRequestButton from "../components/SendRequestButton";
+import { NavLink } from "react-router-dom";
 
 function RequestChangePassword() {
-  
+
   const [username, setUsername] = useState<string>("");
   const handleUsername = (newValue: string) => setUsername(newValue);
 
@@ -69,12 +70,17 @@ function RequestChangePassword() {
           <Link
             textAlign={"center"}
             width={1}
-            href="/"
             underline="hover"
             color="#440464"
             fontSize={isMobile ? "12px" : "16px"}
+            component={NavLink}
+            to="/"
+            sx={{
+              color: "#440464",
+              fontFamily: "Poppins, sans-serif",
+            }}
           >
-            {"Go back"}
+            {"Go Back"}
           </Link>
         </Box>
       </Box>

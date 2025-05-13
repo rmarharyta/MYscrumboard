@@ -28,7 +28,7 @@ export const logout = async () => {
 export const getUserDetails = async (): Promise<string> => {
     try {
         const response = await axiosInstance.get(`/me`);
-        console.log(response);
+        // console.log(response);
         return response.data.userId as string;
     } catch (e) {
         console.error(e as AxiosError);

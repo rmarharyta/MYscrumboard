@@ -4,6 +4,7 @@ import UserName from "../components/UserName";
 import WelcomeText from "../components/WelcomeText";
 import SignUpButton from "../components/SignUpButton";
 import PasswordInput from "../components/PasswordInput";
+import { NavLink } from "react-router-dom";
 
 function SignUpPage() {
   const theme = useTheme();
@@ -116,12 +117,17 @@ function SignUpPage() {
           <Link
             textAlign={"center"}
             width={1}
-            href="/"
             underline="hover"
             color="#440464"
             fontSize={isMobile ? "12px" : "16px"}
+            component={NavLink}
+            to="/"
+            sx={{
+              color: "#440464",
+              fontFamily: "Poppins, sans-serif",
+            }}
           >
-            {"Go back"}
+            {"Go Back"}
           </Link>
         </Box>
       </Box>

@@ -115,7 +115,7 @@ namespace MY_ScrumBoard.Controllers
                 To = { new MailAddress(email) },
                 From = new MailAddress(smtpEmail),
                 Subject = "Password Reset Request",
-                Body = $"You have requested to reset your password. Click on this link to reset it: http://localhost:7070/changepassword/{resetToken}"
+                Body = $"You have requested to reset your password. Click on this link to reset it: https://myscrumboardmanaging.netlify.app/api/password/{resetToken}"
             };
 
             SmtpClient smtp = new(smtpServer, smtpPort)

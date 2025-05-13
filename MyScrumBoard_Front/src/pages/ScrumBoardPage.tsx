@@ -6,7 +6,7 @@ import {
   Drawer,
   IconButton,
   Avatar,
-  Grid,
+  Grid2,
   useTheme,
   CircularProgress,
   useMediaQuery,
@@ -18,7 +18,7 @@ import CreateNoteDialog from "../components/CreateNoteDialog";
 import ConfirmDialog from "../components/ConfirnDialog";
 import { useParams } from "react-router-dom";
 import useAuth from "../utils/Contexts/useAuth";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   addNewNote,
   ChangeNote,
@@ -81,20 +81,16 @@ const ScrumBoardPage: React.FC = () => {
 
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  // Load notes from database (mock implementation)
-  const { isPending, isError, mutate } = useMutation({
-    mutationFn: async () => {
-      const response = await findAllScrumNotes(scrumId ?? ""); // або ваш API запит
-      setNotes(response);
-    },
-    onError: (error: any) => {
-      console.error("Помилка завантаження notes: ", error);
-    },
-    onSuccess: () => {
-      console.log("Проекти завантажено успішно");
-    },
-  });
-
+  // Load notes from database
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["scrumNotes", scrumId],
+    enabled: !!scrumId,
+    queryFn: async () => {
+      const response = await findAllScrumNotes(scrumId || ""); // або ваш API запит
+      setNotes(response) // зберігаємо отримані проекти
+      return response;
+    }
+  })
   //mutate for delete Scrum
   const { mutate: deletemutate } = useMutation({
     mutationFn: async (noteId: string) => {
@@ -114,7 +110,7 @@ const ScrumBoardPage: React.FC = () => {
   });
 
   //mutate for add Scrum
-  const { mutate: addmutate } = useMutation({
+  const { mutate: addmutate, isPending: isPendingAddScrum } = useMutation({
     mutationFn: async ({
       scrumId,
       noteValue,
@@ -140,7 +136,7 @@ const ScrumBoardPage: React.FC = () => {
 
   //mutate for change Scrum
   const {
-    // isPending: addIsPending,
+    isPending: isPendingChangeScrum,
     // isError: addIsError,
     mutate: changemutate,
   } = useMutation({
@@ -154,6 +150,7 @@ const ScrumBoardPage: React.FC = () => {
       noteValue: string;
       position: number;
       colorId: number;
+
     }) => {
       await ChangeNote(noteId, noteValue, position, colorId); // або ваш API запит
       setNotes((currentNotes) =>
@@ -237,8 +234,9 @@ const ScrumBoardPage: React.FC = () => {
   });
 
   useEffect(() => {
-    mutate(); // Викликаєте fetchScrums, щоб завантажити проекти
-  }, []);
+    // mutate(); // Викликаєте fetchScrums, щоб завантажити проекти
+    setNotes(data || []); // Зберігаєте отримані проекти в стані
+  }, [data]);
 
   // Handle note click based on current mode
   const handleNoteClick = (note: NoteType) => {
@@ -303,7 +301,7 @@ const ScrumBoardPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "100vh" }}>
+    <Box sx={{ display: "flex", height: "93dvh" }}>
       {/* Left sidebar */}
       <Drawer
         variant="permanent"
@@ -413,9 +411,11 @@ const ScrumBoardPage: React.FC = () => {
             Something went wrong...
           </Typography>
         ) : (
-          <Grid container spacing={2}>
+          <Grid2 container sx={{ width: '100%' }} spacing={2}>
             {sections.map((section) => (
-              <Grid item xs={12} md={2.4} key={section}>
+              <Grid2
+                size={{ xs: 12, sm: 2.4 }}
+                key={section}>
                 <Paper
                   elevation={2}
                   sx={{
@@ -467,9 +467,9 @@ const ScrumBoardPage: React.FC = () => {
                       ))}
                   </Box>
                 </Paper>
-              </Grid>
+              </Grid2>
             ))}
-          </Grid>
+          </Grid2>
         )}
       </Box>
 
@@ -483,6 +483,7 @@ const ScrumBoardPage: React.FC = () => {
           statusMap={statusMap}
           onClose={() => setIsCreateDialogOpen(false)}
           onSave={handleCreateNote}
+          isPending={isPendingAddScrum}
         />
       )}
 
@@ -495,6 +496,7 @@ const ScrumBoardPage: React.FC = () => {
           statusMap={statusMap}
           onClose={() => setSelectedNote(null)}
           onSave={handleUpdateNote}
+          isPending={isPendingChangeScrum}
         />
       )}
 

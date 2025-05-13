@@ -25,6 +25,7 @@ interface CreateNoteDialogProps {
   statusMap: Record<number, string>;
   onClose: () => void;
   onSave: (note: NoteType) => void;
+  isPending: boolean;
 }
 
 const CreateNoteDialog: React.FC<CreateNoteDialogProps> = ({
@@ -36,6 +37,7 @@ const CreateNoteDialog: React.FC<CreateNoteDialogProps> = ({
   statusMap,
   onClose,
   onSave,
+  isPending
 }) => {
   const [description, setDescription] = useState<string>("");
   const [color, setColor] = useState<ColorType>(1);
@@ -129,7 +131,7 @@ const CreateNoteDialog: React.FC<CreateNoteDialogProps> = ({
         <Button onClick={onClose} color="inherit">
           Скасувати
         </Button>
-        <Button onClick={handleSave} color="primary" variant="contained">
+        <Button disabled={isPending} onClick={handleSave} color="primary" variant="contained">
           {note ? "Зберегти" : "Додати"}
         </Button>
       </DialogActions>

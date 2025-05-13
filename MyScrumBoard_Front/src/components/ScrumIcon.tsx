@@ -197,7 +197,7 @@ export default function ScrumIcon({
 
       {/* Діалог для перейменування */}
       <Dialog open={openDialog} onClose={closeRenameScrumDialog}>
-        <DialogTitle sx={{ color: "#08031B" }}>Rename project</DialogTitle>
+        <DialogTitle sx={{ color: "#08031B" }}>Rename Scrum</DialogTitle>
         <DialogContent>
           <TextField
             sx={{
@@ -229,7 +229,7 @@ export default function ScrumIcon({
               },
             }}
             fullWidth
-            label="Project Name"
+            label="Scrum Name"
             variant="outlined"
             value={newscrumName}
             onChange={(e) => setNewscrumName(e.target.value)}

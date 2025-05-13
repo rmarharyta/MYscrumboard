@@ -17,7 +17,7 @@ function App() {
     <Box>
       <BrowserRouter>
         {userId && <AppBar />}
-        <Box sx={userId ? { mt: 10 } : {}}>
+        <Box sx={userId ? { mt: "60px" } : {}}>
           <Routes>
             <Route
               path="/"

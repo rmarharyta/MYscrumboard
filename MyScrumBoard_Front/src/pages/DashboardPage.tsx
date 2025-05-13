@@ -26,27 +26,23 @@ import AddIcon from "@mui/icons-material/Add";
 import SortIcon from "@mui/icons-material/Sort";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { useState, MouseEvent, useEffect } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { addNewProject, DeleteProject, findAllUserProject, Project, RenameProject, } from "../utils/api/ProjectService";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { addNewProject, DeleteProject, getAllUserProject, Project, RenameProject, } from "../utils/api/ProjectService";
 import useAuth from "../utils/Contexts/useAuth";
-import AddButtonProject from "../components/AddButtonProject";
+import AddProjectButton from "../components/AddButtonProject";
 
 const Dashboard: React.FC = () => {
   const { userId } = useAuth();
   const [projects, setProjects] = useState<Project[]>([]);
 
-  const { isPending, isError, mutateAsync: findAllUserProjectMutate } = useMutation({
-    mutationFn: async () => {
-      const response = await findAllUserProject(); // або ваш API запит
-      setProjects(response); // зберігаємо отримані проекти
-    },
-    onError: (error: any) => {
-      console.error("Помилка завантаження проектів: ", error);
-    },
-    onSuccess: () => {
-      console.log("Проекти завантажено успішно");
-    },
-  });
+  const { data: projectsQuery, isPending: isPendingProjectsQuery, isError: isErrorProjectsQuery } = useQuery({
+    queryKey: ["projects"],
+    queryFn: async () => {
+      const response = await getAllUserProject();
+      setProjects(response);
+      return response;
+    }
+  })
 
   //mutate for delete project
   const { mutateAsync: deletemutate, } = useMutation({
@@ -64,7 +60,7 @@ const Dashboard: React.FC = () => {
 
   //mutate for add project
   const {
-    // isPending: addIsPending,
+    isPending: isPendingAddProject,
     // isError: addIsError,
     mutateAsync: addProjectMutate,
   } = useMutation({
@@ -111,8 +107,8 @@ const Dashboard: React.FC = () => {
   });
 
   useEffect(() => {
-    findAllUserProjectMutate(); // Викликаєте fetchProjects, щоб завантажити проекти
-  }, []);
+    setProjects(projectsQuery || []);
+  }, [projectsQuery]);
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -300,7 +296,7 @@ const Dashboard: React.FC = () => {
       </Box>
       {/* проекти */}
       <Box sx={{ display: "flex", justifyContent: "center" }}>
-        {isPending ? (
+        {isPendingProjectsQuery ? (
           <Box
             sx={{
               position: "fixed",
@@ -317,7 +313,7 @@ const Dashboard: React.FC = () => {
           >
             <CircularProgress color="inherit" />
           </Box>
-        ) : isError ? (
+        ) : isErrorProjectsQuery ? (
           <Typography
             sx={{
               justifyContent: "center",
@@ -368,17 +364,15 @@ const Dashboard: React.FC = () => {
       {/* Діалогове вікно додавання проекту */}
       <Dialog open={openDialog} onClose={closeAddProjectDialog}>
         <DialogTitle sx={{ color: "#08031B" }}>Add New Project</DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ width: isMobile ? "70vw" : "30vw" }}>
           <TextField
             sx={{
               // backgroundColor: "#D9D9D9",
               marginTop: "22px",
               color: "#565454",
-              width: isMobile ? "60vw" : "40vw",
               height: "56px",
-              maxWidth: "592px",
               fontFamily: "Poppins, sans-serif", // Шрифт
-              fontSize: isMobile ? "15px" : "15px", // Розмір
+              fontSize: "15px", // Розмір
               fontWeight: 400,
               borderRadius: isMobile ? "15px" : "20px", // Закруглення країв
               "& .MuiOutlinedInput-root": {
@@ -423,10 +417,11 @@ const Dashboard: React.FC = () => {
           >
             Cancel
           </Button>
-          <AddButtonProject
+          <AddProjectButton
             name={newProjectName}
             setIsSubmitted={setIsSubmitted}
             isDisabled={!isTouched}
+            isPanding={isPendingAddProject}
             addmutate={addProjectMutate}
           />
         </DialogActions>

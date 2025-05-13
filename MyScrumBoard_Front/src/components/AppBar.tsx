@@ -64,7 +64,7 @@ import { useMutation } from "@tanstack/react-query";
 // }));
 
 const drawerWidth = 240;
-const navItems = ["View all"];
+const navItems = ["View all projects"];
 
 export default function DrawerAppBar() {
   const navigate = useNavigate();
@@ -76,7 +76,7 @@ export default function DrawerAppBar() {
       navigate("/");
     },
     onError: (error) => {
-      console.log("Сталася помилка ", error);
+      console.error("Сталася помилка ", error);
     },
   });
   const { mutate: mutateDeleteAccount, /*isPending: isPendingDelete*/ } =
@@ -86,7 +86,7 @@ export default function DrawerAppBar() {
         navigate("/");
       },
       onError: (error) => {
-        console.log("Сталася помилка ", error);
+        console.error("Сталася помилка ", error);
       },
     });
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -120,7 +120,7 @@ export default function DrawerAppBar() {
             <ListItemButton
               onClick={() => {
                 if (text === "Exit") mutateExit();
-                if (text === "Delete account") {setOpenDialogDelete(true) }
+                if (text === "Delete account") { setOpenDialogDelete(true) }
               }}
             >
               {/* Іконка для Exit */}
@@ -143,16 +143,16 @@ export default function DrawerAppBar() {
     </Box>
   );
   const [openDialogDelete, setOpenDialogDelete] = React.useState(false);
-    const handleCancelDelete = () => {
+  const handleCancelDelete = () => {
     setOpenDialogDelete(false);
   };
   const handleConfirmDelete = () => {
     setOpenDialogDelete(false); // Тут можна додати логіку видалення
     mutateDeleteAccount();
   };
-  
+
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", maxHeight: "60px" }}>
       <CssBaseline />
       {/* Верхня панель */}
       <AppBar
@@ -191,7 +191,7 @@ export default function DrawerAppBar() {
             <span>MY.scrum</span>
             <span>board</span>
           </Typography>
-          
+
           {/* <Search>
             <SearchIconWrapper>
               <SearchIcon />
