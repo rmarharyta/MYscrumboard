@@ -1,18 +1,55 @@
 import { useState } from "react";
 import { Box, Link, useMediaQuery, useTheme } from "@mui/material";
+<<<<<<< Updated upstream
 import UserName from "../components/UserName";
 import WelcomeText from "../components/WelcomeText";
 import SendRequestButton from "../components/SendRequestButton";
 
 function RequestChangePassword() {
   
-  const [username, setUsername] = useState<string>("");
-  const handleUsername = (newValue: string) => setUsername(newValue);
+=======
+import WelcomeText from "../components/WelcomeText";
+import { NavLink } from "react-router-dom";
+import InputField from "../components/InputField";
+import { isValidEmail, isValidPassword } from "../utils/commonFunctions";
+import Button from "../components/Button";
+import { useMutation } from "@tanstack/react-query";
+import { requestResetPassword } from "../utils/api/PasswordService";
 
+function RequestChangePassword() {
+>>>>>>> Stashed changes
+  const [username, setUsername] = useState<string>("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+
+  const handleUsername = (newValue: string) => setUsername(newValue);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { mutateAsync: requestResetPasswordMutate } = useMutation({
+    mutationFn: async (username: string) => await requestResetPassword(username),
+    onSuccess: () => {
+      console.log("Успішно відправлено!")
+    },
+    onError: (error) => {
+      console.error("Сталася помилка ", error)
+    },
+  });
+  const handleSendRequest = async () => {
+    if (username && isValidEmail(username)) {
+      try {
+        await requestResetPasswordMutate(username);
+        setIsSubmitted(true);
+      } catch (error) {
+        console.error("Помилка при відправці запиту:", error);
+      }
+    }
+    else {
+      setError("Please enter a valid email address.");
+      setIsSubmitted(false);
+    }
+  };
 
   return (
     //background
@@ -59,13 +96,30 @@ function RequestChangePassword() {
               flexDirection: "column",
             }}
           >
-            <UserName
+            <InputField
               value={username}
               onChange={handleUsername}
               isSubmitted={isSubmitted}
+              type="text"
+              label="Email"
+              validate={(value: string) => isValidPassword(value)}
+              isMobile={isMobile}
             />
           </Box>
-          <SendRequestButton email={username} setIsSubmitted={setIsSubmitted} />
+          <Button
+            action={handleSendRequest}
+            error={error}
+            label="Send Request"
+            setError={setError}
+            isPending={false}
+            variant="contained"
+            isMobile={isMobile}
+            props={{
+              sx: {
+                height: isMobile ? "4rem" : "6rem",
+              },
+            }}
+          />
           <Link
             textAlign={"center"}
             width={1}

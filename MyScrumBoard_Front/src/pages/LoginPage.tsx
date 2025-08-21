@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
 import { Box, Link, useMediaQuery, useTheme } from "@mui/material";
-import UserName from "../components/UserName";
-import Password from "../components/Password";
+import InputField from "../components/InputField";
 import WelcomeText from "../components/WelcomeText";
+<<<<<<< Updated upstream
 import LogInButton from "../components/LogInButton";
 import SignUpLinkButton from "../components/SignUpLinkButton";
+=======
+import { NavLink, useNavigate } from "react-router-dom";
+import Button from "../components/Button";
+import useAuth from "../utils/Contexts/useAuth";
+import { useMutation } from "@tanstack/react-query";
+import { isValidEmail, isValidPassword } from "../utils/commonFunctions";
+>>>>>>> Stashed changes
 
 function LoginPage() {
   useEffect(() => {
@@ -22,6 +29,7 @@ localStorage.removeItem('token')
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+<<<<<<< Updated upstream
   // Функція перевірки валідності пароля
   const isValidPassword = (password: string) => {
     return (
@@ -34,8 +42,40 @@ localStorage.removeItem('token')
     return emailRegex.test(email);
   };
   
+=======
+
+>>>>>>> Stashed changes
   // Визначаємо, чи кнопка має бути заблокована
-  const isButtonDisabled = !isValidEmail(username) || !isValidPassword(password);
+  const auth = useAuth();
+  const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
+
+  const loginHendler = () => {
+    setIsSubmitted(true);
+
+    if (!isValidEmail(username)) {
+      setError("Please enter a valid email address");
+      return;
+    }
+    if (!isValidPassword(password)) {
+      setError("Password must be at least 6 characters long, contain at least one digit and one uppercase letter.");
+      return;
+    }
+
+    mutate();
+    setIsSubmitted(false);
+    setError(null);
+  };
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async () => auth.signin(username, password),
+    onSuccess: () => {
+      navigate("/dashboard");
+    },
+    onError: (error) => {
+      setError(error.message);
+    },
+  });
 
   return (
     <Box
@@ -81,15 +121,24 @@ localStorage.removeItem('token')
               flexDirection: "column",
             }}
           >
-            <UserName
+            <InputField
               value={username}
               onChange={handleUsername}
               isSubmitted={isSubmitted}
+              type="text"
+              label="Username"
+              validate={isValidEmail}
+              isMobile={isMobile}
             />
-            <Password
+
+            <InputField
               value={password}
               onChange={handlePassword}
               isSubmitted={isSubmitted}
+              type="password"
+              label="Password"
+              validate={isValidPassword}
+              isMobile={isMobile}
             />
           </Box>
 
@@ -104,16 +153,27 @@ localStorage.removeItem('token')
             {"Forgot password?"}
           </Link>
 
-          <LogInButton
-            email={username}
-            password={password}
-            setIsSubmitted={setIsSubmitted}
-            isDisabled={isButtonDisabled}
+          <Button
+            action={loginHendler}
+            isPending={isPending}
+            error={error}
+            setError={setError}
+            label="Log in"
+            variant="contained"
           />
-          <SignUpLinkButton />
+          <Button
+            setError={() => { }}
+            action={() => navigate("/signup")}
+            label="Sign up"
+            variant="outlined"
+          />
 
+<<<<<<< Updated upstream
           {/* Кнопка входу через Google */}
           <Link
+=======
+          {/* <Link
+>>>>>>> Stashed changes
             href="#"
             underline="hover"
             sx={{

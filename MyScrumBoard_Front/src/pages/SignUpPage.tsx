@@ -1,9 +1,17 @@
 import { useState } from "react";
 import { Box, Link, useMediaQuery, useTheme } from "@mui/material";
-import UserName from "../components/UserName";
 import WelcomeText from "../components/WelcomeText";
+<<<<<<< Updated upstream
 import SignUpButton from "../components/SignUpButton";
 import PasswordRegister from "../components/PasswordRegister";
+=======
+import Button from "../components/Button";
+import { NavLink, useNavigate } from "react-router-dom";
+import useAuth from "../utils/Contexts/useAuth";
+import { useMutation } from "@tanstack/react-query";
+import InputField from "../components/InputField";
+import { isValidEmail, isValidPassword } from "../utils/commonFunctions";
+>>>>>>> Stashed changes
 
 function SignUpPage() {
   
@@ -22,6 +30,7 @@ function SignUpPage() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+<<<<<<< Updated upstream
   // Функція перевірки валідності пароля
   const isValidPassword = (password: string) => {
     return (
@@ -36,6 +45,48 @@ function SignUpPage() {
   // Визначаємо, чи кнопка має бути заблокована
   const isButtonDisabled =
     !isValidEmail(username) || !isValidPassword(password);
+=======
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setRepeatPassword] = useState<string>("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const auth = useAuth();
+  const navigate = useNavigate();
+
+
+  const handleSignUp = () => {
+    setIsSubmitted(true);
+    if (!isValidEmail(username)) {
+      setError("Please enter a valid email address");
+      return;
+    }
+    if (!isValidPassword(password)) {
+      setError("Password must be at least 6 characters long, contain at least one digit and one uppercase letter.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    mutate();
+    setIsSubmitted(false);
+    setError(null);
+  };
+
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async () => auth.signup(username, password),
+    onSuccess: () => {
+      navigate("/dashboard");
+    },
+    onError: () => {
+      setError("Something went wrong, try again later.");
+    },
+  });
+>>>>>>> Stashed changes
 
   return (
     <Box
@@ -48,20 +99,6 @@ function SignUpPage() {
         backgroundColor: "#E6DFFF",
       }}
     >
-      {/* Білий контейнер */}
-      {/* <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          width: "90vw",
-          maxWidth: "600px",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#FFFFFFCC",
-          borderRadius: isMobile ? "30px" : "60px",
-          padding: isMobile ? "20px" : "40px",
-        }}
-      > */}
       <Box
         sx={{
           display: "flex",
@@ -73,7 +110,6 @@ function SignUpPage() {
           padding: isMobile ? "20px" : "40px",
         }}
       >
-        {/* Блок з компонентами */}
         <Box
           sx={{
             display: "flex",
@@ -84,7 +120,6 @@ function SignUpPage() {
           }}
         >
           <WelcomeText />
-          {/* Поля введення */}
           <Box
             sx={{
               width: "100%",
@@ -94,24 +129,56 @@ function SignUpPage() {
               flexDirection: "column",
             }}
           >
-            <UserName
+            <InputField
               value={username}
               onChange={handleUsername}
               isSubmitted={isSubmitted}
+              type="text"
+              label="Username"
+              validate={isValidEmail}
+              isMobile={isMobile}
+
             />
+<<<<<<< Updated upstream
             <PasswordRegister
               valueFirst={password}
               valueSecond={repeatPassword}
               onChangeFirst={handlePassword}
               onChangeSecond={handleRepeatedPassword}
+=======
+            <InputField
+              id="password"
+              value={password}
+              onChange={setPassword}
+>>>>>>> Stashed changes
               isSubmitted={isSubmitted}
+              type="password"
+              label="Password"
+              validate={isValidPassword}
+              isMobile={isMobile}
             />
+<<<<<<< Updated upstream
+=======
+            <InputField
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={setRepeatPassword}
+              isSubmitted={isSubmitted}
+              type="password"
+              label="Confirm Password"
+              validate={() => confirmPassword === password}
+              isMobile={isMobile}
+            />
+>>>>>>> Stashed changes
           </Box>
-          <SignUpButton
-            email={username}
-            password={password}
-            setIsSubmitted={setIsSubmitted}
-            isDisabled={isButtonDisabled}
+          <Button
+            action={handleSignUp}
+            isPending={isPending}
+            error={error}
+            setError={setError}
+            label="Sign up"
+            variant="contained"
+
           />
           <Link
             textAlign={"center"}

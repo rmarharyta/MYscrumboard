@@ -3,6 +3,14 @@ import { Box, useMediaQuery, useTheme } from "@mui/material";
 import WelcomeText from "../components/WelcomeText";
 import PasswordRegister from "../components/PasswordRegister";
 import ChangePasswordButton from "../components/ChangePasswordButton";
+<<<<<<< Updated upstream
+=======
+import { resetPassword } from "../utils/api/PasswordService";
+import { useNavigate, useParams } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import InputField from "../components/InputField";
+import { isValidPassword } from "../utils/commonFunctions";
+>>>>>>> Stashed changes
 
 function ChangePassword() {
   const [password, setPassword] = useState<string>("");
@@ -29,7 +37,6 @@ function ChangePassword() {
         backgroundColor: "#E6DFFF",
       }}
     >
-      {/* Білий контейнер */}
       <Box
         sx={{
           display: "flex",
@@ -41,7 +48,6 @@ function ChangePassword() {
           padding: isMobile ? "20px" : "40px",
         }}
       >
-        {/* Блок з компонентами */}
         <Box
           sx={{
             display: "flex",
@@ -52,7 +58,6 @@ function ChangePassword() {
           }}
         >
           <WelcomeText />
-          {/* Поля введення */}
           <Box
             sx={{
               width: "100%",
@@ -62,14 +67,39 @@ function ChangePassword() {
               flexDirection: "column",
             }}
           >
+<<<<<<< Updated upstream
             {" "}
             <PasswordRegister
               valueFirst={password}
               valueSecond={repeatPassword}
               onChangeFirst={handlePassword}
               onChangeSecond={handleRepeatedPassword}
+=======
+            <InputField
+              id="password"
+              value={password}
+              onChange={setPassword}
+>>>>>>> Stashed changes
               isSubmitted={isSubmitted}
+              type="password"
+              label="Password"
+              validate={isValidPassword}
+              isMobile={isMobile}
             />
+<<<<<<< Updated upstream
+=======
+            <InputField
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={(value) => setConfirmPassword(value)}
+              isSubmitted={isSubmitted}
+              type="password"
+              label="Confirm Password"
+              validate={() => confirmPassword === password}
+              isMobile={isMobile}
+            />
+            <ChangePasswordButton type="submit" />
+>>>>>>> Stashed changes
           </Box>
           <ChangePasswordButton
             password={password}

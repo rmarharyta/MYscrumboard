@@ -8,51 +8,32 @@ import {
 import { useState } from "react";
 
 interface Props {
-<<<<<<< Updated upstream:MyScrumBoard_Front/src/components/AddProjectButton.tsx
-  projectName: string;
-
-  setIsSubmitted: (value: boolean) => void;
-  isDisabled: boolean;
-
-  addmutate: (string: string) => void; //Add
-=======
   name: string;
+  projectId: string;
   setIsSubmitted: (value: boolean) => void;
   isDisabled: boolean;
-  isPanding: boolean;
-  addMutate: (string: string) => void;
->>>>>>> Stashed changes:MyScrumBoard_Front/src/components/AddButtonProject.tsx
+
+  addMutate: ({
+    projectId,
+    scrumName,
+  }: {
+    projectId: string;
+    scrumName: string;
+  }) => void;
 }
 
 function AddProjectButton({
-  projectName,
+  name,
+  projectId,
   setIsSubmitted,
   isDisabled,
-<<<<<<< Updated upstream:MyScrumBoard_Front/src/components/AddProjectButton.tsx
-  addmutate,
-=======
-  addMutate: addmutate,
-  isPanding
->>>>>>> Stashed changes:MyScrumBoard_Front/src/components/AddButtonProject.tsx
+  addMutate,
 }: Props) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [error, setError] = useState<string | null>(null);
 
-<<<<<<< Updated upstream:MyScrumBoard_Front/src/components/AddProjectButton.tsx
-  // const { mutate } = useMutation({
-  //   mutationFn: async () => addNewProject(projectName),
-  //   onError: () => {
-  //     setError("Something went wrong");
-  //   },
-  //   onSuccess: () => {
-  //     closeAddProjectDialog();
-  //     setError(null);
-  //   },
-  // });
-=======
->>>>>>> Stashed changes:MyScrumBoard_Front/src/components/AddButtonProject.tsx
   return (
     <>
       <Snackbar
@@ -72,9 +53,8 @@ function AddProjectButton({
       <Button
         onClick={() => {
           setIsSubmitted(true);
-          if (projectName && !isDisabled) {
-            addmutate(projectName);
-            // closeAddProjectDialog();
+          if (name && projectId && !isDisabled) {
+            addMutate({ projectId, scrumName: name });
           }
         }}
         variant="contained"

@@ -1,8 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\",
+  "WorkspaceRootPath": "F:\\GitProject\\MYscrumboard\\MY_ScrumBoard\\",
   "Documents": [
     {
+<<<<<<< Updated upstream
       "AbsoluteMoniker": "D:0:0:{EFC5B4F9-74A3-40F0-8810-C16483156CB5}|MY_ScrumBoard.csproj|c:\\users\\marharyta\\desktop\\myscrumboard\\my_scrumboard\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EFC5B4F9-74A3-40F0-8810-C16483156CB5}|MY_ScrumBoard.csproj|solutionrelative:controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -69,6 +70,14 @@
     {
       "AbsoluteMoniker": "D:0:0:{EFC5B4F9-74A3-40F0-8810-C16483156CB5}|MY_ScrumBoard.csproj|c:\\users\\marharyta\\desktop\\myscrumboard\\my_scrumboard\\mysqlserverversion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EFC5B4F9-74A3-40F0-8810-C16483156CB5}|MY_ScrumBoard.csproj|solutionrelative:mysqlserverversion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+=======
+      "AbsoluteMoniker": "D:0:0:{EFC5B4F9-74A3-40F0-8810-C16483156CB5}|MY_ScrumBoard.csproj|f:\\gitproject\\myscrumboard\\my_scrumboard\\servicecollectionextension.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EFC5B4F9-74A3-40F0-8810-C16483156CB5}|MY_ScrumBoard.csproj|solutionrelative:servicecollectionextension.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EFC5B4F9-74A3-40F0-8810-C16483156CB5}|MY_ScrumBoard.csproj|f:\\gitproject\\myscrumboard\\my_scrumboard\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EFC5B4F9-74A3-40F0-8810-C16483156CB5}|MY_ScrumBoard.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+>>>>>>> Stashed changes
     }
   ],
   "DocumentGroupContainers": [
@@ -78,10 +87,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
+<<<<<<< Updated upstream
               "DocumentIndex": 2,
               "Title": "UserServices.cs",
               "DocumentMoniker": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\Services\\UserServices.cs",
@@ -143,10 +153,22 @@
               "ViewState": "AgIAABAAAAAAAAAAAAAuwCIAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-02T14:58:44.487Z",
+=======
+              "DocumentIndex": 0,
+              "Title": "ServiceCollectionExtension.cs",
+              "DocumentMoniker": "F:\\GitProject\\MYscrumboard\\MY_ScrumBoard\\ServiceCollectionExtension.cs",
+              "RelativeDocumentMoniker": "ServiceCollectionExtension.cs",
+              "ToolTip": "F:\\GitProject\\MYscrumboard\\MY_ScrumBoard\\ServiceCollectionExtension.cs",
+              "RelativeToolTip": "ServiceCollectionExtension.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABwAAAB7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-13T08:28:09.262Z",
+>>>>>>> Stashed changes
               "EditorCaption": ""
             },
             {
               "$type": "Document",
+<<<<<<< Updated upstream
               "DocumentIndex": 6,
               "Title": "NotesController.cs",
               "DocumentMoniker": "C:\\Users\\Marharyta\\Desktop\\MYscrumboard\\MY_ScrumBoard\\Controllers\\NotesController.cs",
@@ -292,6 +314,18 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-23T12:01:25.592Z"
+=======
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "F:\\GitProject\\MYscrumboard\\MY_ScrumBoard\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "F:\\GitProject\\MYscrumboard\\MY_ScrumBoard\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACsAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-29T15:50:03.547Z",
+              "EditorCaption": ""
+>>>>>>> Stashed changes
             }
           ]
         }

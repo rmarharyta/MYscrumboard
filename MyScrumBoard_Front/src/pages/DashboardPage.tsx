@@ -25,6 +25,7 @@ import ProjectIcon from "../components/ProjectIcon";
 import AddIcon from "@mui/icons-material/Add";
 import SortIcon from "@mui/icons-material/Sort";
 import FilterListIcon from "@mui/icons-material/FilterList";
+<<<<<<< Updated upstream
 import { useState, MouseEvent, useEffect } from "react";
 import AddProjectButton from "../components/AddProjectButton";
 import { useMutation } from "@tanstack/react-query";
@@ -34,6 +35,11 @@ import {
   findAllUserProject,
   RenameProject,
 } from "../utils/api/ProjectServices";
+=======
+import { useState, useEffect, useMemo } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { addNewProject, DeleteProject, getAllUserProject, Project, RenameProject, } from "../utils/api/ProjectService";
+>>>>>>> Stashed changes
 import useAuth from "../utils/Contexts/useAuth";
 
 interface Project {
@@ -44,9 +50,24 @@ interface Project {
 }
 
 const Dashboard: React.FC = () => {
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { userId } = useAuth();
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
   const [projects, setProjects] = useState<Project[]>([]);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [sortBy, setSortBy] = useState<"name" | "newest" | "oldest">("newest");
+  const [filterRole, setFilterRole] = useState<"" | "owner" | "participant">("");
+  const [filterAnchor, setFilterAnchor] = useState<null | HTMLElement>(null);
+  const [sortAnchor, setSortAnchor] = useState<null | HTMLElement>(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [newProjectName, setNewProjectName] = useState("");
+  const [isTouched, setIsTouched] = useState(false);
 
   const { isPending, isError, mutate } = useMutation({
     mutationFn: async () => {
@@ -68,41 +89,58 @@ const Dashboard: React.FC = () => {
     mutate: deletemutate,
   } = useMutation({
     mutationFn: async (projId: string) => {
+<<<<<<< Updated upstream
       deleteProject(projId); // або ваш API запит
+=======
+      await DeleteProject(projId);
+      setProjects(projects.filter((p) => p.projectId !== projId));
+>>>>>>> Stashed changes
     },
     onError: (error: Error) => {
-      console.error("Помилка ??? проектів: ", error.message);
+      console.error("Error deleting projects: ", error.message);
     },
     onSuccess: () => {
-      console.log("Проекти ??? успішно");
+      console.log("Projects deleted successfully");
     },
   });
 
   //mutate for add project
+<<<<<<< Updated upstream
   const {
     // isPending: addIsPending,
     // isError: addIsError,
     mutate: addProjectMutate,
+=======
+  const { isPending: isPendingAddProject, mutateAsync: addProjectMutate,
+>>>>>>> Stashed changes
   } = useMutation({
     mutationFn: async (projName: string) => {
       addProject(projName); // або ваш API запит
     },
     onError: (error: Error) => {
-      console.error("Помилка ??? проектів: ", error.message);
+      console.error("Error adding projects: ", error.message);
     },
     onSuccess: () => {
       closeAddProjectDialog();
+<<<<<<< Updated upstream
       mutate();
       console.log("Проекти ??? успішно");
+=======
+      console.log("Projects added successfully");
+>>>>>>> Stashed changes
     },
   });
 
   //mutate for rename project
+<<<<<<< Updated upstream
   const {
     // isPending: addIsPending,
     // isError: addIsError,
     mutate: renameProjectMutate,
   } = useMutation({
+=======
+  const { mutateAsync: renameProjectMutate, } = useMutation({
+>>>>>>> Stashed changes
     mutationFn: async ({
       projectId,
       projectName,
@@ -110,14 +148,22 @@ const Dashboard: React.FC = () => {
       projectId: string;
       projectName: string;
     }) => {
+<<<<<<< Updated upstream
       renameProject(projectId, projectName); // або ваш API запит
+=======
+      await RenameProject(projectId, projectName);
+      setProjects(
+        projects.map((p) =>
+          p.projectId === projectId ? { ...p, projectName } : p
+        )
+      );
+>>>>>>> Stashed changes
     },
     onError: (error: Error) => {
-      console.error("Помилка ??? проектів: ", error.message);
+      console.error("Error renaming projects: ", error.message);
     },
     onSuccess: () => {
-      //mutate();
-      console.log("Проекти ??? успішно");
+      console.log("Projects renamed successfully");
     },
   });
 
@@ -143,8 +189,8 @@ const Dashboard: React.FC = () => {
     );
   };
 
-  const [isSubmitted, setIsSubmitted] = useState(false);
 
+<<<<<<< Updated upstream
   const [sortBy, setSortBy] = useState<"name" | "newest" | "oldest">("newest");
   const [filterRole, setFilterRole] = useState<"" | "owner" | "participant">("");
   const [filterAnchor, setFilterAnchor] = useState<null | HTMLElement>(null);
@@ -183,40 +229,35 @@ const Dashboard: React.FC = () => {
         );
       }
     });
+=======
+  const sortedProjects = useMemo(() => {
+    return [...projects]
+      .filter((project) => {
+        if (filterRole === "owner") {
+          return project.ownerId === userId;
+        } else if (filterRole === "participant") {
+          return project.ownerId !== userId;
+        } else return project;
+      })
+      .sort((a, b) => {
+        if (sortBy === "name") {
+          return a.projectName.localeCompare(b.projectName);
+        } else if (sortBy === "newest") {
+          return (
+            new Date(b.date_time).getTime() - new Date(a.date_time).getTime()
+          );
+        } else {
+          return (
+            new Date(a.date_time).getTime() - new Date(b.date_time).getTime()
+          );
+        }
+      });
+  }, [projects, sortBy, filterRole, userId]);
+>>>>>>> Stashed changes
 
   const handleSortChange = (newSortBy: "name" | "newest" | "oldest") => {
     setSortBy(newSortBy);
     setSortAnchor(null);
-  };
-
-  const handleFilterRoleChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setFilterRole(event.target.value as "owner" | "participant");
-  };
-
-  const clearFilter = () => {
-    setFilterRole("");
-  };
-
-  const openFilterMenu = (event: MouseEvent<HTMLButtonElement>) => {
-    setFilterAnchor(event.currentTarget);
-  };
-
-  const closeFilterMenu = () => {
-    setFilterAnchor(null);
-  };
-
-  const openSortMenu = (event: MouseEvent<HTMLButtonElement>) => {
-    setSortAnchor(event.currentTarget);
-  };
-
-  const closeSortMenu = () => {
-    setSortAnchor(null);
-  };
-
-  const openAddProjectDialog = () => {
-    setOpenDialog(true)
   };
 
   const closeAddProjectDialog = () => {
@@ -226,7 +267,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <Box>
-      {/* Верхня панель */}
+      {/* Top panel */}
       <Box
         sx={{
           display: "flex",
@@ -237,28 +278,28 @@ const Dashboard: React.FC = () => {
         }}
       >
         <Tooltip title="Add project" color="#08031B" arrow>
-          <IconButton onClick={openAddProjectDialog}>
+          <IconButton onClick={() => setOpenDialog(true)}>
             <AddIcon />
           </IconButton>
         </Tooltip>
 
-        {/* Кнопка сортування */}
+        {/* Sort button */}
         <Tooltip title="Sort" color="#08031B" arrow>
-          <IconButton onClick={openSortMenu}>
+          <IconButton onClick={(event) => setSortAnchor(event.currentTarget)}>
             <SortIcon />
           </IconButton>
         </Tooltip>
 
-        {/* Меню сортування */}
+        {/* Sort menu */}
         <Menu
           sx={{
-            fontFamily: "Poppins, sans-serif", // Шрифт
-            fontSize: "15px", // Розмір
+            fontFamily: "Poppins, sans-serif", // Font
+            fontSize: "15px", // Size
             fontWeight: 400,
           }}
           anchorEl={sortAnchor}
           open={Boolean(sortAnchor)}
-          onClose={closeSortMenu}
+          onClose={() => setSortAnchor(null)}
         >
           <MenuItem
             selected={sortBy === "name"}
@@ -280,30 +321,32 @@ const Dashboard: React.FC = () => {
           </MenuItem>
         </Menu>
 
-        {/* Кнопка фільтрації */}
+        {/* Filter button */}
         <Tooltip title="Filter" color="#08031B" arrow>
-          <IconButton onClick={openFilterMenu}>
+          <IconButton onClick={(event) => setFilterAnchor(event.currentTarget)}>
             <FilterListIcon />
           </IconButton>
         </Tooltip>
 
-        {/* Меню фільтрації */}
+        {/* Filter menu */}
         <Menu
           sx={{
-            fontFamily: "Poppins, sans-serif", // Шрифт
-            fontSize: "15px", // Розмір
+            fontFamily: "Poppins, sans-serif", // Font
+            fontSize: "15px", // Size
             fontWeight: 400,
           }}
           anchorEl={filterAnchor}
           open={Boolean(filterAnchor)}
-          onClose={closeFilterMenu}
+          onClose={() => setFilterAnchor(null)}
         >
           <MenuItem sx={{ width: 240, justifyContent: "center" }}>
             <FormControl component="fieldset">
               <FormLabel component="legend">Filter</FormLabel>
               <RadioGroup
                 value={filterRole}
-                onChange={handleFilterRoleChange}
+                onChange={(event) =>
+                  setFilterRole(event.target.value as "owner" | "participant")
+                }
                 row
               >
                 <FormControlLabel
@@ -318,9 +361,9 @@ const Dashboard: React.FC = () => {
                 />
               </RadioGroup>
             </FormControl>
-            {/* Кнопка очищення фільтра */}
+            {/* Clear filter button */}
             <Button
-              onClick={clearFilter}
+              onClick={() => setFilterRole("")}
               variant="outlined"
               sx={{ color: "#08031B" }}
             >
@@ -329,7 +372,7 @@ const Dashboard: React.FC = () => {
           </MenuItem>
         </Menu>
       </Box>
-      {/* проекти */}
+      {/* Projects */}
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         {isPending ? (
           // <Typography
@@ -383,7 +426,7 @@ const Dashboard: React.FC = () => {
             spacing={0.5}
             sx={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", // Рівномірно заповнює екран
+              gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", // Evenly fills the screen
               gap: "1rem",
               width: "100%",
             }}
@@ -410,11 +453,16 @@ const Dashboard: React.FC = () => {
         )}
       </Box>
 
+<<<<<<< Updated upstream
       {/* Діалогове вікно додавання проекту */}
       <Dialog
         open={openDialog}
         onClose={closeAddProjectDialog}
       >
+=======
+      {/* Add project dialog */}
+      <Dialog open={openDialog} onClose={closeAddProjectDialog}>
+>>>>>>> Stashed changes
         <DialogTitle sx={{ color: "#08031B" }}>Add New Project</DialogTitle>
         <DialogContent>
           <TextField
@@ -424,30 +472,35 @@ const Dashboard: React.FC = () => {
               color: "#565454",
               width: isMobile ? "60vw" : "40vw",
               height: "56px",
+<<<<<<< Updated upstream
               maxWidth: "592px",
               fontFamily: "Poppins, sans-serif", // Шрифт
               fontSize: isMobile ? "15px" : "15px", // Розмір
+=======
+              fontFamily: "Poppins, sans-serif", // Font
+              fontSize: "15px", // Size
+>>>>>>> Stashed changes
               fontWeight: 400,
-              borderRadius: isMobile ? "15px" : "20px", // Закруглення країв
+              borderRadius: isMobile ? "15px" : "20px", // Rounded edges
               "& .MuiOutlinedInput-root": {
                 borderRadius: isMobile ? "15px" : "20px",
                 color: "#565454",
                 "& fieldset": {
                   borderWidth: "1px",
-                  borderColor: "#08031B", // Товщина лінії
+                  borderColor: "#08031B", // Line thickness
                 },
                 "&:hover fieldset": {
                   borderWidth: "2px",
-                  borderColor: "#08031B", // Товстіша лінія при наведенні
+                  borderColor: "#08031B", // Thicker line on hover
                 },
                 "&.Mui-focused fieldset": {
-                  borderWidth: "1px", // Товстіша лінія при фокусі
+                  borderWidth: "1px", // Thicker line on focus
                   borderColor: "#08031B",
                 },
               },
             }}
             fullWidth
-            onBlur={handleBlur}
+            onBlur={() => setIsTouched(true)}
             label="Project Name"
             variant="outlined"
             value={newProjectName}
@@ -462,8 +515,8 @@ const Dashboard: React.FC = () => {
             sx={{
               backgroundColor: "#FFFFFF",
               color: "#08031B",
-              fontFamily: "Poppins, sans-serif", // Шрифт
-              fontSize: isMobile ? "15px" : "20px", // Розмір
+              fontFamily: "Poppins, sans-serif", // Font
+              fontSize: isMobile ? "15px" : "20px", // Size
               fontWeight: 400,
               borderRadius: "10px",
               textTransform: "none",
@@ -475,11 +528,16 @@ const Dashboard: React.FC = () => {
             projectName={newProjectName}
             setIsSubmitted={setIsSubmitted}
             isDisabled={!isTouched}
+<<<<<<< Updated upstream
             addmutate={addProjectMutate}
+=======
+            isPanding={isPendingAddProject}
+            addMutate={addProjectMutate}
+>>>>>>> Stashed changes
           />
         </DialogActions>
       </Dialog>
-    </Box>
+    </Box >
   );
 };
 export default Dashboard;
