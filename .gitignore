@@ -6,3 +6,5 @@
 bin/
 obj/
 Debug/
+# ignore ALL files in ANY directory named temp
+temp/
