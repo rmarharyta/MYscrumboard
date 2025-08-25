@@ -32,21 +32,25 @@ namespace MY_ScrumBoard
 
             var app = builder.Build();
 
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
-            app.UseHttpsRedirection();
-
-            app.UseCors("_myPolicy");
+            app.UseCors("_allowAllOrigins");
 
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseHttpsRedirection();
+
             app.MapControllers();
+
+            app.MapFallbackToFile("/index.html");
 
             app.Run();
         }
